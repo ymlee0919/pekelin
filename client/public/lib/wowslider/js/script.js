@@ -1,0 +1,23 @@
+jQuery('#wowslider-container1').wowSlider({
+	effect:"carousel", 
+	prev:"", 
+	next:"", 
+	duration: 20*100, 
+	delay:20*100, 
+	width:960,
+	height:360,
+	autoPlay:true,
+	autoPlayVideo:false,
+	playPause:false,
+	stopOnHover:false,
+	loop:false,
+	bullets:1,
+	caption: true, 
+	captionEffect:"fade",
+	controls:true,
+	responsive:2,
+	fullScreen:false,
+	gestures: 2,
+	onBeforeStep:0,
+	images:0
+});

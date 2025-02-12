@@ -1,0 +1,13 @@
+admin/node_modules/
+admin/.env
+
+api/dist/
+api/node_modules/
+api/.env
+
+client/node_modules/
+client/.env
+
+node_modules/
+
+docs.txt

@@ -1,0 +1,221 @@
+/****************** PANEL ******************/
+.panel {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    background-color: #fff;
+    -webkit-box-shadow: 0 0 8px 0 rgb(62 44 90 / 5%);
+    box-shadow: 0 0 8px 0 rgb(62 44 90 / 5%);
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, .09);
+    border-bottom: 1px solid #e0e0e0;
+    -webkit-transition: border .5s ease-out;
+    transition: border .5s ease-out;
+    border-radius: 10px;
+}
+
+.inner-panel {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    background-color: #fff;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, .09);
+    border-bottom: 1px solid #e0e0e0;
+    -webkit-transition: border .5s ease-out;
+    transition: border .5s ease-out;
+    
+}
+
+.panel-header {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: #6660c5;
+    font-weight: 700 !important;
+    min-height: 3rem;
+    border-bottom: 1px solid rgba(0, 0, 0, .07);
+    -webkit-transition: background-color .4s ease-out;
+    transition: background-color .4s ease-out;
+    border-radius: 10px 10px 0 0;
+}
+
+.panel-header.panel-header-lighten{
+    background: #eff6cc;
+    color: #366398;
+}
+
+div.panel-header>span.title {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    font-size: 1.175rem;
+    margin: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    line-height: 3rem;
+    color: #e7f4fa;
+    padding: 0 20px;
+    position: relative;
+    font-weight: 400;
+}
+
+.panel-header.panel-header-lighten>span.title{
+    color: #366398;
+}
+
+.panel-content {
+    padding: 0.5rem 1rem 1rem 1rem;
+}
+
+.panel-content.no-padding{
+    padding: 0;
+}
+
+.panel-footer {
+    background: #ffffff;
+    min-height: 3rem;
+    border-top: 1px solid rgba(0, 0, 0, .15);
+    padding: .75rem .75rem;
+    border-radius: 0 0 10px 10px;
+}
+
+/**************** MENU ******************/
+aside > div > ul.menu > li > a.active {
+    background-color: #ffffff !important;
+    color: #355b86 !important;
+    font-weight: 500;
+    -webkit-box-shadow: 1px 1px 8px 0 rgb(62 44 90 / 5%);
+    box-shadow: 1px 1px 8px 0 rgb(62 44 90 / 5%);
+}
+
+/************* TOP BAR ICON *************/
+.icon-transition {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+  
+.icon-open {
+    transform: rotate(0deg);
+    opacity: 1;
+}
+
+.icon-close {
+    transform: rotate(90deg); 
+    opacity: 1;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
+
+/************* RESPONSIVE TABLE GRID *************/
+table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+td.action-buttons{
+    display: contents;
+}
+
+table.table-grid tr {
+    transition: box-shadow .3s ease;
+}
+
+table.table-grid tr:hover {
+    box-shadow: 0 0 3px rgba(190, 190, 190, 0.8);
+}
+
+table.table-grid td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #ccc;
+}
+table.table-grid th {
+    background: #f2f6f8;
+    padding: 10px 8px;
+    color:#4b4d53
+}
+
+@media only screen and  (max-width: 760px) {
+
+    td, tr { display: flow-root; }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        border: 1px solid #b7d3ef;
+        /*box-shadow: 1px 1px 3px rgba(116, 113, 113, 0.5);*/
+        border-radius: 5px;
+    }
+
+    tr + tr { margin-top: 1.5em; }
+
+    td{
+        padding: 10px 8px;
+    }
+    table.table-grid td {
+        /* make like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        text-align: left;
+    }
+
+    td:before {
+        content: attr(data-label);
+        display: inline-block;
+        font-weight: 500;
+        color: #4b4d53;
+        line-height: 1.5;
+        margin-left: -100%;
+        width: 60%;
+        white-space: nowrap;
+    }
+}
+
+/**
+ * Correct the padding in Firefox.
+ */
+ fieldset {
+    padding: 0.35em 0.95em 0.9em;
+    border: 1px solid #dfdcdc
+  }
+  
+  /**
+   * 1. Correct the text wrapping in Edge and IE.
+   * 2. Correct the color inheritance from `fieldset` elements in IE.
+   * 3. Remove the padding so developers are not caught out when they zero out
+   *    `fieldset` elements in all browsers.
+   */
+  legend {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box; /* 1 */
+    color: #909090; /* 2 */
+    font-size: 90%;
+    display: table; /* 1 */
+    max-width: 100%; /* 1 */
+    padding: 0 5px; /* 3 */
+    white-space: normal; /* 1 */
+  }

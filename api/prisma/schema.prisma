@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Accounts {
+  userId      Int     @id @default(autoincrement()) @map("user_id")
+  user        String  @unique
+  name        String
+  email       String  @unique
+  password    String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime? @map("updated_at")
+
+  @@map("accounts")
+}
+
+model Categories {
+  categoryId    Int @id @default(autoincrement()) @map("category_id")
+  category      String
+  url           String
+  icon          String
+  remoteUrl     String @map("remote_url")
+  expiry        Int
+
+  Products      Products[]
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+  
+  @@map("categories")
+}
+
+model Products {
+  productId     Int   @id @default(autoincrement()) @map("product_id")
+  categoryId    Int   @map("catecoty_id")
+  Category      Categories @relation(fields: [categoryId], references: [categoryId])
+  name          String
+  url           String
+  price         Int
+  image         String
+  remoteUrl     String @map("remote_url")
+  expiry        Int
+  description   String?
+  isBestSeller  Boolean @map("best_seller") @default(false)
+  isNew         Boolean @map("is_new") @default(false)
+  visible       Boolean @default(true)
+  Features      Features[]
+  Types         ProductTypes[]
+  
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+
+  @@map("products")
+}
+
+model ProductTypes {
+  typeId        Int @id @default(autoincrement()) @map("type_id")
+  productId     Int @map("product_id")
+  Product       Products @relation(fields: [productId], references: [productId])
+  name          String
+  image         String
+  remoteUrl     String @map("remote_url")
+  expiry        Int
+  visible       Boolean @default(true)
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+
+  @@map("product_type")
+}
+
+model Features {
+  featureId     Int   @id @default(autoincrement()) @map("feature_id")
+  productId     Int   @map("product_id")
+  Product       Products @relation(fields: [productId], references: [productId])
+  title         String
+  content       String
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+
+  @@map("features")
+}

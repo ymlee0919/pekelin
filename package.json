@@ -1,0 +1,36 @@
+{
+  "name": "photos",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"npm run dev-api\" \"npm run dev-admin\"",
+    "dev-api": "cd api && npm run start:dev",
+    "dev-admin": "cd admin && npm run dev",
+	
+	"build": "concurrently \"npm run build-api\" \"npm run build-admin\"",
+	"build-api": "cd api && npm run build",
+    "build-admin": "cd admin && npm run build",
+	
+	"deploy": "npm run deploy-index && npm run deploy-assets",
+	"deploy-index": "del client\\apps\\admin\\view\\index.html && copy admin\\dist\\index.html client\\apps\\admin\\view\\index.html",
+	"deploy-assets": "del client\\public\\assets\\index*.*  && copy admin\\dist\\assets\\* client\\public\\assets\\",
+	
+	"start": "concurrently \"npm run start-client\" \"npm run start-api\"",
+	"start-client": "cd client && node ./bin/www",
+	"start-api": "cd api && node dist/main"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ymlee0919/photos.git"
+  },
+  "keywords": [],
+  "author": "Yuriesky Mendez Lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ymlee0919/photos/issues"
+  },
+  "homepage": "https://github.com/ymlee0919/photos#readme",
+  "description": "Sample project for photography studio",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

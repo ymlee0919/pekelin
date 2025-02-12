@@ -1,0 +1,3 @@
+- Make an object for manage the routes and the components
+
+- Load dashboard information and refresh with each change is made

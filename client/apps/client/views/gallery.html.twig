@@ -1,0 +1,57 @@
+{% extends "base.html.twig" %}
+{% set page='gallery' %}
+{% block title %}Galería{% endblock %}
+
+{% block content %}
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container text-center py-5 my-5">
+            <div class="text-white mb-4 animated slideInDown">
+                <h1 class="display-3 text-white">Galería</h1>
+                <p class="display-7 text-white mb-4 animated slideInDown">Echa un vistazo a algunas de nuestras sesiones más memorables.</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Gallery Start -->
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            
+            <section id="main-carousel" class="splide gallery-carousel" aria-label="Muestra de Nuestro Trabajo">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        {% for image in images %}
+                            <li class="splide__slide">
+                                <img class="bg-white shadow p-1 mx-auto mb-3" src="{{ statics }}images/gallery/{{ image.imageUrl }}" style="height: 400px; width: auto;">
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+            <div class="mt-3 p-3 secondary-bg rounded-5 shadow-sm">
+                <section id="thumbnail-carousel" class="splide thumbnail-carousel" aria-label="The carousel thumbnails">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            {% for image in images %}
+                                <li class="splide__slide">
+                                    <img src="{{ statics }}images/gallery/{{ image.imageUrl }}" alt="">
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!-- Gallery End -->
+
+    {% include "./sections/reserve.html.twig" %}
+    
+{% endblock %}
+
+{% block js %}
+<script src="lib/splide/js/splide.min.js"></script>
+<script src="js/gallery.js"></script>
+{% endblock %}
