@@ -3,7 +3,11 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { CommonProps } from "../../types/Common";
 import { MdImageSearch } from "react-icons/md";
 
-type CategoryFromValues = { category: string; file: FileList; };
+type CategoryFromValues = { 
+	category: string; 
+	description: string; 
+	file: FileList;
+};
 
 export interface NewServiceDialogProps extends CommonProps {
     onChange: (data: FormData) => void;
@@ -33,6 +37,7 @@ const NewCategoryDialog = forwardRef( (props: NewServiceDialogProps, ref) => {
             formData.append('image', file[0]);
         }
 		formData.append('category', data.category);
+		formData.append('description', data.description);
         props.onChange(formData);           
     };
 
@@ -78,6 +83,29 @@ const NewCategoryDialog = forwardRef( (props: NewServiceDialogProps, ref) => {
 							{errors.category && (
 								<div className="label">
 									<span className="label-text text-red-500 text-sm">{errors.category.message}</span>
+								</div>
+							)}
+						</label>
+						<label className="form-control w-full max-w-xs">
+							<div className="label">
+								<span className="label-text">Description</span>
+							</div>
+							<input
+								{...register("description", {
+									required: 'The description name is required',
+									minLength: {
+										value: 10,
+										message: "The description name must contains 10 characters minimun",
+									},
+								})}
+								type="text"
+								placeholder="Description"
+								className="input input-bordered w-full max-w-xs"
+							/>
+
+							{errors.description && (
+								<div className="label">
+									<span className="label-text text-red-500 text-sm">{errors.description.message}</span>
 								</div>
 							)}
 						</label>

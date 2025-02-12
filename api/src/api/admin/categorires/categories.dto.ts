@@ -5,4 +5,9 @@ export class CategoryDTO {
     @IsNotEmpty()
     @MinLength(3)
     readonly category: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @MinLength(10)
+    readonly description: string;
 }

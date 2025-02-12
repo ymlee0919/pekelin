@@ -160,7 +160,7 @@ const Categories = () => {
 									</figure>
 									<div className="card-body">
 										<h2 className="card-title">{category.category}</h2>
-										<p>Products:</p>
+										<p>{category.description}</p>
 										<div className="card-actions justify-end">
 											<button
 												data-img={category.categoryId}

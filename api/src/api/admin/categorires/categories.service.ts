@@ -5,6 +5,7 @@ import { InvalidOperationError } from "src/api/common/errors/invalid.error";
 import { name2url } from "src/services/utils/string.utils";
 import { ImageSrc } from "src/api/common/types/common.types";
 import { CategoryInfo, CreatedCategory, UpdatedCategory } from "./categories.types";
+import { CategoryDTO } from "./categories.dto";
 
 /**
  * Service for categories
@@ -13,7 +14,7 @@ import { CategoryInfo, CreatedCategory, UpdatedCategory } from "./categories.typ
 export class CategoriesService {
 
     private static defaultSelection = {
-        categoryId: true, category: true, url: true, icon: true, remoteUrl: true, expiry: true
+        categoryId: true, category: true, description: true, url: true, icon: true, remoteUrl: true, expiry: true
     }
     
     /**
@@ -55,27 +56,28 @@ export class CategoriesService {
     /**
      * Add new category to database
      * 
-     * @param category New category name
+     * @param category New category
      * @param image Image (Local, remote & expiry)
      * @returns True if success, otherwise throw an exception
      */
-    async addCategory(category: string, image: ImageSrc) : Promise<CreatedCategory>
+    async addCategory(category: CategoryDTO, image: ImageSrc) : Promise<CreatedCategory>
     {
         // Validate if new category exists
-        let exists = await this.existsCategory(category);
+        let exists = await this.existsCategory(category.category);
         if(exists)
-            throw new InvalidOperationError(`The category ${category} already exists`);
+            throw new InvalidOperationError(`The category ${category.category} already exists`);
 
         console.log(image);
 
         // Create the newone
         let created = await this.database.categories.create({
             data : {
-                category: category,
+                category: category.category,
+                description: category.description,
                 icon: image.local,
                 remoteUrl: image.remote,
                 expiry: image.expiryRemote,
-                url: name2url(category)
+                url: name2url(category.category)
             }, select : {
                 createdAt: true, ...CategoriesService.defaultSelection
             }
@@ -88,11 +90,11 @@ export class CategoriesService {
      * Update the category information
      * 
      * @param categoryId Service id to update
-     * @param newCategoryName New category name
+     * @param newCategory New category
      * @param newImage New image
      * @returns True if value is updated
      */
-    async updateCategory(categoryId: number, newCategoryName: string, newImage?: ImageSrc) : Promise<UpdatedCategory> 
+    async updateCategory(categoryId: number, newCategory: CategoryDTO, newImage?: ImageSrc) : Promise<UpdatedCategory> 
     {
         let currentService = await this.database.categories.findFirst({where : {
             categoryId : categoryId
@@ -103,15 +105,16 @@ export class CategoriesService {
             throw new InvalidOperationError('The category you want to update do not exist');
 
         // Validate the new category name do not exists
-        if(currentService.category.toLowerCase() != newCategoryName.toLowerCase()){
-            let exists = await this.existsCategory(newCategoryName);
+        if(currentService.category.toLowerCase() != newCategory.category.toLowerCase()){
+            let exists = await this.existsCategory(newCategory.category);
             if(exists)
-                throw new InvalidOperationError(`The category ${newCategoryName} already exists`);
+                throw new InvalidOperationError(`The category ${newCategory.category} already exists`);
         }
 
         let data : Partial<UpdatedCategory> = {
-            category: newCategoryName,
-            url: name2url(newCategoryName),
+            category: newCategory.category,
+            description: newCategory.description,
+            url: name2url(newCategory.category),
             updatedAt: new Date()
         };
 

@@ -28,6 +28,7 @@ model Accounts {
 model Categories {
   categoryId    Int @id @default(autoincrement()) @map("category_id")
   category      String
+  description   String @default("No description")
   url           String
   icon          String
   remoteUrl     String @map("remote_url")

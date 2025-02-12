@@ -61,7 +61,7 @@ export class CategoriesController {
                 expiryRemote: Date.now() / 60000 + 72000
             }
 
-            let created = await this.manager.addCategory(category.category, image);
+            let created = await this.manager.addCategory(category, image);
             return created;
         } catch (error) {
             // Delete the uploaded images
@@ -95,7 +95,7 @@ export class CategoriesController {
             if(file)
                 remoteUrl = await this.cloudService.uploadFile(fileName);
 
-            let updated = await this.manager.updateCategory(categoryId, category.category, (!!file) ? {
+            let updated = await this.manager.updateCategory(categoryId, category, (!!file) ? {
                 local: fileName, remote: remoteUrl, expiryRemote: Date.now() + 72000 * 60000
             } : null);
 

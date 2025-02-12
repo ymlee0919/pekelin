@@ -2,6 +2,7 @@
 export interface CategoryContent {
 	categoryId: number;
 	category: string;
+	description: string;
 	icon: string;
 	url: string;
 	remoteUrl: string;
