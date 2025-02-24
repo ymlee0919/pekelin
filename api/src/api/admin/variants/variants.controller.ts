@@ -24,6 +24,7 @@ import { FileService } from 'src/services/files/file.services';
 import { CloudService } from 'src/services/cloud/cloud.service';
 import { ImageSrc } from 'src/api/common/types/common.types';
 import { plainToInstance } from 'class-transformer';
+import { CropPngFilePipe } from 'src/services/pipes/crop.PngFile.pipe';
 
 @Controller('api/products')
 export class VariantsController {
@@ -67,7 +68,7 @@ export class VariantsController {
         @Param('productId', ParseIntPipe) productId: number,
         @UploadedFile(
             new ParseFilePipe({ fileIsRequired: true}),
-            new CropJpgFilePipe(multerConfig.localProductsDest, 500, 500)
+            new CropPngFilePipe(multerConfig.localProductsDest)
         ) file: string,
         @Body() body: any
     ): Promise<CreatedVariant>{
@@ -115,7 +116,7 @@ export class VariantsController {
         @Body() body: any,
         @UploadedFile( 
             new ParseFilePipe({ fileIsRequired: false}),
-            new CropJpgFilePipe(multerConfig.localProductsDest, 500, 500)
+            new CropPngFilePipe(multerConfig.localProductsDest)
     ) file?: string) : Promise<UpdatedVariant> 
     {
 

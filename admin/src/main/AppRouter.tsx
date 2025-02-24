@@ -49,11 +49,11 @@ const AppRouter = createBrowserRouter([
 				element: <ProductVariants />,
 			},
 			{
-				path: "/products/:id/variants/new",
+				path: "/products/:productId/variants/new",
 				element: <NewVariant />,
 			},
 			{
-				path: "/products/:id/variants/:variant/edit",
+				path: "/products/:productId/variants/:variantId/edit",
 				element: <EditVariant />,
 			},
 		],

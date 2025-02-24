@@ -1,8 +1,13 @@
 import { EventResult } from "../../../types/Events";
-import { ProductFeature } from "./Products.Types";
 
 export enum FeatureStatus {
 	Original, New, Updated, Deleted
+}
+
+export interface IFeature {
+	featureId: number;
+    title: string;
+    content: string;
 }
 
 export interface IProductFeature {
@@ -16,12 +21,12 @@ export class ProductFeaturesList {
 
 	private _list: Array<IProductFeature>;
 
-	constructor(initialList: Array<ProductFeature> | null = null) 
+	constructor(initialList: Array<IFeature> | null = null) 
 	{	
 		if(!initialList)
 			this._list = new Array<IProductFeature>();
 		else
-			this._list = initialList.map((item: ProductFeature) => {
+			this._list = initialList.map((item: IFeature) => {
 				return {
 					featureId: item.featureId,
 					status: FeatureStatus.Original,

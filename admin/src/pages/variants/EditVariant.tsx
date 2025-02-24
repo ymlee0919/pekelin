@@ -9,14 +9,15 @@ import ProductFeatures from "../features/ProductFeatures";
 import toast from "react-hot-toast";
 import useStores from "../../hooks/useStores";
 import { EmptyEvent } from "../../types/Events";
-import { ProductForm } from "../../store/remote/products/Products.Types";
 
 import { MdImageSearch } from "react-icons/md";
-import { CategoryContent } from "../../store/remote/categories/Categories.Types";
+
 import { StoreStatus } from "../../store/remote/Store";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
-
+import { VariantForm } from "../../store/remote/variants/Variants.Types";
+import { useSelector } from 'react-redux'; 
+import { RootState } from "../../store/local/store"; 
 
 let features: ProductFeaturesList = new ProductFeaturesList();
 
@@ -27,6 +28,8 @@ const EditVariant = () => {
 
     let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
     let [image, setImage] = useState<string>("");
+    const [item, setItems] = useState<number>(0);
+    const product = useSelector((state: RootState) => state.currentProduct.product);
 
     const stores = useStores();
     const navigate = useNavigate();
@@ -34,23 +37,17 @@ const EditVariant = () => {
 	const params = useParams();
     
     const {register, 
-		clearErrors, 
-		setError, 
 		setValue, 
 		watch, 
 		reset, 
 		handleSubmit, 
-		formState: { errors }} = useForm<ProductForm & { items: number }>();
+		formState: { errors }} = useForm<VariantForm>();
 
     const [preview, setPreview] = useState<string | null>(null);
 	const file = watch("image");
     
     const onItemsUpdated = () => {
-        setValue("items", refFeatures.current.list.length);
-        if(refFeatures.current.list.length > 0)
-            clearErrors("items");
-        else
-            setError("items", { message: "The product must have at least one feature" });
+        setItems(Date.now());
     }
 
     const submitRef = useRef<EmptyEvent>();
@@ -59,21 +56,19 @@ const EditVariant = () => {
         stores.categoryStore.load(null).then(
             (newPreStatus: StoreStatus) => { 
                 if(newPreStatus == StoreStatus.READY) {
-                    stores.singleProductsStore.load({productId: parseInt(params.id ?? '0')})
-                        .then( (newStatus : StoreStatus) => {
-                            if(stores.singleProductsStore.content)
+                    stores.singleVariantStore.load({
+                        productId: parseInt(params.productId ?? '0'),
+                        variantId: parseInt(params.variantId ?? '0'),
+                    }).then( (newStatus : StoreStatus) => {
+                            if(stores.singleVariantStore.content)
                             {
-                                refFeatures.current = new ProductFeaturesList(stores.singleProductsStore.content.Features);
-                                setImage(stores.singleProductsStore.content.remoteUrl);
-                                setValue("categoryId", stores.singleProductsStore.content.categoryId);
-                                setValue("name", stores.singleProductsStore.content.name);
-                                setValue("price", stores.singleProductsStore.content.price);
-                                setValue("basePrice", stores.singleProductsStore.content.basePrice);
-                                setValue("description", stores.singleProductsStore.content.description);
-                                setValue("isBestSeller", stores.singleProductsStore.content.isBestSeller);
-                                setValue("isNew", stores.singleProductsStore.content.isNew);
-                                setValue("visible", stores.singleProductsStore.content.visible);
-                                setValue("items", stores.singleProductsStore.content.Features.length);
+                                refFeatures.current = new ProductFeaturesList(stores.singleVariantStore.content.Features);
+                                setImage(stores.singleVariantStore.content.remoteUrl);
+                                setValue("name", stores.singleVariantStore.content.name);
+                                setValue("description", stores.singleVariantStore.content.description);
+                                setValue("isBestSeller", stores.singleVariantStore.content.isBestSeller);
+                                setValue("isNew", stores.singleVariantStore.content.isNew);
+                                setValue("visible", stores.singleVariantStore.content.visible);
                             }
                                 
                             setStatus(newStatus);
@@ -91,7 +86,7 @@ const EditVariant = () => {
 			submitRef.current = handleSubmit(onSumbit);
         
         // Unmount the component and create a new offer info for new page
-        return () => {stores.singleProductsStore.release()}
+        return () => {stores.singleVariantStore.release()}
     }, []);
 
     useEffect(() => {
@@ -118,13 +113,13 @@ const EditVariant = () => {
 		return () => { stores.categoryStore.release() }
 	}, []);
 
-    const onSumbit = async (data: ProductForm) => {
+    const onSumbit = async (data: VariantForm) => {
         // Append information
         const formData = new FormData(); 
         
         for (const key in data) {
             if (data.hasOwnProperty(key) && key != 'image' && key != 'items') {
-                formData.append(key, data[key as keyof ProductForm] as string);
+                formData.append(key, data[key as keyof VariantForm] as string);
             }
         }
         
@@ -138,8 +133,12 @@ const EditVariant = () => {
         formData.append('features', JSON.stringify(refFeatures.current.list));
 
         // Send to backend
-        let loadingToast = toast.loading("Updating product...");
-		let result = await stores.productsStore.update(params.id ?? '0', formData);
+        let loadingToast = toast.loading("Updating product variant...");
+		let result = await stores.variantsStore.update(
+            product?.productId || 0, 
+            params.variantId ?? '0', 
+            formData
+        );
 		toast.dismiss(loadingToast);
 
 		if (result.success) {
@@ -154,7 +153,8 @@ const EditVariant = () => {
         <Breadcrumbs pages={[
             { url: '/', label: 'Dashboard' },
             { url: '/products', label: 'Products' },
-            { url: '.', label: stores.singleProductsStore.content?.name || 'Product' },
+            { url: '.', label: product?.name || 'Product' },
+            { url: `/products/${product?.productId}/variants`, label: 'Variants' },
             { url: '.', label: 'Editar' },
         ]} />
 
@@ -249,70 +249,6 @@ const EditVariant = () => {
                                         </label>
                                     </div>
 
-                                    <div className="w-full md:w-5/12 sm:w-5/12">
-                                        <label className="form-control w-full max-w-xs">
-                                            <div className="label">
-                                                <span className="label-text">Category</span>
-                                            </div>
-                                            <select 
-                                                {...register("categoryId")} 
-                                                className="select select-bordered w-full max-w-xs"
-                                            >
-                                                    {stores.categoryStore.content?.map((category: CategoryContent) => {
-                                                        return <option key={category.categoryId} value={category.categoryId}>{category.category}</option>
-                                                    })}
-                                            </select>
-                                        </label>
-                                    </div>
-
-                                    <div className="w-full md:w-3/12 sm:w-6/12">
-                                        <label className="form-control w-full">
-                                            <div className="label">
-                                                <span className="label-text">Base price</span>
-                                            </div>
-                                            <input 
-                                                type="number" 
-                                                placeholder="Basic product price" 
-                                                className="input input-bordered w-full max-w-xs"
-                                                {...register("basePrice", {
-                                                    required: "The base price is required", 
-                                                    valueAsNumber: true,
-                                                    min: {
-                                                        value: 1, message: 'The product must cost more than $1'}
-                                                    }
-                                                )}  
-                                            />
-                                            {errors.basePrice && 
-                                                <div className="label">
-                                                    <span className="label-text text-red-500 text-sm">{errors.basePrice.message}</span>
-                                                </div>}
-                                        </label>
-                                    </div>
-
-                                    <div className="w-full md:w-3/12 sm:w-6/12">
-                                        <label className="form-control w-full">
-                                            <div className="label">
-                                                <span className="label-text">Price</span>
-                                            </div>
-                                            <input 
-                                                type="number" 
-                                                placeholder="Selling price" 
-                                                className="input input-bordered w-full max-w-xs"
-                                                {...register("price", {
-                                                    required: "The selling price is required", 
-                                                    valueAsNumber: true,
-                                                    min: {
-                                                        value: 1, message: 'The product must cost more than $1'}
-                                                    }
-                                                )}  
-                                            />
-                                            {errors.price && 
-                                                <div className="label">
-                                                    <span className="label-text text-red-500 text-sm">{errors.price.message}</span>
-                                                </div>}
-                                        </label>
-                                    </div>
-
                                     <div className="w-full">
                                         <label className="form-control w-full">
                                             <div className="label">
@@ -382,26 +318,12 @@ const EditVariant = () => {
                                 </div>                  
                             </div>
                         </div>
-                        <input 
-                            type="hidden" 
-                            className="hidden"
-                            {...register("items", {
-                                required: true, 
-                                valueAsNumber: true,
-                                min: {
-                                    value: 1, message: 'The product must have at least one feature'}
-                                }
-                            )}
-                        />
+                        
                     </form>
                     <br></br>
 
                     <ProductFeatures features={refFeatures} onUpdate={onItemsUpdated} />
-                    
-                    {errors.items && 
-                        <div className="label">
-                            <span className="label-text text-red-500 text-sm">{errors.items.message}</span>
-                        </div>}
+
                 </div>
                 <div className="panel-footer text-right">
                     <button 

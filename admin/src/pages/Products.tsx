@@ -153,7 +153,7 @@ const Products = () => {
 														<td data-label="Selling price">$ {product.price}</td>
 														<td data-label="Variants">
 															{product.variants} 
-															<NavLink to={`/products/${product.productId}/edit`} className="btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none">
+															<NavLink to={`/products/${product.productId}/variants`} className="btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none">
 																<MdEdit />
 															</NavLink>
 														</td>

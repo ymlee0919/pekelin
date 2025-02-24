@@ -50,6 +50,7 @@ export interface UpdatedVariant extends BasicVariant {
 export interface VariantForm {
     name: string;
     description?: string;
+    image: FileList;
     isBestSeller: boolean;
     isNew: boolean;
     visible: boolean;
