@@ -4,12 +4,14 @@ import NotFound from "./NotFound";
 import Layout from "./Layout";
 
 import Home from "../pages/Home";
-import Offers from "../pages/Offers"
-import NewOffer from "../pages/offer/NewOffer";
-import EditOffer from "../pages/offer/EditOffer";
+import Products from "../pages/Products";
+import NewProduct from "../pages/products/NewProduct";
+import EditProduct from "../pages/products/EditProduct";
 import Accounts from "../pages/Accounts";
-import CopyOffer from "../pages/offer/CopyOffer";
 import Categories from "../pages/Categories";
+import ProductVariants from "../pages/ProductVariants";
+import NewVariant from "../pages/variants/NewVariant";
+import EditVariant from "../pages/variants/EditVariant";
 
 const AppRouter = createBrowserRouter([
 	{
@@ -31,20 +33,28 @@ const AppRouter = createBrowserRouter([
 				element: <Categories />,
 			},
 			{
-				path: "/offers",
-				element: <Offers />,
+				path: "/products",
+				element: <Products />,
 			},
 			{
-				path: "/offers/new",
-				element: <NewOffer />,
+				path: "/products/new",
+				element: <NewProduct />,
 			},
 			{
-				path: "/offers/:id/edit",
-				element: <EditOffer />,
+				path: "/products/:id/edit",
+				element: <EditProduct />,
 			},
 			{
-				path: "/offers/:id/copy",
-				element: <CopyOffer />,
+				path: "/products/:productId/variants",
+				element: <ProductVariants />,
+			},
+			{
+				path: "/products/:id/variants/new",
+				element: <NewVariant />,
+			},
+			{
+				path: "/products/:id/variants/:variant/edit",
+				element: <EditVariant />,
 			},
 		],
 	},

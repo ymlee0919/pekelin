@@ -1,21 +1,21 @@
 import { useRef, useImperativeHandle, forwardRef } from "react";
-import { CommonProps } from "../../../types/Common";
+import { CommonProps } from "../../types/Common";
 import { useForm } from "react-hook-form";
-import { IOfferItem } from "../../../store/remote/offers/OfferInfo";
+import { IProductFeature } from "../../store/remote/products/ProductFeatures";
 import toast from "react-hot-toast";
-import { EventResult } from "../../../types/Events";
+import { EventResult } from "../../types/Events";
 
-export interface NewOfferItemDialogProps extends CommonProps {
-    onChange: (item:string, details?:string) => EventResult;
+export interface NewFeatureDialogProps extends CommonProps {
+    onChange: (title:string, content?:string) => EventResult;
 }
 
-const NewOfferItemDialog = forwardRef( (props : NewOfferItemDialogProps, ref) => {
+const NewFeatureDialog = forwardRef( (props : NewFeatureDialogProps, ref) => {
 
     let modalRef = useRef<HTMLDialogElement>(null);
 
-    const {register, reset, handleSubmit, formState: { errors }} = useForm<IOfferItem>({
+    const {register, reset, handleSubmit, formState: { errors }} = useForm<IProductFeature>({
         defaultValues: {
-            itemName: '', itemDetails: ''
+            title: '', content: ''
         }
     });
 
@@ -28,8 +28,8 @@ const NewOfferItemDialog = forwardRef( (props : NewOfferItemDialogProps, ref) =>
         }
     });
 
-    let onSubmit = (data: IOfferItem) => {
-        let result = props.onChange(data.itemName, data.itemDetails);
+    let onSubmit = (data: IProductFeature) => {
+        let result = props.onChange(data.title, data.content);
         if(result.success)
             modalRef.current?.close();
         else {
@@ -42,31 +42,31 @@ const NewOfferItemDialog = forwardRef( (props : NewOfferItemDialogProps, ref) =>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<dialog ref={modalRef} className="modal">
 					<div className="modal-box">
-						<h3 className="font-bold text-lg">New offer element</h3>
+						<h3 className="font-bold text-lg">New product feature</h3>
 						<label className="form-control w-full max-w-xs">
 							<div className="label">
-								<span className="label-text">Offer element</span>
+								<span className="label-text">Feature title</span>
 							</div>
 							<input
-								{...register("itemName", { required: true })}
+								{...register("title", { required: "The feature title is required" })}
 								type="text"
 								placeholder="Offer element"
 								className="input input-bordered w-full max-w-xs"
 							/>
-							{errors.itemName && (
+							{errors.title && (
 								<div className="label">
-									<span className="label-text text-red-500 text-sm">The offer is required</span>
+									<span className="label-text text-red-500 text-sm">{errors.title.message}</span>
 								</div>
 							)}
 						</label>
 						<label className="form-control w-full min-w-full">
 							<div className="label">
-								<span className="label-text">Details</span>
+								<span className="label-text">Feature content</span>
 							</div>
 							<input
-								{...register("itemDetails")}
+								{...register("content")}
 								type="text"
-								placeholder="Offer details [Optional]"
+								placeholder="Feature content [Optional]"
 								className="input input-bordered w-full min-w-full"
 							/>
 						</label>
@@ -85,4 +85,4 @@ const NewOfferItemDialog = forwardRef( (props : NewOfferItemDialogProps, ref) =>
 	);
 });
 
-export default NewOfferItemDialog;
+export default NewFeatureDialog;

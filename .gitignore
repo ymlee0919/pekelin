@@ -11,3 +11,4 @@ client/.env
 node_modules/
 
 docs.txt
+TODO.txt

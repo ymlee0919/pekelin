@@ -15,6 +15,7 @@ CREATE TABLE "accounts" (
 CREATE TABLE "categories" (
     "category_id" SERIAL NOT NULL,
     "category" TEXT NOT NULL,
+    "description" TEXT NOT NULL DEFAULT 'No description',
     "url" TEXT NOT NULL,
     "icon" TEXT NOT NULL,
     "remote_url" TEXT NOT NULL,
@@ -28,8 +29,10 @@ CREATE TABLE "categories" (
 -- CreateTable
 CREATE TABLE "products" (
     "product_id" SERIAL NOT NULL,
-    "catecoty_id" INTEGER NOT NULL,
+    "category_id" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "base_price" INTEGER NOT NULL DEFAULT 0,
     "price" INTEGER NOT NULL,
     "image" TEXT NOT NULL,
     "remote_url" TEXT NOT NULL,
@@ -45,22 +48,7 @@ CREATE TABLE "products" (
 );
 
 -- CreateTable
-CREATE TABLE "ProductTypes" (
-    "type_id" SERIAL NOT NULL,
-    "product_id" INTEGER NOT NULL,
-    "name" TEXT NOT NULL,
-    "image" TEXT NOT NULL,
-    "remote_url" TEXT NOT NULL,
-    "expiry" INTEGER NOT NULL,
-    "visible" BOOLEAN NOT NULL DEFAULT true,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3),
-
-    CONSTRAINT "ProductTypes_pkey" PRIMARY KEY ("type_id")
-);
-
--- CreateTable
-CREATE TABLE "features" (
+CREATE TABLE "product_features" (
     "feature_id" SERIAL NOT NULL,
     "product_id" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
@@ -68,7 +56,35 @@ CREATE TABLE "features" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
-    CONSTRAINT "features_pkey" PRIMARY KEY ("feature_id")
+    CONSTRAINT "product_features_pkey" PRIMARY KEY ("feature_id")
+);
+
+-- CreateTable
+CREATE TABLE "product_variants" (
+    "variant_id" SERIAL NOT NULL,
+    "product_id" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "image" TEXT NOT NULL,
+    "remote_url" TEXT NOT NULL,
+    "expiry" INTEGER NOT NULL,
+    "visible" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+
+    CONSTRAINT "product_variants_pkey" PRIMARY KEY ("variant_id")
+);
+
+-- CreateTable
+CREATE TABLE "variants_features" (
+    "feature_id" SERIAL NOT NULL,
+    "variant_id" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+
+    CONSTRAINT "variants_features_pkey" PRIMARY KEY ("feature_id")
 );
 
 -- CreateIndex
@@ -78,10 +94,13 @@ CREATE UNIQUE INDEX "accounts_user_key" ON "accounts"("user");
 CREATE UNIQUE INDEX "accounts_email_key" ON "accounts"("email");
 
 -- AddForeignKey
-ALTER TABLE "products" ADD CONSTRAINT "products_catecoty_id_fkey" FOREIGN KEY ("catecoty_id") REFERENCES "categories"("category_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "products" ADD CONSTRAINT "products_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "categories"("category_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProductTypes" ADD CONSTRAINT "ProductTypes_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("product_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "product_features" ADD CONSTRAINT "product_features_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("product_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "features" ADD CONSTRAINT "features_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("product_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "product_variants" ADD CONSTRAINT "product_variants_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("product_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "variants_features" ADD CONSTRAINT "variants_features_variant_id_fkey" FOREIGN KEY ("variant_id") REFERENCES "product_variants"("variant_id") ON DELETE RESTRICT ON UPDATE CASCADE;

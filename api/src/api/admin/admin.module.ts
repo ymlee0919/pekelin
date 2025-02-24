@@ -9,7 +9,8 @@ import { ProductsModule } from './products/products.module';
 import { ApplicationModule } from './app/application.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
-import { CategoriesModule } from './categorires/categories.module';
+import { CategoriesModule } from './categories/categories.module';
+import { VariantsModule } from './variants/variants.module';
 
 @Module({
 	imports: [
@@ -17,7 +18,8 @@ import { CategoriesModule } from './categorires/categories.module';
 		AccountsModule, 
 		AuthModule,
 		ApplicationModule,
-		ProductsModule, 
+		ProductsModule,
+		VariantsModule,
 		CategoriesModule,
 		JwtModule.register({
 			global: true,

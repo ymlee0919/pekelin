@@ -15,8 +15,8 @@ import { useDispatch } from "react-redux";
 import { CategoryContent } from "../store/remote/categories/Categories.Types";
 import { setCategories } from "../store/local/slices/globalSlice";
 
-interface HTMLEditServiceDialogElement extends HTMLDialogElement {
-    showDialog : (service: string) => void;
+interface HTMLEditCategoryDialogElement extends HTMLDialogElement {
+    showDialog : (category: string, description: string) => void;
 }
 
 const Categories = () => {
@@ -26,31 +26,31 @@ const Categories = () => {
     let [selected, setSelected] = useState<CategoryContent | undefined>(undefined);
     
     let addModalRef = useRef<HTMLDialogElement>();
-    let updateModalRef = useRef<HTMLEditServiceDialogElement>();
+    let updateModalRef = useRef<HTMLEditCategoryDialogElement>();
     let deleteModalRef = useRef<HTMLDialogElement>();
 
     const stores = useStores();
 
-    let selectService = (categoryId: number | string) : CategoryContent | undefined => {
+    let selectCategory = (categoryId: number | string) : CategoryContent | undefined => {
         let id = (typeof categoryId == "string") ? parseInt(categoryId) : categoryId;
-        let service = stores.categoryStore.get(id);
-        setSelected(service);
-        return service;
+        let category = stores.categoryStore.get(id);
+        setSelected(category);
+        return category;
     }
 
     let handleEditBtnClick = (e : MouseEvent<HTMLButtonElement>) => {
-        let selected = selectService(e.currentTarget.getAttribute('data-img') ?? '0');
-        updateModalRef.current?.showDialog(selected?.category || '');
+        let selected = selectCategory(e.currentTarget.getAttribute('data-img') ?? '0');
+        updateModalRef.current?.showDialog(selected?.category || '', selected?.description || '');
     }
 
     let handleDeleteBtnClick = (e : MouseEvent<HTMLButtonElement>) => {
-        selectService(e.currentTarget.getAttribute('data-img') || '0');
+        selectCategory(e.currentTarget.getAttribute('data-img') || '0');
         deleteModalRef.current?.showModal()
     }
 
     const reload = () => {
         setStatus(StoreStatus.LOADING);
-        selectService(0);
+        selectCategory(0);
         
         stores.categoryStore.load(null).then(
             (newStatus: StoreStatus) => {
@@ -96,7 +96,7 @@ const Categories = () => {
         }
     }
 
-    let deleteService = async () => {
+    let deleteCategory = async () => {
         if(selected) {
             let loadingToast = toast.loading("Deleting category...");
             let result = await stores.categoryStore.delete(selected.categoryId);
@@ -187,15 +187,15 @@ const Categories = () => {
 
 					<UpdateCategoryDialog
 						ref={updateModalRef}
-						imageUrl={selected?.icon}
+						imageUrl={selected?.remoteUrl}
 						onChange={updateCategory}
 					/>
 
 					<DeleteCategoryDialog
 						ref={deleteModalRef}
 						category={selected?.category}
-						imageUrl={selected?.icon}
-						onChange={deleteService}
+						imageUrl={selected?.remoteUrl}
+						onChange={deleteCategory}
 					/>
 				</>
 			) : (

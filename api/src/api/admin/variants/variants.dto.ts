@@ -1,56 +1,20 @@
 import { IsBoolean, IsDefined, IsEnum, IsInt, IsNotEmpty, IsString, MinLength, ValidateNested } from "class-validator";
-import { FeatureStatus } from "./products.types";
 import { Transform, Type } from 'class-transformer';
+import { FeatureDTO } from "../products/products.dto";
 
-export class FeatureDTO {
-
-    @IsDefined({message:'Unable to take a feature'})
-    @IsNotEmpty()
-    @IsInt()
-    featureId: number;
-
-    @IsDefined({message:'Unable to take a feature'})
-    @IsNotEmpty()
-    @IsEnum(FeatureStatus)
-	status: FeatureStatus;
-
-    @IsDefined()
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(3, { message : 'The title of a feature must be at least 3 characters lenght'})
-    title: string;
-
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(3, { message : 'The feature of a product must be at least 3 characters lenght'})
-    content: string;
-}
-
-export class ProductDTO {
+export class VariantDTO {
     
     @IsDefined()
     @IsNotEmpty()
     @IsInt()
     @Transform(({ value }) => parseInt(value.toString()))
-    categoryId: number;
+    productId: number;
 
     @IsDefined()
     @IsNotEmpty()
     @IsString()
     @MinLength(3, {message: 'The name of a product must be at least 3 characters lenght'})
     name: string;
-
-    @IsDefined()
-    @IsNotEmpty()
-    @IsInt()
-    @Transform(({ value }) => parseInt(value.toString()))
-    price: number;
-
-    @IsDefined()
-    @IsNotEmpty()
-    @IsInt()
-    @Transform(({ value }) => parseInt(value.toString()))
-    basePrice: number;
 
     @IsString()
     @MinLength(10, {message: 'You must provide more than 10 characters for description'})

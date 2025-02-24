@@ -44,10 +44,11 @@ model Categories {
 
 model Products {
   productId     Int   @id @default(autoincrement()) @map("product_id")
-  categoryId    Int   @map("catecoty_id")
+  categoryId    Int   @map("category_id")
   Category      Categories @relation(fields: [categoryId], references: [categoryId])
   name          String
   url           String
+  basePrice     Int @default(0) @map("base_price")
   price         Int
   image         String
   remoteUrl     String @map("remote_url")
@@ -56,8 +57,8 @@ model Products {
   isBestSeller  Boolean @map("best_seller") @default(false)
   isNew         Boolean @map("is_new") @default(false)
   visible       Boolean @default(true)
-  Features      Features[]
-  Types         ProductTypes[]
+  Features      ProductFeatures[]
+  Variants      ProductVariants[]
   
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime? @map("updated_at")
@@ -65,23 +66,7 @@ model Products {
   @@map("products")
 }
 
-model ProductTypes {
-  typeId        Int @id @default(autoincrement()) @map("type_id")
-  productId     Int @map("product_id")
-  Product       Products @relation(fields: [productId], references: [productId])
-  name          String
-  image         String
-  remoteUrl     String @map("remote_url")
-  expiry        Int
-  visible       Boolean @default(true)
-
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime? @map("updated_at")
-
-  @@map("product_type")
-}
-
-model Features {
+model ProductFeatures {
   featureId     Int   @id @default(autoincrement()) @map("feature_id")
   productId     Int   @map("product_id")
   Product       Products @relation(fields: [productId], references: [productId])
@@ -91,5 +76,40 @@ model Features {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime? @map("updated_at")
 
-  @@map("features")
+  @@map("product_features")
+}
+
+model ProductVariants {
+  variantId     Int @id @default(autoincrement()) @map("variant_id")
+  productId     Int @map("product_id")
+  Product       Products @relation(fields: [productId], references: [productId])
+  name          String
+  description   String?
+  image         String
+  remoteUrl     String @map("remote_url")
+  expiry        Int
+  
+  isBestSeller  Boolean @map("best_seller") @default(false)
+  isNew         Boolean @map("is_new") @default(false)
+  visible       Boolean @default(true)
+
+  Features      VariantsFeatures[]
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+
+  @@map("product_variants")
+}
+
+model VariantsFeatures {
+  featureId     Int   @id @default(autoincrement()) @map("feature_id")
+  variantId     Int   @map("variant_id")
+  Variants      ProductVariants @relation(fields: [variantId], references: [variantId])
+  title         String
+  content       String
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+
+  @@map("variants_features")
 }

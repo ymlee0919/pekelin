@@ -1,23 +1,23 @@
 import { useRef, useImperativeHandle, forwardRef} from "react";
-import { IOfferItem } from "../../../store/remote/offers/OfferInfo";
+import { IProductFeature } from "../../store/remote/products/ProductFeatures";
 import { useForm } from "react-hook-form";
-import { EventResult } from "../../../types/Events";
+import { EventResult } from "../../types/Events";
 import toast from "react-hot-toast";
-import { CommonProps } from "../../../types/Common";
+import { CommonProps } from "../../types/Common";
 
-interface EditOfferItemDialogProps extends CommonProps {
-    onChange: (item: string, details?: string) => EventResult;
+export interface EditFeatureDialogProps extends CommonProps {
+    onChange: (title:string, content?:string) => EventResult;
 }
 
-export interface HTMLEditOfferDialogElement extends HTMLDialogElement {
-    setValues : (value: IOfferItem | null) => void;
+export interface HTMLEditFeatureDialogElement extends HTMLDialogElement {
+    setValues : (value: IProductFeature | null) => void;
 }
 
-const EditOfferItemDialog  = forwardRef((props : EditOfferItemDialogProps, ref) => {
+const EditOfferItemDialog  = forwardRef((props : EditFeatureDialogProps, ref) => {
 
     let modalRef = useRef<HTMLDialogElement>(null);
     
-    const {register, setValue, handleSubmit, formState: { errors }} = useForm<IOfferItem>();
+    const {register, setValue, handleSubmit, formState: { errors }} = useForm<IProductFeature>();
 
     useImperativeHandle(ref, () => {
         return {
@@ -25,15 +25,15 @@ const EditOfferItemDialog  = forwardRef((props : EditOfferItemDialogProps, ref) 
                 if(!!modalRef.current)
                     modalRef.current.showModal();
             },
-            setValues: (value: IOfferItem) => {
-                setValue("itemName", value.itemName);
-                setValue("itemDetails", value.itemDetails);
+            setValues: (value: IProductFeature) => {
+                setValue("title", value.title);
+                setValue("content", value.content);
             }
         }
     });
 
-    let onSubmit = (data: IOfferItem) => {
-        let result = props.onChange(data.itemName, data.itemDetails);
+    let onSubmit = (data: IProductFeature) => {
+        let result = props.onChange(data.title, data.content);
         if(result.success)
             modalRef.current?.close();
         else {
@@ -49,28 +49,28 @@ const EditOfferItemDialog  = forwardRef((props : EditOfferItemDialogProps, ref) 
 						<h3 className="font-bold text-lg">Update offer element</h3>
 						<label className="form-control w-full max-w-xs">
 							<div className="label">
-								<span className="label-text">Offer element</span>
+								<span className="label-text">Feature title</span>
 							</div>
 							<input
-								{...register("itemName", { required: true })}
+								{...register("title", { required: "The feature title is required" })}
 								type="text"
 								placeholder="Offer element"
 								className="input input-bordered w-full max-w-xs"
 							/>
-							{errors.itemName && (
+							{errors.title && (
 								<div className="label">
-									<span className="label-text text-red-500 text-sm">The offer is required</span>
+									<span className="label-text text-red-500 text-sm">{errors.title.message}</span>
 								</div>
 							)}
 						</label>
 						<label className="form-control w-full min-w-full">
 							<div className="label">
-								<span className="label-text">Details</span>
+								<span className="label-text">Feature content</span>
 							</div>
 							<input
-								{...register("itemDetails")}
+								{...register("content")}
 								type="text"
-								placeholder="Offer details [Optional]"
+								placeholder="Feature content [Optional]"
 								className="input input-bordered w-full min-w-full"
 							/>
 						</label>

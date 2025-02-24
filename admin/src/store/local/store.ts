@@ -1,10 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import globalReducer from './slices/globalSlice';
+import currentProductReducer from './slices/productSlice';
+
+const rootReducer = combineReducers({
+  global: globalReducer,
+  currentProduct: currentProductReducer,
+});
 
 const localStore = configureStore({
-  reducer: {
-    global: globalReducer,
-  },
+  reducer: rootReducer
 });
 
 export default localStore;

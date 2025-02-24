@@ -1,0 +1,102 @@
+import { EventResult } from "../../../types/Events";
+import { Store } from "../Store";
+import HttpProductsProvider from "./Products.HttpProvider";
+import { BasicProductInfo, CreatedProduct, Product, UpdatedProduct } from "./Products.Types";
+
+export interface ProductSearch {
+	productId: number;
+}
+
+export class SingleProductStore extends Store<Product, ProductSearch> {
+	private _provider: HttpProductsProvider;
+
+	constructor() {
+		super();
+		this._provider = new HttpProductsProvider();
+	}
+
+	protected get provider(): HttpProductsProvider {
+		return this._provider as HttpProductsProvider;
+	}
+
+	protected async getData(params: ProductSearch): Promise<Product> {
+		let info = await this.provider.get(params.productId);
+		return info;
+	}
+}
+
+export class ProductsStore extends Store<Array<BasicProductInfo>> {
+	private _provider: HttpProductsProvider;
+
+	constructor() {
+		super();
+		this._provider = new HttpProductsProvider();
+	}
+
+	protected get provider(): HttpProductsProvider {
+		return this._provider as HttpProductsProvider;
+	}
+
+	protected async getData(): Promise<Array<BasicProductInfo>> {
+		return await this.provider.load();
+	}
+
+	async create(offer: FormData): Promise<EventResult<CreatedProduct | null>> {
+		try {
+			let created = await this.provider.createProduct(offer);
+
+			return {
+				success: true,
+				message: "Product successfully created",
+				info: created
+			};
+		} catch (error) {
+			return {
+				success: false,
+				errorCode: this.provider.lastErrorCode ?? 0,
+				message: String(error),
+			};
+		}
+	}
+
+	async update(
+		productId: string | number, 
+		newProduct: FormData
+	): Promise<EventResult<UpdatedProduct | null >> {
+		try {
+			let id = typeof productId == "string" ? parseInt(productId) : productId;
+			let updated = await this.provider.updateProduct(id, newProduct);
+
+			return {
+				success: true,
+				message: "Product successfully updated",
+				info: updated
+			};
+		} catch (error) {
+			return {
+				success: false,
+				errorCode: this.provider.lastErrorCode ?? 0,
+				message: String(error),
+			};
+		}
+	}
+
+	async delete(productId: string | number): Promise<EventResult> {
+		try {
+			let id = typeof productId == "string" ? parseInt(productId) : productId;
+			await this.provider.deleteProduct(id);
+
+			return {
+				success: true,
+				message: "Product successfully deleted",
+			};
+		} catch (error) {
+			return {
+				success: false,
+				errorCode: this.provider.lastErrorCode ?? 0,
+				message: String(error),
+			};
+		}
+	}
+}
+

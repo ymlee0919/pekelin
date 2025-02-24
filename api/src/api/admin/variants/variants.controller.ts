@@ -13,9 +13,9 @@ import { BadRequestException,
     UploadedFile,
     ParseFilePipe
 } from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { CreatedProduct, UpdatedProduct, Product, BasicProductInfo } from "./products.types";
-import { ProductDTO } from './products.dto';
+import { VariantsService } from './variants.service';
+import { CreatedVariant, UpdatedVariant, BasicVariant, BasicVariantInfo, Variant } from "./variants.types";
+import { VariantDTO } from './variants.dto';
 import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig, MulterMemoryOptions } from 'src/services/files/multer.options';
@@ -26,52 +26,51 @@ import { ImageSrc } from 'src/api/common/types/common.types';
 import { plainToInstance } from 'class-transformer';
 
 @Controller('api/products')
-export class ProductsController {
+export class VariantsController {
 
     constructor(
-        private readonly manager: ProductsService,
+        private readonly manager: VariantsService,
         private readonly fileService: FileService,
         private readonly cloudService: CloudService
     ){}
 
-    @Get('/list')
+    @Get(':productId/variants')
     @HttpCode(HttpStatus.OK)
-    async getList(): Promise<Array<BasicProductInfo>>{
-        let result = await this.manager.getList();
+    async getList(
+        @Param('productId', ParseIntPipe) productId: number
+    ): Promise<Array<BasicVariant>>{
+        let result = await this.manager.getList(productId);
         return result ?? [];
     }
 
-    @Get('/full')
+    @Get(':productId/variants/:variantId')
     @HttpCode(HttpStatus.OK)
-    async getFullList(): Promise<Array<Product>>{
-        let result = await this.manager.getFullList();
-        return result ?? [];
-    }
-
-    @Get('/:id')
-    @HttpCode(HttpStatus.OK)
-    async get(@Param('id', ParseIntPipe) productId: number): Promise<Product>{
-        let product = await this.manager.get(productId);
-        if(!!product)
-            return product;
+    async get(
+        @Param('productId', ParseIntPipe) productId: number,
+        @Param('variantId', ParseIntPipe) variantId: number
+    ): Promise<Variant>{
+        let variant = await this.manager.get(productId, variantId);
+        if(!!variant)
+            return variant;
 
         throw new BadRequestException({
             success: false,
             errorCode: HttpStatus.BAD_REQUEST,
-            message: 'Unable to find the requested product'
+            message: 'Unable to find the requested variant'
         })
     }
 
-    @Post('/')
+    @Post(':productId/variants')
     @HttpCode(HttpStatus.CREATED)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
     async create(
+        @Param('productId', ParseIntPipe) productId: number,
         @UploadedFile(
             new ParseFilePipe({ fileIsRequired: true}),
             new CropJpgFilePipe(multerConfig.localProductsDest, 500, 500)
         ) file: string,
         @Body() body: any
-    ): Promise<CreatedProduct>{
+    ): Promise<CreatedVariant>{
         let fileName = `${multerConfig.productsDest}${file}`;
 
         try {
@@ -87,13 +86,13 @@ export class ProductsController {
             // Deserialize the features field
             const features = JSON.parse(body.features);
             // Create the DTO object
-            const product = plainToInstance(ProductDTO, {
+            const variant = plainToInstance(VariantDTO, {
                 ...body,
                 features
             });
 
-            let createdProduct = await this.manager.createProduct(product, image);
-            return createdProduct;
+            let createdVariant = await this.manager.createVariant(productId, variant, image);
+            return createdVariant;
         } catch (error) {
             // Delete the uploaded images
             this.fileService.deleteFile(fileName);
@@ -107,16 +106,17 @@ export class ProductsController {
         }
     }
 
-    @Put('/:productId')
+    @Put(':productId/variants/:variantId')
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
     async updateImage(
         @Param('productId', ParseIntPipe) productId: number,
+        @Param('variantId', ParseIntPipe) variantId: number,
         @Body() body: any,
         @UploadedFile( 
             new ParseFilePipe({ fileIsRequired: false}),
             new CropJpgFilePipe(multerConfig.localProductsDest, 500, 500)
-    ) file?: string) : Promise<UpdatedProduct> 
+    ) file?: string) : Promise<UpdatedVariant> 
     {
 
        let fileName = (!!file) ? `${multerConfig.categoriesDest}${file}` : null;
@@ -131,12 +131,12 @@ export class ProductsController {
             // Deserialize the features field
             const features = JSON.parse(body.features);
             // Create the DTO object
-            const product = plainToInstance(ProductDTO, {
+            const product = plainToInstance(VariantDTO, {
                 ...body,
                 features
             });
 
-            let updated = await this.manager.updateProduct(productId, product, (!!file) ? {
+            let updated = await this.manager.updateVariant(productId, variantId, product, (!!file) ? {
                 local: fileName, remote: remoteUrl, expiryRemote: Math.round(Date.now() / 1000) + 72000
             } : null);
 
@@ -158,13 +158,14 @@ export class ProductsController {
         }
     }
 
-    @Delete('/:id')
+    @Delete(':productId/variants/:variantId')
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(
-        @Param('id', ParseIntPipe) productId: number
+        @Param('productId', ParseIntPipe) productId: number,
+        @Param('variantId', ParseIntPipe) variantId: number,
     ): Promise<void>{
         try {
-            let deleted = await this.manager.deleteProduct(productId);
+            let deleted = await this.manager.deleteVariant(productId, variantId);
             if (deleted) {
                 // Delete the uploaded images
                 this.fileService.deleteFile(deleted.image);

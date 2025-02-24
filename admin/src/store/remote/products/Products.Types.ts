@@ -1,15 +1,8 @@
-export enum FeatureStatus {
-    Original, New, Updated, Deleted
-}
-
-export interface BasicFeature {
-    title: string;
-    content: string;
-}
-
-export interface Feature extends BasicFeature {
+export interface ProductFeature {
     featureId: number;
     productId: number;
+    title: string;
+    content: string;
 }
 
 export interface ProductCategory {
@@ -24,7 +17,6 @@ export interface BasicProductInfo {
     basePrice: number;
     variants: number;
     remoteUrl: string;
-    isBestSeller: boolean;
     isNew: boolean;
     visible: boolean;
 }
@@ -38,7 +30,6 @@ export interface BasicProduct {
     basePrice: number;
     image: string;
     remoteUrl: string;
-    expiry: number;
     description?: string;
     isBestSeller: boolean;
     isNew: boolean;
@@ -46,7 +37,7 @@ export interface BasicProduct {
 }
 
 export interface Product extends BasicProduct {
-    Features: Array<Feature>;
+    Features: Array<ProductFeature>;
     Category: ProductCategory;
 }
 
@@ -56,4 +47,17 @@ export interface CreatedProduct extends BasicProduct {
 
 export interface UpdatedProduct extends BasicProduct {
     updatedAt: Date;
+}
+
+export interface ProductForm {
+	categoryId: number;
+    name: string;
+    image: FileList;
+    price: number;
+    basePrice: number;
+    description?: string;
+    isBestSeller: boolean;
+    isNew: boolean;
+    visible: boolean;
+	Features: Array<ProductFeature>;
 }

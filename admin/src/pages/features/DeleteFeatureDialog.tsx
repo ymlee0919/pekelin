@@ -1,14 +1,14 @@
 import { useRef, useImperativeHandle, forwardRef } from "react";
-import { CommonProps } from "../../../types/Common";
+import { CommonProps } from "../../types/Common";
 import toast from "react-hot-toast";
-import { EventResult } from "../../../types/Events";
+import { EventResult } from "../../types/Events";
 
-export interface DeleteOfferItemDialogProps extends CommonProps {
-    offerLabel: string;
+export interface DeleteFeatureDialogProps extends CommonProps {
+    feature: string;
     onChange: () => EventResult;
 }
 
-const DeleteOfferItemDialog = forwardRef( (props : DeleteOfferItemDialogProps, ref) => {
+const DeleteFeatureDialog = forwardRef( (props : DeleteFeatureDialogProps, ref) => {
 
     let modalRef = useRef<HTMLDialogElement>(null);
 
@@ -33,11 +33,11 @@ const DeleteOfferItemDialog = forwardRef( (props : DeleteOfferItemDialogProps, r
     return <>
         <dialog ref={modalRef} className="modal">
             <div className="modal-box">
-                <h3 className="font-bold text-lg">Delete offer element</h3>
+                <h3 className="font-bold text-lg">Delete product feature</h3>
                 <br></br>
-                <p className="italic">{props.offerLabel}</p>
+                <p className="italic">{props.feature}</p>
                 <br></br>
-                <p>Are you sure you want to delete the selected offer item?</p>
+                <p>Are you sure you want to delete the selected product feature?</p>
                 <div className="modal-action">
                     <a className="btn btn-info btn-sm mr-5" onClick={onDelete}>Yes, delete</a>
                     <a className="btn btn-sm" onClick={()=>modalRef.current?.close()}>No, close</a>
@@ -47,4 +47,4 @@ const DeleteOfferItemDialog = forwardRef( (props : DeleteOfferItemDialogProps, r
     </>
 });
 
-export default DeleteOfferItemDialog;
+export default DeleteFeatureDialog;

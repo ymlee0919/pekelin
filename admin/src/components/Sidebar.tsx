@@ -49,7 +49,7 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 						</NavLink>
 					</li>
 					<li>
-						<NavLink to="/offers" className="group text-sm text-gray-500 p-3 my-1">
+						<NavLink to="/products" className="group text-sm text-gray-500 p-3 my-1">
 							<span>
 								<MdBusinessCenter className="text-xl" />
 							</span>

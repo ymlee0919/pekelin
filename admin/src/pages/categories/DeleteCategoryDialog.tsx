@@ -34,19 +34,21 @@ const DeleteCategoryDialog = forwardRef( (props: DeleteServiceDialogProps, ref) 
 				<dialog ref={modalRef} className="modal">
 					<div className="modal-box">
 						<h3 className="font-bold text-lg">Delete category</h3>
-						<label className="form-control w-full max-w-xs">
-							<div className="label">
-								<span className="label-text">{props.category}</span>
+						<div className="flex gap-2 py-3">
+							<div >
+								<div className="avatar">
+									<div className="w-32 rounded">
+										<img
+											src={props.imageUrl}
+										/>
+									</div>
+								</div>
 							</div>
-						</label>
-						<div className="avatar">
-							<div className="w-32 rounded">
-								<img
-									src={props.imageUrl && `http://localhost:3000/images/categories/${props.imageUrl}`}
-								/>
+							<div className="flex-1 content-start">
+								<span className="text-xl">{props.category}</span>
 							</div>
 						</div>
-
+						
 						<p>Are you sure you want to delete this category?</p>
 						<div className="modal-action">
 							<button type="submit" className="btn btn-error btn-sm mr-5">
