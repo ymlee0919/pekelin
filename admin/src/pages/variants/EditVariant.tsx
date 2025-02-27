@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MdOutlineCheck, MdClose } from "react-icons/md";
 import { useForm } from "react-hook-form";
 
@@ -18,6 +18,8 @@ import Error from "../../components/Error";
 import { VariantForm } from "../../store/remote/variants/Variants.Types";
 import { useSelector } from 'react-redux'; 
 import { RootState } from "../../store/local/store"; 
+import { setCurrentProduct } from "../../store/local/slices/productSlice";
+import { useDispatch } from "react-redux"; 
 
 let features: ProductFeaturesList = new ProductFeaturesList();
 
@@ -31,15 +33,18 @@ const EditVariant = () => {
     const [item, setItems] = useState<number>(0);
     const product = useSelector((state: RootState) => state.currentProduct.product);
 
-    const stores = useStores();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const stores = useStores();
     const refFeatures = useRef<ProductFeaturesList>(features);
-	const params = useParams();
+	
+    const params = useParams();
+    const productId = parseInt(params.productId ?? '0');
+    const variantId = parseInt(params.variantId ?? '0');
     
     const {register, 
 		setValue, 
 		watch, 
-		reset, 
 		handleSubmit, 
 		formState: { errors }} = useForm<VariantForm>();
 
@@ -52,43 +57,50 @@ const EditVariant = () => {
 
     const submitRef = useRef<EmptyEvent>();
 
-    useEffect(() => {
-        stores.categoryStore.load(null).then(
-            (newPreStatus: StoreStatus) => { 
-                if(newPreStatus == StoreStatus.READY) {
-                    stores.singleVariantStore.load({
-                        productId: parseInt(params.productId ?? '0'),
-                        variantId: parseInt(params.variantId ?? '0'),
-                    }).then( (newStatus : StoreStatus) => {
-                            if(stores.singleVariantStore.content)
-                            {
-                                refFeatures.current = new ProductFeaturesList(stores.singleVariantStore.content.Features);
-                                setImage(stores.singleVariantStore.content.remoteUrl);
-                                setValue("name", stores.singleVariantStore.content.name);
-                                setValue("description", stores.singleVariantStore.content.description);
-                                setValue("isBestSeller", stores.singleVariantStore.content.isBestSeller);
-                                setValue("isNew", stores.singleVariantStore.content.isNew);
-                                setValue("visible", stores.singleVariantStore.content.visible);
-                            }
-                                
-                            setStatus(newStatus);
-                        })
-                } else {
-                    setStatus(newPreStatus);
-                }
-                
-            }
-        );
+    const handleGoBack = () => {
+        // Navigate to the previous URL
+        navigate(-1);
+    };
 
+    const loadVariant = () => {
+        stores.singleVariantStore.load({ productId, variantId})
+            .then( (newStatus : StoreStatus) => {
+                if(stores.singleVariantStore.content)
+                {
+                    refFeatures.current = new ProductFeaturesList(stores.singleVariantStore.content.Features);
+                    setImage(stores.singleVariantStore.content.remoteUrl);
+                    setValue("name", stores.singleVariantStore.content.name);
+                    setValue("description", stores.singleVariantStore.content.description);
+                    setValue("isBestSeller", stores.singleVariantStore.content.isBestSeller);
+                    setValue("isNew", stores.singleVariantStore.content.isNew);
+                    setValue("visible", stores.singleVariantStore.content.visible);
+                }
+                setStatus(newStatus);
+            })
+    }
+
+    // Page initialization
+    useEffect(() => {
+        if(!!product && product.productId == productId)
+			loadVariant();
+		else {
+			stores.singleProductsStore.load({ productId }).then(
+				(status: StoreStatus) => {
+					if(status == StoreStatus.READY && stores.singleProductsStore.content) {
+						dispatch(setCurrentProduct(stores.singleProductsStore.content));
+						loadVariant();
+					}
+				}
+			);
+		}
         
-		
-			reset();
-			submitRef.current = handleSubmit(onSumbit);
+        submitRef.current = handleSubmit(onSumbit);
         
         // Unmount the component and create a new offer info for new page
         return () => {stores.singleVariantStore.release()}
     }, []);
 
+    // File preview treatment
     useEffect(() => {
         if (file && file.length > 0) {
             const selectedFile = file[0];
@@ -103,15 +115,6 @@ const EditVariant = () => {
             }
         }
     }, [file]);
-
-    useEffect(() => {
-		stores.categoryStore.load(null).then(
-            (newStatus: StoreStatus) => { 
-                setStatus(newStatus);
-            }
-        );
-		return () => { stores.categoryStore.release() }
-	}, []);
 
     const onSumbit = async (data: VariantForm) => {
         // Append information
@@ -143,7 +146,7 @@ const EditVariant = () => {
 
 		if (result.success) {
 			toast.success(result.message);
-            navigate('/products');
+            navigate(-1);
 		} else {
 			toast.error(result.message);
 		}
@@ -153,19 +156,20 @@ const EditVariant = () => {
         <Breadcrumbs pages={[
             { url: '/', label: 'Dashboard' },
             { url: '/products', label: 'Products' },
-            { url: '.', label: product?.name || 'Product' },
+            { url: `/products/${product?.productId}`, label: product?.name || 'Product' },
             { url: `/products/${product?.productId}/variants`, label: 'Variants' },
-            { url: '.', label: 'Editar' },
+            { url: '.', label: stores.singleVariantStore.content?.name  ?? ''},
+            { url: '.', label: 'Edit'},
         ]} />
 
         {status == StoreStatus.LOADING ? <Loading /> : ''}
-        {status == StoreStatus.ERROR ? <Error text={stores.productsStore.lastError} /> : ''}
+        {status == StoreStatus.ERROR ? <Error text={stores.variantsStore.lastError} /> : ''}
         { status == StoreStatus.READY ? 
            
             /* Main component */
             <div className="panel">
                 <div className="panel-header">
-                    <span className="title">New product</span>
+                    <span className="title" data-features={item}>Variant {stores.singleVariantStore.content?.name} of {product?.name}</span>
                 </div>
                 <div className="panel-content">
                     <form>
@@ -333,9 +337,9 @@ const EditVariant = () => {
                     >
                         <MdOutlineCheck className="text-xl" />Update
                     </button>
-                    <NavLink to='/products' className="btn bg-base-300 btn-sm mt-0">
+                    <a href="#" onClick={handleGoBack} className="btn bg-base-300 btn-sm mt-0">
                         <MdClose className="text-xl" /> Cancel
-                    </NavLink>
+                    </a>
                 </div>
             </div>
             /* END of Main component */

@@ -12,6 +12,7 @@ import Categories from "../pages/Categories";
 import ProductVariants from "../pages/ProductVariants";
 import NewVariant from "../pages/variants/NewVariant";
 import EditVariant from "../pages/variants/EditVariant";
+import ProductInfo from "../pages/products/ProductInfo";
 
 const AppRouter = createBrowserRouter([
 	{
@@ -43,6 +44,10 @@ const AppRouter = createBrowserRouter([
 			{
 				path: "/products/:id/edit",
 				element: <EditProduct />,
+			},
+			{
+				path: "/products/:productId",
+				element: <ProductInfo />,
 			},
 			{
 				path: "/products/:productId/variants",

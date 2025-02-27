@@ -39,7 +39,16 @@ export class ProductsService {
                         Variants: true
                     }
                 }
-            }
+            },
+            orderBy: [{
+                Category : {
+                    categoryId: 'asc'
+                } }, {
+                    name: 'asc'
+                }
+            ]
+                
+            
         });
         
         // Format the result to match the desired output
@@ -213,6 +222,27 @@ export class ProductsService {
         });
 
         return updated;
+    }
+
+    async changeVisibility(productId: number) : Promise<UpdatedProduct> {
+        // Validate the selected product already exists
+        let product = await this.database.products.findFirst({
+            where: { productId },
+            select: { productId: true, visible: true}
+        });
+
+        if(!product)
+            throw new NotFoundException("The selected product do not exists");
+
+        let record = await this.database.products.update({
+            where: { productId }, 
+            data : {
+                visible: !product.visible,
+                updatedAt: new Date()
+            }
+        });
+
+        return record;
     }
 
     async deleteProduct(productId: number) : Promise<BasicProduct>{

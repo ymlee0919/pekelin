@@ -19,7 +19,7 @@ export class AppService {
      */
     constructor(
         private readonly database:DatabaseService
-    ){}
+    ){ }
 
     /**
      * Get general app information

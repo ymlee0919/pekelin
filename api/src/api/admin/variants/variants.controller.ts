@@ -11,7 +11,8 @@ import { BadRequestException,
     Put,
     UseInterceptors,
     UploadedFile,
-    ParseFilePipe
+    ParseFilePipe,
+    Patch
 } from '@nestjs/common';
 import { VariantsService } from './variants.service';
 import { CreatedVariant, UpdatedVariant, BasicVariant, BasicVariantInfo, Variant } from "./variants.types";
@@ -120,7 +121,7 @@ export class VariantsController {
     ) file?: string) : Promise<UpdatedVariant> 
     {
 
-       let fileName = (!!file) ? `${multerConfig.categoriesDest}${file}` : null;
+       let fileName = (!!file) ? `${multerConfig.productsDest}${file}` : null;
 
         try {
             let remoteUrl : string | null = null;
@@ -151,6 +152,27 @@ export class VariantsController {
                 this.cloudService.deleteFile(fileName);
             }
 
+            // Treat the error
+            if(error instanceof InvalidOperationError){
+                throw new BadRequestException(error.message);
+            }
+            throw new BadRequestException(error);
+        }
+    }
+
+    @Patch('/:productId/variants/:variantId/view')
+    @HttpCode(HttpStatus.OK)
+    async changeVisibility(
+        @Param('productId', ParseIntPipe) productId: number,
+        @Param('variantId', ParseIntPipe) variantId: number
+        ) : Promise<UpdatedVariant> 
+    {
+        try {
+            
+            let updated = await this.manager.changeVisibility(productId, variantId);
+            return updated;
+        } 
+        catch (error) {
             // Treat the error
             if(error instanceof InvalidOperationError){
                 throw new BadRequestException(error.message);

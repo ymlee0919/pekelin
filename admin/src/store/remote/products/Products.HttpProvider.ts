@@ -43,6 +43,15 @@ export default class ProductsHttpProvider extends AxiosProvider<Array<BasicProdu
 		return null;
 	}
 
+	async changeVisibility(productId: number): Promise<boolean> {
+		try {
+			await HttpProvider.patch<null, any>(`/products/${productId}/view`);
+		} catch (error: any) {
+			this.handleError(error, "Unable to update the product");
+		}
+		return true;
+	}
+
 	async deleteProduct(productId: number): Promise<boolean> {
 		try {
 			await HttpProvider.delete<null, any>(`/products/${productId}`);

@@ -81,6 +81,24 @@ export class ProductsStore extends Store<Array<BasicProductInfo>> {
 		}
 	}
 
+	async changeVisibility(productId: string | number): Promise<EventResult> {
+		try {
+			let id = typeof productId == "string" ? parseInt(productId) : productId;
+			await this.provider.changeVisibility(id);
+
+			return {
+				success: true,
+				message: "Product successfully updated",
+			};
+		} catch (error) {
+			return {
+				success: false,
+				errorCode: this.provider.lastErrorCode ?? 0,
+				message: String(error),
+			};
+		}
+	}
+
 	async delete(productId: string | number): Promise<EventResult> {
 		try {
 			let id = typeof productId == "string" ? parseInt(productId) : productId;

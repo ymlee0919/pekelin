@@ -48,7 +48,7 @@ export class VariantsService {
 
     async get(productId: number, variantId: number) : Promise<Variant | null> {
         let result =  await this.database.productVariants.findFirst({
-            where: {productId}, 
+            where: {productId, variantId}, 
             include : {
                 Product: true,
                 Features: true
@@ -166,6 +166,28 @@ export class VariantsService {
         return updated;
     }
 
+    async changeVisibility(productId: number, variantId: number) : Promise<UpdatedVariant> {
+        
+        // Validate the selected variant already exists
+        let variant = await this.database.productVariants.findFirst({
+            where: { productId, variantId },
+            select: { variantId: true, visible: true}
+        });
+
+        if(!variant)
+            throw new NotFoundException("The selected variant do not exists");
+
+        let record = await this.database.productVariants.update({
+            where: { variantId }, 
+            data : {
+                visible: !variant.visible,
+                updatedAt: new Date()
+            }
+        });
+
+        return record;
+    }
+
     async deleteVariant(productId: number, variantId: number) : Promise<BasicVariant>{
 
         // Validate variant exists
@@ -175,7 +197,7 @@ export class VariantsService {
             }
         });
 
-        if(!!count)
+        if(!count)
             throw new InvalidOperationError('The product variant you want to delete do not exsits.')
 
         let deleted = await this.database.$transaction(async (database) => {

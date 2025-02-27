@@ -41,12 +41,13 @@ export class ProductFeaturesList {
 	}
 
 	get(featureId:number) : IProductFeature | null {
+		
 		// Find the index of the selected item
 		let index = this._list.findIndex((item) => {
-			return item.featureId === featureId;
+			return item.featureId == featureId;
 		});
 
-		return (index = -1) ? this._list[index] : null;
+		return (index != -1) ? this._list[index] : null;
 	}
 
 	private equals(item1: string, item2: string): boolean {

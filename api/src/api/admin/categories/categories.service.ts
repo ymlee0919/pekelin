@@ -45,7 +45,7 @@ export class CategoriesService {
           where: {
             category: {
               equals: categoryName.toLowerCase(),
-              mode: 'insensitive',
+              //mode: 'insensitive',
             },
           },
         });

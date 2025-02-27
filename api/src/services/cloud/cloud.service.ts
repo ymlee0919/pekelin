@@ -16,8 +16,8 @@ export class CloudService {
 			region: cloudConfig.region,
 			credentials: {
 				accessKeyId: cloudConfig.accessKeyId,
-				secretAccessKey: cloudConfig.secretAccessKey,
-			},
+				secretAccessKey: cloudConfig.secretAccessKey
+			}
 		});
 	}
 

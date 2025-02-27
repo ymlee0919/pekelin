@@ -1,0 +1,39 @@
+.timeline-box {
+    border: none !important;
+}
+
+.timeline-vertical .timeline-full {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 4;
+    align-self: center;
+    justify-self: center;
+}
+.timeline-vertical > li > hr {
+    height: 1.3rem !important;
+}
+
+.footer {
+    padding: 20px 35px;
+    margin-bottom: 0 !important;
+}
+
+.footer-header {
+    text-align: right;
+    padding-bottom: 9px;
+    padding-right: 10px;
+    border-bottom: 1px solid #FFFFFF;
+}
+.footer-item{
+    display: inline-flex;
+    padding: 5px 0;
+}
+
+.footer-icon{
+    font-size: 25px;
+}
+
+.footer-text {
+    padding: 5px;
+}

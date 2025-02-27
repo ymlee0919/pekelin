@@ -18,6 +18,7 @@ export interface BasicProductInfo {
     variants: number;
     remoteUrl: string;
     isNew: boolean;
+    isBestSeller: boolean;
     visible: boolean;
 }
 

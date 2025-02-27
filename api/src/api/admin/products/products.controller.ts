@@ -11,7 +11,8 @@ import { BadRequestException,
     Put,
     UseInterceptors,
     UploadedFile,
-    ParseFilePipe
+    ParseFilePipe,
+    Patch
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreatedProduct, UpdatedProduct, Product, BasicProductInfo } from "./products.types";
@@ -150,6 +151,26 @@ export class ProductsController {
                 this.cloudService.deleteFile(fileName);
             }
 
+            // Treat the error
+            if(error instanceof InvalidOperationError){
+                throw new BadRequestException(error.message);
+            }
+            throw new BadRequestException(error);
+        }
+    }
+
+    @Patch('/:productId/view')
+    @HttpCode(HttpStatus.OK)
+    async changeVisibility(
+        @Param('productId', ParseIntPipe) productId: number,
+        ) : Promise<UpdatedProduct> 
+    {
+        try {
+            
+            let updated = await this.manager.changeVisibility(productId);
+            return updated;
+        } 
+        catch (error) {
             // Treat the error
             if(error instanceof InvalidOperationError){
                 throw new BadRequestException(error.message);

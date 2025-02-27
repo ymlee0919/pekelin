@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MdOutlineCheck, MdClose } from "react-icons/md";
 import { useForm } from "react-hook-form";
 
@@ -15,6 +15,11 @@ import { MdImageSearch } from "react-icons/md";
 import { useSelector } from 'react-redux'; 
 import { RootState } from "../../store/local/store"; 
 import { VariantForm } from "../../store/remote/variants/Variants.Types";
+import { StoreStatus } from "../../store/remote/Store";
+import { setCurrentProduct } from "../../store/local/slices/productSlice";
+import { useDispatch } from "react-redux"; 
+import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 
 let features: ProductFeaturesList = new ProductFeaturesList();
 
@@ -23,8 +28,17 @@ let features: ProductFeaturesList = new ProductFeaturesList();
  */
 const NewVariant = () => {
 
-    const stores = useStores();
+    let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
+    const [preview, setPreview] = useState<string | null>(null);
+    const [item, setItems] = useState<number>(0);
+
+    const params = useParams();
+    const productId = parseInt(params.productId ?? '0');
+
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const stores = useStores();
     const refFeatures = useRef<ProductFeaturesList>(features);
     const product = useSelector((state: RootState) => state.currentProduct.product);
     
@@ -38,17 +52,35 @@ const NewVariant = () => {
         }
     });
 
-    const [preview, setPreview] = useState<string | null>(null);
-    const [item, setItems] = useState<number>(0);
-	const file = watch("image");
-
+    const file = watch("image");
+	
+    
     const submitRef = useRef<EmptyEvent>();
+
     const onItemsUpdated = () => { 
         setItems(Date.now());
     }
 
+    const handleGoBack = () => {
+        // Navigate to the previous URL
+        navigate(-1);
+    };
+
     useEffect(() => {
-        // Unmount the component and create a new offer info for new page
+        if(!product || product.productId != productId) {
+			stores.singleProductsStore.load({ productId }).then(
+				(status: StoreStatus) => {
+					if(status == StoreStatus.READY && stores.singleProductsStore.content) {
+						dispatch(setCurrentProduct(stores.singleProductsStore.content));
+					}
+                    setStatus(status);
+				}
+			);
+		}
+        else {
+            setStatus(StoreStatus.READY);
+        }
+
         reset();
         submitRef.current = handleSubmit(onSumbit)
         return () => { features = new ProductFeaturesList(); refFeatures.current = features; }
@@ -90,7 +122,7 @@ const NewVariant = () => {
 
         // Send to backend
         let loadingToast = toast.loading("Creating product variant...");
-		let result = await stores.variantsStore.create(product?.productId || 0, formData);
+		let result = await stores.variantsStore.create(productId, formData);
 		toast.dismiss(loadingToast);
 
 		if (result.success) {
@@ -105,14 +137,19 @@ const NewVariant = () => {
         <Breadcrumbs pages={[
             { url: '/', label: 'Dashboard' },
             { url: '/products', label: 'Products' },
-            { url: '.', label: product?.name || 'Product' },
+            { url: `/products/${product?.productId}`, label: product?.name || 'Product' },
             { url: `/products/${product?.productId}/variants`, label: 'Variants' },
             { url: '.', label: 'New' },
         ]} />
 
+        {status == StoreStatus.LOADING ? <Loading /> : ''}
+        {status == StoreStatus.ERROR ? <Error text={stores.variantsStore.lastError} /> : ''}
+        { status == StoreStatus.READY ? 
+           
+           /* Main component */
         <div className="panel">
             <div className="panel-header">
-                <span className="title">New variant for {product?.name}</span>
+                <span className="title" data-features={item}>New variant for {product?.name}</span>
             </div>
             <div className="panel-content">
                 <form>
@@ -261,11 +298,14 @@ const NewVariant = () => {
                 >
                     <MdOutlineCheck className="text-xl" />Create
                 </button>
-                <NavLink to={`/products/${product?.productId}/variants`} className="btn bg-base-300 btn-sm mt-0">
+                <a href="#" onClick={handleGoBack} className="btn bg-base-300 btn-sm mt-0">
                     <MdClose className="text-xl" /> Cancel
-                </NavLink>
+                </a>
             </div>
         </div>
+        /* END of Main component */
+        : <></>
+        }
     </>
 }
 

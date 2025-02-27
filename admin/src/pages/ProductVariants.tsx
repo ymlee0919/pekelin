@@ -1,6 +1,6 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
-import { MdDelete, MdOutlineAdd, MdEditSquare } from "react-icons/md";
+import { MdDelete, MdOutlineAdd, MdEditSquare, MdFiberNew, MdOutlineStar, MdOutlineRemoveRedEye } from "react-icons/md";
 
 import useStores from "../hooks/useStores";
 
@@ -11,7 +11,8 @@ import Loading from "../components/Loading";
 import Error  from "../components/Error";
 import toast from "react-hot-toast";
 import { BasicVariantInfo } from "../store/remote/variants/Variants.Types";
-import { Product } from "../store/remote/products/Products.Types";
+import { useSelector } from 'react-redux'; 
+import { RootState } from "../store/local/store"; 
 
 import { setCurrentProduct } from "../store/local/slices/productSlice";
 import { useDispatch } from "react-redux"; 
@@ -21,50 +22,61 @@ const ProductVariants = () => {
     let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
 	let [selected, setSelected] = useState<number|null>(null);
 	let [selectedName, setSelectedName] = useState<string|null>(null);
-	let [product, setProduct] = useState<Product|null>(null);
 
 	const dispatch = useDispatch();
 	const stores = useStores();
 	const params = useParams();
+	const product = useSelector((state: RootState) => state.currentProduct.product);
+	const productId = parseInt(params.productId ?? '0' );
+
 	let modalRef = useRef<HTMLDialogElement>(null);
 
 	let reload = () => {
 		setStatus(StoreStatus.LOADING);
 
-		stores.singleProductsStore.load({ productId: parseInt(params.productId ?? '0' ) }).then(
-			(productStatus: StoreStatus) => { 
-				if(productStatus == StoreStatus.READY) {
-					// Set loaded product
-					if(stores.singleProductsStore.content){
-						setProduct(stores.singleProductsStore.content);
-						dispatch(setCurrentProduct(stores.singleProductsStore.content));
-					}
-					
-					// Set loaded
-					stores.variantsStore.load({
-						productId: parseInt(params.productId ?? '0' )
-					}).then(
-						(newStatus: StoreStatus) => { 
-							setStatus(newStatus);
-						}
-					);
-				}
-				else {
-					setStatus(productStatus);
-				}
+		stores.variantsStore.load({ productId })
+		.then( (newStatus: StoreStatus) => { 
+				setStatus(newStatus);
 			}
 		);
 	}
 
 	useEffect(() => {
-		reload();
+		if(!!product && product.productId == productId)
+			reload();
+		else {
+			stores.singleProductsStore.load({ productId }).then(
+				(status: StoreStatus) => {
+					if(status == StoreStatus.READY && stores.singleProductsStore.content) {
+						dispatch(setCurrentProduct(stores.singleProductsStore.content));
+						reload();
+					}
+				}
+			);
+		}
+
 		return () => { stores.variantsStore.release(); stores.singleProductsStore.release(); }
 	}, []);
+
+	const onChangeView = async () => {
+		if(selected) {
+			let loadingToast = toast.loading("Updating product variant...");
+			let result = await stores.variantsStore.changeVisibility(productId, selected);
+			toast.dismiss(loadingToast);
+
+			if (result.success) {
+				toast.success(result.message);
+				reload();
+			} else {
+				toast.error(result.message);
+			}
+		}
+	}
 
 	const onDelete = async () => {
 		if(selected) {
 			let loadingToast = toast.loading("Deleting product variant...");
-			let result = await stores.variantsStore.delete(params.productId ?? '0', selected);
+			let result = await stores.variantsStore.delete(productId, selected);
 			toast.dismiss(loadingToast);
 
 			if (result.success) {
@@ -75,7 +87,6 @@ const ProductVariants = () => {
 				toast.error(result.message);
 			}
 		}
-			
 	}
 
     return (
@@ -84,7 +95,7 @@ const ProductVariants = () => {
 				pages={[
 					{ url: '/', label: 'Dashboard' },
 					{ url: '/products', label: 'Products' },
-					{ url: '.', label: stores.singleProductsStore.content?.name || 'Product' },
+					{ url: `/products/${product?.productId}`, label: product?.name || 'Product' },
 					{ url: '.', label: 'Variants' },
 				]}
 			/>
@@ -133,6 +144,15 @@ const ProductVariants = () => {
 												<MdDelete /> Delete
 											</a>
 
+											<a
+												className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
+													selected ?? "btn-disabled"
+												}`}
+												onClick={onChangeView}
+											>
+												<MdOutlineRemoveRedEye /> Show/Hide
+											</a>
+
 										</div>
 									</div>
 									<table className="table table-grid">
@@ -160,14 +180,20 @@ const ProductVariants = () => {
 													key={variant.variantId}
 													data-id={variant.variantId}
 													data-label={variant.name}
-													className={`hover ${variant.variantId == selected ? "active" : ""}`}
+													className={`hover ${variant.variantId == selected ? "active" : ""}  ${!variant.visible && 'bg-base-300 line-through'}`}
 													onClick={(e: MouseEvent<HTMLTableRowElement>) => {
 														setSelected(parseInt(e.currentTarget.getAttribute("data-id") ?? "0"))
 														setSelectedName(e.currentTarget.getAttribute("data-label") ?? "-")
 														}}
 													>
 														<td data-label="Image" className="w-20"><img src={variant.remoteUrl} className="w-12"></img></td>
-														<td data-label="Product" >{variant.name}</td>
+														<td data-label="Product" >
+															<div className="flex gap-2">
+																{variant.name} 
+																{variant.isNew && <MdFiberNew className="text-blue-500 text-lg" />} 
+																{variant.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg" />}
+															</div>
+														</td>
 														<td data-label="Description" >{variant.description}</td>
 													</tr>);
 												})

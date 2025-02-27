@@ -46,6 +46,15 @@ export default class VariantsHttpProvider extends AxiosProvider<Array<BasicVaria
 		return null;
 	}
 
+	async changeVisibility(productId: number, variantId: number): Promise<boolean> {
+		try {
+			await HttpProvider.patch<null, any>(`/products/${productId}/variants/${variantId}/view`);
+		} catch (error: any) {
+			this.handleError(error, "Unable to update the product variant");
+		}
+		return true;
+	}
+
 	async deleteVariant(productId: number, variantId: number): Promise<boolean> {
 		try {
 			await HttpProvider.delete<null, any>(`/products/${productId}/variants/${variantId}`);

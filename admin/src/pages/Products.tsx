@@ -1,6 +1,6 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
-import { MdDelete, MdOutlineAdd, MdEditSquare, MdEdit } from "react-icons/md";
+import { NavLink, useNavigate } from "react-router-dom";
+import { MdDelete, MdOutlineAdd, MdEditSquare, MdEdit, MdOutlineStar, MdFiberNew, MdOutlineRemoveRedEye } from "react-icons/md";
 
 import useStores from "../hooks/useStores";
 
@@ -30,6 +30,7 @@ const Products = () => {
 	let [selectedName, setSelectedName] = useState<string|null>(null);
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const stores = useStores();
 	let modalRef = useRef<HTMLDialogElement>(null);
 
@@ -49,10 +50,10 @@ const Products = () => {
 		return () => { stores.productsStore.release() }
 	}, []);
 
-	const onDelete = async () => {
+	const onChangeView = async () => {
 		if(selected) {
-			let loadingToast = toast.loading("Deleting product...");
-			let result = await stores.productsStore.delete(selected);
+			let loadingToast = toast.loading("Updating product...");
+			let result = await stores.productsStore.changeVisibility(selected);
 			toast.dismiss(loadingToast);
 
 			if (result.success) {
@@ -63,7 +64,23 @@ const Products = () => {
 				toast.error(result.message);
 			}
 		}
-			
+	}
+
+	const onDelete = async () => {
+		if(selected) {
+			let loadingToast = toast.loading("Deleting product...");
+			let result = await stores.productsStore.delete(selected);
+			toast.dismiss(loadingToast);
+
+			if (result.success) {
+				modalRef.current?.close();
+				toast.success(result.message);
+				setSelected(null);
+				reload();
+			} else {
+				toast.error(result.message);
+			}
+		}
 	}
 
     return (
@@ -110,6 +127,15 @@ const Products = () => {
 												<MdDelete /> Delete
 											</a>
 
+											<a
+												className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
+													selected ?? "btn-disabled"
+												}`}
+												onClick={onChangeView}
+											>
+												<MdOutlineRemoveRedEye /> Show/Hide
+											</a>
+
 										</div>
 									</div>
 									<table className="table table-grid">
@@ -140,14 +166,24 @@ const Products = () => {
 													key={product.productId}
 													data-id={product.productId}
 													data-label={product.name}
-													className={`hover ${product.productId == selected ? "active" : ""}`}
+													className={`hover ${product.productId == selected ? "active" : ""} ${!product.visible && 'bg-base-300 line-through'}`}
 													onClick={(e: MouseEvent<HTMLTableRowElement>) => {
-														setSelected(parseInt(e.currentTarget.getAttribute("data-id") ?? "0"))
-														setSelectedName(e.currentTarget.getAttribute("data-label") ?? "-")
+															setSelected(parseInt(e.currentTarget.getAttribute("data-id") ?? "0"))
+															setSelectedName(e.currentTarget.getAttribute("data-label") ?? "-")
+														}}
+													onDoubleClick={(e: MouseEvent<HTMLTableRowElement>) => {
+															let id = e.currentTarget.getAttribute("data-id") ?? "0";
+															navigate(`/products/${id}`);
 														}}
 													>
 														<td data-label="Image" className="w-20"><img src={product.remoteUrl} className="w-12"></img></td>
-														<td data-label="Product" >{product.name}</td>
+														<td data-label="Product" >
+															<div className="flex gap-2">
+																{product.name} 
+																{product.isNew && <MdFiberNew className="text-blue-500 text-lg" />} 
+																{product.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg" />}
+															</div>
+														</td>
 														<td data-label="Category" >{product.category}</td>
 														<td data-label="Base price">$ {product.basePrice}</td>
 														<td data-label="Selling price">$ {product.price}</td>

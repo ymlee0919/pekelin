@@ -155,7 +155,7 @@ const EditProduct = () => {
             { url: '/', label: 'Dashboard' },
             { url: '/products', label: 'Products' },
             { url: '.', label: stores.singleProductsStore.content?.name || 'Product' },
-            { url: '.', label: 'Editar' },
+            { url: '.', label: 'Edit' },
         ]} />
 
         {status == StoreStatus.LOADING ? <Loading /> : ''}
@@ -165,7 +165,7 @@ const EditProduct = () => {
             /* Main component */
             <div className="panel">
                 <div className="panel-header">
-                    <span className="title">New product</span>
+                    <span className="title">Edit product</span>
                 </div>
                 <div className="panel-content">
                     <form>

@@ -90,6 +90,29 @@ export class VariantsStore extends Store<Array<BasicVariantInfo>, VariantSearch>
 		}
 	}
 
+	async changeVisibility(
+		productId: string | number,
+		variantId: string | number
+	): Promise<EventResult> {
+		try {
+			let pId = typeof productId == "string" ? parseInt(productId) : productId;
+			let vId = typeof variantId == "string" ? parseInt(variantId) : variantId;
+
+			await this.provider.changeVisibility(pId, vId);
+
+			return {
+				success: true,
+				message: "Variant successfully updated",
+			};
+		} catch (error) {
+			return {
+				success: false,
+				errorCode: this.provider.lastErrorCode ?? 0,
+				message: String(error),
+			};
+		}
+	}
+
 	async delete(
 		productId: string | number,
 		variantId: string | number
