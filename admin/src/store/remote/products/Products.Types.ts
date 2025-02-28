@@ -13,6 +13,7 @@ export interface BasicProductInfo {
     productId: number;
     category: string;
     name: string;
+    gender: string;
     price: number;
     basePrice: number;
     variants: number;
@@ -26,6 +27,7 @@ export interface BasicProduct {
     productId: number;
     categoryId: number;
     name: string;
+    gender: string;
     url: string;
     price: number;
     basePrice: number;
@@ -53,6 +55,7 @@ export interface UpdatedProduct extends BasicProduct {
 export interface ProductForm {
 	categoryId: number;
     name: string;
+    gender: boolean,
     image: FileList;
     price: number;
     basePrice: number;

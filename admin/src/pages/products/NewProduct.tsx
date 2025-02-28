@@ -34,6 +34,7 @@ const NewProduct = () => {
         defaultValues: {
             categoryId: 0,
             name: '',
+            gender: false,
             price: 0,
             basePrice: 0,
             description: '',
@@ -92,7 +93,7 @@ const NewProduct = () => {
         const formData = new FormData(); 
         
         for (const key in data) {
-            if (data.hasOwnProperty(key) && key != 'image' && key != 'items') {
+            if (data.hasOwnProperty(key) && key != 'image' && key != 'items' && key != 'gender') {
                 formData.append(key, data[key as keyof ProductForm] as string);
             }
         }
@@ -104,6 +105,7 @@ const NewProduct = () => {
                 formData.append('image', data.image[0]);
         }
 
+        formData.append("gender", data.gender ? "M" : "F");
         formData.append('features', JSON.stringify(refFeatures.current.list));
 
         // Send to backend
@@ -262,6 +264,20 @@ const NewProduct = () => {
                                                 <div className="label">
                                                     <span className="label-text text-red-500 text-sm">{errors.price.message}</span>
                                                 </div>}
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full md:w-3/12 sm:w-6/12">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <span className="label-text">Gender</span>
+                                            </div>
+                                            
+                                            <label className="label cursor-pointer">
+                                                <span className="label-text">Male</span>
+                                                <input type="checkbox" {...register("gender")} className="toggle toggle-success" defaultChecked />
+                                                <span className="label-text">Female</span>
+                                            </label>
                                         </label>
                                     </div>
 

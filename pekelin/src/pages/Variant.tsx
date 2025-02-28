@@ -55,7 +55,7 @@ const Variant = () => {
                         return variant.variantId != variantId
                     })
                     .map((variant: VariantCardInfo) => {
-                        return <VariantCircle variant={variant} />
+                        return <VariantCircle key={variant.variantId} variant={variant} />
                     })
                 }
             </div>
@@ -69,7 +69,7 @@ const Variant = () => {
                         .filter((prod : ProductCardInfo) => {
                             return prod.productId != variant.productId
                         }).map((product: ProductCardInfo) => {
-                            return <ProductCard product={product} />
+                            return <ProductCard key={product.productId} product={product} />
                         })
                 }
             </div>

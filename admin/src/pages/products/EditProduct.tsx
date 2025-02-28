@@ -67,6 +67,7 @@ const EditProduct = () => {
                                 setImage(stores.singleProductsStore.content.remoteUrl);
                                 setValue("categoryId", stores.singleProductsStore.content.categoryId);
                                 setValue("name", stores.singleProductsStore.content.name);
+                                setValue("gender", stores.singleProductsStore.content.gender == "M");
                                 setValue("price", stores.singleProductsStore.content.price);
                                 setValue("basePrice", stores.singleProductsStore.content.basePrice);
                                 setValue("description", stores.singleProductsStore.content.description);
@@ -123,7 +124,7 @@ const EditProduct = () => {
         const formData = new FormData(); 
         
         for (const key in data) {
-            if (data.hasOwnProperty(key) && key != 'image' && key != 'items') {
+            if (data.hasOwnProperty(key) && key != 'image' && key != 'items' && key != 'gender') {
                 formData.append(key, data[key as keyof ProductForm] as string);
             }
         }
@@ -135,6 +136,7 @@ const EditProduct = () => {
                 formData.append('image', data.image[0]);
         }
 
+        formData.append("gender", data.gender ? "M" : "F");
         formData.append('features', JSON.stringify(refFeatures.current.list));
 
         // Send to backend
@@ -310,6 +312,20 @@ const EditProduct = () => {
                                                 <div className="label">
                                                     <span className="label-text text-red-500 text-sm">{errors.price.message}</span>
                                                 </div>}
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full md:w-3/12 sm:w-6/12">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <span className="label-text">Gender</span>
+                                            </div>
+                                            
+                                            <label className="label cursor-pointer">
+                                                <span className="label-text">Male</span>
+                                                <input type="checkbox" {...register("gender")} className="toggle toggle-success" defaultChecked />
+                                                <span className="label-text">Female</span>
+                                            </label>
                                         </label>
                                     </div>
 

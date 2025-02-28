@@ -165,6 +165,7 @@ export class LocalDatabase {
             price: product.price,
             productName: product.name,
             productUrl: product.url,
+            gender: product.gender,
             Features: product.Features.concat(Features),
             description: description || product.description,
             ...item

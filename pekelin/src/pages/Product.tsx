@@ -39,7 +39,7 @@ const Product = () => {
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 justify-center">
                 {
                     db.getProductVariants(product.productId).map((variant: VariantCardInfo) => {
-                        return <VariantCircle variant={variant} />
+                        return <VariantCircle key={variant.variantId} variant={variant} />
                     })
                 }
             </div>
@@ -53,7 +53,7 @@ const Product = () => {
                         .filter((prod : ProductCardInfo) => {
                             return prod.productId != product.productId
                         }).map((product: ProductCardInfo) => {
-                            return <ProductCard product={product} />
+                            return <ProductCard key={product.productId} product={product} />
                         })
                 }
             </div>
@@ -65,7 +65,7 @@ const Product = () => {
                 {db.Categories
                     .filter((cat: CategoryInfo) => { return cat.url != categoryUrl})
                     .map((cat: CategoryInfo) => {
-                        return <CategoryCard category={cat} />
+                        return <CategoryCard key={cat.categoryId} category={cat} />
                     })}
             </div>
         </div>

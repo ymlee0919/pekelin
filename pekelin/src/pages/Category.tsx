@@ -43,7 +43,7 @@ const Category = () => {
                 {db.Categories
                     .filter((cat: CategoryInfo) => { return cat.url != categoryUrl})
                     .map((cat: CategoryInfo) => {
-                        return <CategoryCard category={cat} />
+                        return <CategoryCard key={cat.categoryId} category={cat} />
                     })}
                 </div>
             </div>

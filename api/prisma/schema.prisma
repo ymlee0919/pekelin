@@ -50,6 +50,7 @@ model Products {
   url           String
   basePrice     Int @default(0) @map("base_price")
   price         Int
+  gender        String @default("M")
   image         String
   remoteUrl     String @map("remote_url")
   expiry        Int

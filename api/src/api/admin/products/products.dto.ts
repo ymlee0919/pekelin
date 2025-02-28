@@ -48,6 +48,11 @@ export class ProductDTO {
 
     @IsDefined()
     @IsNotEmpty()
+    @IsString()
+    gender: string;
+
+    @IsDefined()
+    @IsNotEmpty()
     @IsInt()
     @Transform(({ value }) => parseInt(value.toString()))
     basePrice: number;

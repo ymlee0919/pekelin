@@ -19,6 +19,7 @@ interface Product {
 	productId: number,
 	categoryId: number,
 	name: string,
+	gender: string,
 	url: string,
 	description?: string,
 	price: number,

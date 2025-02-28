@@ -23,6 +23,7 @@ export class ProductsService {
             select: {
                 productId: true,
                 name: true,
+                gender: true,
                 basePrice: true,
                 price: true,
                 remoteUrl: true,
@@ -55,6 +56,7 @@ export class ProductsService {
         const result = productsWithVariantsCount.map(product => ({
             productId: product.productId,
             name: product.name,
+            gender: product.gender,
             category: product.Category.category,
             remoteUrl: product.remoteUrl,
             basePrice: product.basePrice,
@@ -116,6 +118,7 @@ export class ProductsService {
             data: {
                 categoryId: product.categoryId,
                 price: product.price,
+                gender: (product.gender == "M" ? "M" : "F"),
                 basePrice: product.basePrice,
                 name: product.name,
                 url: name2url(product.name),
@@ -168,6 +171,7 @@ export class ProductsService {
                 price: newProduct.price,
                 basePrice: newProduct.basePrice,
                 name: newProduct.name,
+                gender: (newProduct.gender == "M" ? "M" : "F"),
                 url: name2url(newProduct.name),
                 isBestSeller: newProduct.isBestSeller,
                 isNew: newProduct.isNew,

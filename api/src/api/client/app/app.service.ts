@@ -38,6 +38,7 @@ export class ClientAppService {
                         productId: true,
                         categoryId: true,
                         name: true,
+                        gender: true,
                         url: true,
                         description: true,
                         price: true,
