@@ -6,30 +6,33 @@ import { TbTruckDelivery } from "react-icons/tb";
 
 import db from "../database/db";
 import { CategoryInfo } from "../database/database.types";
+import ProductCard from "../components/ProductCard";
+import VariantCard from "../components/VariantCard";
+import CategoryCard from "../components/CategoryCard";
 
 const Home = () => {
     return <>
-    <div
-        className="hero min-h-screen"
-        style={{
-            backgroundImage: "url(/index.jpeg)",
-        }}>
-        <div className="hero-overlay bg-opacity-50"></div>
-        <div className="hero-content text-neutral-content text-center">
-            <div className="max-w-md">
-            <h1 className="mb-5 text-5xl font-bold">Pekelin</h1>
-            <p className="mb-5 text-xl">
-                Vista a su niña como una princesa y a su niño como un caballero.
-                <br></br>
-                Ropa de calidad y confortable para su bebé.
-            </p>
+        <div
+            className="hero min-h-screen"
+            style={{
+                backgroundImage: "url(/index.jpeg)",
+            }}>
+            <div className="hero-overlay bg-opacity-50"></div>
+            <div className="hero-content text-neutral-content text-center">
+                <div className="max-w-md">
+                <h1 className="mb-5 text-5xl font-bold">Pekelin</h1>
+                <p className="mb-5 text-xl">
+                    Vista a su niña como una princesa y a su niño como un caballero.
+                    <br></br>
+                    Ropa de calidad y confortable para su bebé.
+                </p>
+                </div>
             </div>
-        </div>
         </div>
         <p> </p>
         <br></br>
-        <div className="px-5 py-2 mb-5">
-            <p className="text-center text-xl mb-5">El proceso es bien simple</p>
+        <div className="p-5 mb-12">
+            <p className="text-center text-xl mb-5 text-sky-900">El proceso es bien simple</p>
             <ul className="timeline timeline-vertical">
                 <li>
                     <hr />
@@ -82,28 +85,37 @@ const Home = () => {
                     <hr />
                 </li>  
             </ul>
-            <br></br>
-            <p className="text-center text-2xl my-5">Nuestras ofertas</p>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 justify-center">
-            {db.Categories.map((category: CategoryInfo) => {
-                return <>
+            <div className="py-10">
+                <p className="text-center text-2xl my-5 text-sky-900">Nuestras ofertas</p>
                 
-                    <div key={category.categoryId} className="py-3">
-                        <div  className="flex bg-blue-50 shadow-md rounded-full">
-                            <img src={category.remoteUrl} className="flex-none w-24 h-24 rounded-full p-3"></img>
-                            <div className="flex-1 text-center mx-4 pt-2">
-                                <span className="text-xl border-b flex pb-1 mb-1 text-gray-700">{category.category}</span>
-                                <p className="text-left text-gray-500 text-xs">
-                                    {category.description}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                
-                </>
-            })}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 justify-center">
+                    {db.Categories.map((category: CategoryInfo) => {
+                        return <CategoryCard category={category} />
+                    })}
+                </div>
             </div>
+
+            {db.existsBestSeller && 
+                /** Best sellers */
+                <>
+                    <br></br>
+                    <p className="text-center text-xl my-5 text-sky-900">Best seller</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 justify-center px-5">
+                    {
+                        db.bestSellerProductsId.map((productId: number) => 
+                            <ProductCard key={productId} product={db.getProductCardInfoById(productId)} />
+                        )
+                    }
+                    {
+                        db.bestSellerVariantsId.map((variantId: number) => 
+                            <VariantCard key={variantId} variant={db.getVariantCardInfoById(variantId)} />
+                        )
+                    }
+                    </div>
+                </>
+                /** END of Best seller */
+            }
             
         </div>
 

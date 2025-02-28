@@ -1,4 +1,4 @@
-interface Feature {
+export interface Feature {
 	title: string,
 	content: string
 }
@@ -30,16 +30,20 @@ export interface Product {
 	Variants: Variant[]
 }
 
+
 export interface ProductInfo {
 	productId: number,
 	categoryId: number,
 	name: string,
+	category: string,
 	url: string,
+	categoryUrl: string,
 	description?: string,
 	price: number,
 	isNew: boolean,
 	isBestSeller: boolean,
 	remoteUrl: string,
+	Variants: Variant[]
 }
 
 export interface Category {
@@ -62,6 +66,8 @@ export interface CategoryInfo {
 
 export type DataBase = Array<Category>;
 
+/** Indexes */
+
 export type CategoryIndex = {
 	[key : string] : Category
 };
@@ -79,3 +85,58 @@ export type VariantIndex = {
 		}
 	}
 };
+
+export type CategoryList = {
+	[key : number] : Category
+};
+
+export type ProductList = {
+	[key : number] : Product
+};
+
+export type VariantList = {
+	[key : number] : Variant
+};
+
+/** View */
+export interface ProductCardInfo { 
+	productId: number,
+	categoryUrl: string,
+	category: string,
+	name: string,
+	url: string,
+	description?: string,
+	price: number,
+	isNew: boolean,
+	isBestSeller: boolean,
+	remoteUrl: string
+}
+
+export interface VariantCardInfo {
+	variantId: number,
+	productUrl: string,
+	categoryUrl: string,
+	productName: string,
+	name: string,
+	price: number,
+	description?: string,
+	isBestSeller: boolean,
+	isNew: boolean,
+	remoteUrl: string,
+}
+
+export interface VariantFullInfo {
+	variantId: number,
+	productId: number,
+	productUrl: string,
+	categoryUrl: string,
+	category: string,
+	productName: string,
+	name: string,
+	price: number,
+	description?: string,
+	isBestSeller: boolean,
+	isNew: boolean,
+	remoteUrl: string,
+	Features: Feature[]
+}

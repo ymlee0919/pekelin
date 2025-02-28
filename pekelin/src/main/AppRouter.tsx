@@ -6,6 +6,7 @@ import Layout from "./Layout";
 import Home from "../pages/Home";
 import Category from "../pages/Category";
 import Product from "../pages/Product";
+import Variant from "../pages/Variant";
 
 const AppRouter = createBrowserRouter([
 	{
@@ -25,6 +26,10 @@ const AppRouter = createBrowserRouter([
 			{
 				path: "/:category/:product",
 				element: <Product />,
+			},
+			{
+				path: "/:category/:product/v/:variantId",
+				element: <Variant />,
 			},
 		],
 	},
