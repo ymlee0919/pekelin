@@ -14,10 +14,9 @@ const VariantCircle = (props: VariantCircleProps) => {
                     <img src={props.variant.remoteUrl} alt="Product Name" className="rounded-full h-full w-full object-contain bg-white p-1"></img>
                 </div>
             </div>
-            <p className="text-center text-gray-500 text-xs px-2">{props.variant.name}</p>
+            <p className="text-center text-gray-500 text-xs px-2 pt-1">{props.variant.name}</p>
         </NavLink>
     </>
-
 }
 
 export default VariantCircle;

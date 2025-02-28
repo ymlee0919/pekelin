@@ -3,6 +3,7 @@ import db from "../database/db";
 import { ProductCardInfo, VariantCardInfo, Feature} from "../database/database.types";
 import VariantCircle from "../components/VariantCircle";
 import ProductCard from "../components/ProductCard";
+import RequestBtn from "../components/RequestBtn";
 
 const Variant = () => {
 
@@ -43,10 +44,13 @@ const Variant = () => {
                     <div className="pt-5">
                         <span className="price">Precio: ${variant.price}</span>
                     </div>
+                    <div className="pt-6">
+                        <RequestBtn product={variant.name} gender={variant.gender} />
+                    </div>
                 </div>
             </div>
         </div>
-        <div className="py-8 px-7">
+        <div className="py-6 px-7">
             <p className="text-xl my-5 text-sky-900 px-7">Variantes</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 justify-center">
                 {
