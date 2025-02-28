@@ -5,7 +5,8 @@ import { NavLink } from "react-router-dom"
 
 const Navbar = () => {
 
-    return <div className="px-5 navbar from-blue-200 to-blue-50 bg-gradient-to-t z-30 rounded-3xl fixed m-4 w-auto min-h-4 left-2 right-2 shadow-md text-gray-700">
+    return <>
+    <div className="px-5 navbar from-blue-200 to-blue-50 bg-gradient-to-t z-30 rounded-3xl fixed m-4 w-auto min-h-4 left-2 right-2 shadow-md text-gray-700">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
@@ -31,6 +32,7 @@ const Navbar = () => {
                 <a className="text-xl">Pekelin</a>
             </div>
         </div>
+    </>
 }
 
 export default Navbar

@@ -6,6 +6,7 @@ import { name2url } from "src/services/utils/string.utils";
 import { ImageSrc } from "src/api/common/types/common.types";
 import { CategoryInfo, CreatedCategory, UpdatedCategory } from "./categories.types";
 import { CategoryDTO } from "./categories.dto";
+import { CloudService } from 'src/services/cloud/cloud.service';
 
 /**
  * Service for categories
@@ -22,8 +23,35 @@ export class CategoriesService {
      * @param database Database provider category
      */
     constructor(
-        private readonly database:DatabaseService
+        private readonly database:DatabaseService,
+        private readonly cloudService: CloudService
     ){}
+
+    private async updateExpiryImages() {
+
+        let now = Math.round(Date.now() / 60000);
+        let time = now + 3600;
+
+        let expires = await this.database.categories.findMany({
+            where: {
+                expiry : {
+                    lt : time
+                }
+            }
+        });
+
+        for(let i = 0; i < expires.length; i++){
+            let remoteUrl = await this.cloudService.getSharedLink(expires[i].icon);
+            
+            await this.database.categories.update({
+                where: {
+                    categoryId: expires[i].categoryId
+                }, data : {
+                    remoteUrl, expiry: now + 72000
+                }
+            });
+        }
+    }
 
     /**
      * Get the list of images
@@ -32,6 +60,8 @@ export class CategoriesService {
      */
     async getList() : Promise<Array<CategoryInfo>|null>
     {
+        await this.updateExpiryImages();
+
         let list = await this.database.categories.findMany({
             orderBy: { category: 'asc'},
             select: CategoriesService.defaultSelection

@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { DatabaseService } from "src/services/database/database.service";
 import { DataBase } from "./app.types";
+import { CloudService } from 'src/services/cloud/cloud.service';
 
 /**
  * Service for gallery
@@ -13,8 +14,66 @@ export class ClientAppService {
      * @param database Database provider service
      */
     constructor(
-        private readonly database:DatabaseService
+        private readonly database:DatabaseService,
+        private readonly cloudService: CloudService
     ){ }
+
+    private async updateExpiryImages() {
+
+        let now = Math.round(Date.now() / 60000);
+        let time = now + 3600;
+
+        // Update categories
+        let categories = await this.database.categories.findMany({
+            where: { expiry : { lt : time } }
+        });
+
+        for(let i = 0; i < categories.length; i++){
+            let remoteUrl = await this.cloudService.getSharedLink(categories[i].icon);
+            
+            await this.database.categories.update({
+                where: {
+                    categoryId: categories[i].categoryId
+                }, data : {
+                    remoteUrl, expiry: now + 72000
+                }
+            });
+        }
+
+        // Update products
+        let products = await this.database.products.findMany({
+            where: { expiry : { lt : time } }
+        });
+        
+        for(let i = 0; i < products.length; i++){
+            let remoteUrl = await this.cloudService.getSharedLink(products[i].image);
+            
+            await this.database.products.update({
+                where: {
+                    productId: products[i].productId
+                }, data : {
+                    remoteUrl, expiry: now + 72000
+                }
+            });
+        }
+
+        // Update variants
+        let variants = await this.database.productVariants.findMany({
+            where: { expiry : { lt : time } }
+        });
+        
+        for(let i = 0; i < variants.length; i++){
+            let remoteUrl = await this.cloudService.getSharedLink(variants[i].image);
+            
+            await this.database.productVariants.update({
+                where: {
+                    variantId: variants[i].variantId
+                }, data : {
+                    remoteUrl, expiry: now + 72000
+                }
+            });
+        }
+    }
 
     /**
      * Get general app information
@@ -23,6 +82,8 @@ export class ClientAppService {
      */
     async getInfo() : Promise<DataBase>
     {
+        await this.updateExpiryImages();
+        
         let database = await this.database.categories.findMany({
             // Categories
             select: {
