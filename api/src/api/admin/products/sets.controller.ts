@@ -15,7 +15,7 @@ import { BadRequestException,
     Patch
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreatedProduct, UpdatedProduct, Product, BasicProductInfo } from "./products.types";
+import { CreatedProduct, UpdatedProduct, ProductSet, CategorySource } from "./products.types";
 import { ProductDTO, ProductSetDTO } from './products.dto';
 import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -26,8 +26,8 @@ import { CloudService } from 'src/services/cloud/cloud.service';
 import { ImageSrc } from 'src/api/common/types/common.types';
 import { plainToInstance } from 'class-transformer';
 
-@Controller('api/products')
-export class ProductsController {
+@Controller('api/products/sets')
+export class SetsController {
 
     constructor(
         private readonly manager: ProductsService,
@@ -35,24 +35,17 @@ export class ProductsController {
         private readonly cloudService: CloudService
     ){}
 
-    @Get('/list')
+    @Get('/source')
     @HttpCode(HttpStatus.OK)
-    async getList(): Promise<Array<BasicProductInfo>>{
-        let result = await this.manager.getList();
-        return result ?? [];
-    }
-
-    @Get('/full')
-    @HttpCode(HttpStatus.OK)
-    async getFullList(): Promise<Array<Product>>{
-        let result = await this.manager.getFullList();
+    async getList(): Promise<Array<CategorySource>>{
+        let result = await this.manager.getSetsSource();
         return result ?? [];
     }
 
     @Get('/:id')
     @HttpCode(HttpStatus.OK)
-    async get(@Param('id', ParseIntPipe) productId: number): Promise<Product>{
-        let product = await this.manager.get(productId);
+    async get(@Param('id', ParseIntPipe) productId: number): Promise<ProductSet>{
+        let product = await this.manager.getSet(productId);
         if(!!product)
             return product;
 
@@ -63,10 +56,10 @@ export class ProductsController {
         })
     }
 
-    @Post('/')
+    @Post('')
     @HttpCode(HttpStatus.CREATED)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
-    async create(
+    async createSet(
         @UploadedFile(
             new ParseFilePipe({ fileIsRequired: true}),
             new CropJpgFilePipe(multerConfig.localProductsDest, 500, 500)
@@ -88,12 +81,12 @@ export class ProductsController {
             // Deserialize the features field
             const features = JSON.parse(body.features);
             // Create the DTO object
-            const product = plainToInstance(ProductDTO, {
+            const product = plainToInstance(ProductSetDTO, {
                 ...body,
                 features
             });
 
-            let createdProduct = await this.manager.createProduct(product, image);
+            let createdProduct = await this.manager.createProductSet(product, image);
             return createdProduct;
         } catch (error) {
             // Delete the uploaded images
@@ -111,7 +104,7 @@ export class ProductsController {
     @Put('/:productId')
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
-    async updateProduct(
+    async updateSet(
         @Param('productId', ParseIntPipe) productId: number,
         @Body() body: any,
         @UploadedFile( 
@@ -157,50 +150,5 @@ export class ProductsController {
             }
             throw new BadRequestException(error);
         }
-    }
-
-    @Patch('/:productId/view')
-    @HttpCode(HttpStatus.OK)
-    async changeVisibility(
-        @Param('productId', ParseIntPipe) productId: number,
-        ) : Promise<UpdatedProduct> 
-    {
-        try {
-            
-            let updated = await this.manager.changeVisibility(productId);
-            return updated;
-        } 
-        catch (error) {
-            // Treat the error
-            if(error instanceof InvalidOperationError){
-                throw new BadRequestException(error.message);
-            }
-            throw new BadRequestException(error);
-        }
-    }
-
-    @Delete('/:id')
-    @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(
-        @Param('id', ParseIntPipe) productId: number
-    ): Promise<void>{
-        try {
-            let deleted = await this.manager.deleteProduct(productId);
-            if (deleted) {
-                // Delete the uploaded images
-                this.fileService.deleteFile(deleted.image);
-                this.cloudService.deleteFile(deleted.image);
-
-                return;
-            }
-
-        } catch (error) {
-            if (error instanceof InvalidOperationError) {
-              throw new BadRequestException(error.message);
-            }
-            throw new BadRequestException(error);
-        }
-
-        throw new BadRequestException('Unable to delete the product');
     }
 }

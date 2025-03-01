@@ -23,10 +23,13 @@ interface Product {
 	url: string,
 	description?: string,
 	price: number,
+	isSet: boolean,
 	isNew: boolean,
 	isBestSeller: boolean,
 	remoteUrl: string,
 	expiry: number,
+	element1Id: number,
+	element2Id: number,
 	Features: Feature[],
 	Variants: Variant[]
 }

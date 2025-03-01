@@ -26,6 +26,7 @@ export interface BasicProductInfo {
     variants: number;
     remoteUrl: string;
     isBestSeller: boolean;
+    isSet: boolean;
     isNew: boolean;
     visible: boolean;
 }
@@ -42,6 +43,7 @@ export interface BasicProduct {
     remoteUrl: string;
     expiry: number;
     description?: string;
+    isSet: boolean;
     isBestSeller: boolean;
     isNew: boolean;
     visible: boolean;
@@ -52,10 +54,31 @@ export interface Product extends BasicProduct {
     Category: ProductCategory;
 }
 
+export interface ProductSet extends Product {
+    product1: number,
+    product2: number
+}
+
 export interface CreatedProduct extends BasicProduct {
     createdAt: Date;
 }
 
 export interface UpdatedProduct extends BasicProduct {
     updatedAt: Date;
+}
+
+export interface UpdatedSet extends UpdatedProduct {
+    element1Id: number;
+    element2Id: number;
+}
+
+export interface ProductSource {
+    productId: number;
+    name: string;
+}
+
+export interface CategorySource {
+	categoryId: number;
+	category: string;
+    Products: Array<ProductSource>
 }

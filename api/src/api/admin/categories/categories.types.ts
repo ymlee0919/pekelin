@@ -16,3 +16,5 @@ export interface CreatedCategory extends CategoryInfo {
 export interface UpdatedCategory extends CategoryInfo {
     updatedAt: Date;
 }
+
+

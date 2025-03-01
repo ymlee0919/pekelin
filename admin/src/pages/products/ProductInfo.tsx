@@ -128,7 +128,7 @@ const ProductInfo = () => {
 								<div className="flex-1">
 									<p className="border-b text-2xl">
 										{product?.name} 
-										<NavLink to={`/products/${product?.productId}/edit`} className="btn btn-info btn-xs btn-ghost mx-2">
+										<NavLink to={`/products/${product?.productId}/${product?.isSet ? 'edit-set' : 'edit'}`} className="btn btn-info btn-xs btn-ghost mx-2">
 											<MdEdit className="text-xl" />
 										</NavLink>
 									</p>

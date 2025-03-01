@@ -83,3 +83,18 @@ export class ProductDTO {
     @Type(() => FeatureDTO)
     features: FeatureDTO[];
 }
+
+export class ProductSetDTO extends ProductDTO {
+
+    @IsDefined()
+    @IsNotEmpty()
+    @IsInt()
+    @Transform(({ value }) => parseInt(value.toString()))
+    product1: number;
+
+    @IsDefined()
+    @IsNotEmpty()
+    @IsInt()
+    @Transform(({ value }) => parseInt(value.toString()))
+    product2: number;
+}

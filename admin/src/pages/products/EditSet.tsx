@@ -5,14 +5,13 @@ import { useForm } from "react-hook-form";
 
 import Breadcrumbs from "../../components/Breadcrumbs";
 import { ProductFeaturesList } from "../../store/remote/products/ProductFeatures";
-import ProductFeatures from "./../features/ProductFeatures";
+import ProductFeatures from "../features/ProductFeatures";
 import toast from "react-hot-toast";
 import useStores from "../../hooks/useStores";
 import { EmptyEvent } from "../../types/Events";
-import { ProductForm } from "../../store/remote/products/Products.Types";
+import { BasicCategory, BasicProduct, SetsForm } from "../../store/remote/sets/Sets.Types";
 
 import { MdImageSearch } from "react-icons/md";
-import { CategoryContent } from "../../store/remote/categories/Categories.Types";
 import { StoreStatus } from "../../store/remote/Store";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
@@ -23,7 +22,7 @@ let features: ProductFeaturesList = new ProductFeaturesList();
 /**
  * Page for new product
  */
-const EditProduct = () => {
+const EditSet = () => {
 
     let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
     let [image, setImage] = useState<string>("");
@@ -40,10 +39,13 @@ const EditProduct = () => {
 		watch, 
 		reset, 
 		handleSubmit, 
-		formState: { errors }} = useForm<ProductForm & { items: number }>();
+		formState: { errors }} = useForm<SetsForm & { items: number }>();
 
     const [preview, setPreview] = useState<string | null>(null);
 	const file = watch("image");
+    const categoryId = watch("categoryId");
+    const product1 = watch("product1");
+    const product2 = watch("product2");
     
     const onItemsUpdated = () => {
         setValue("items", refFeatures.current.list.length);
@@ -56,25 +58,27 @@ const EditProduct = () => {
     const submitRef = useRef<EmptyEvent>();
 
     useEffect(() => {
-        stores.categoryStore.load(null).then(
+        stores.setSourceStore.load(null).then(
             (newPreStatus: StoreStatus) => { 
                 if(newPreStatus == StoreStatus.READY) {
-                    stores.singleProductsStore.load({productId: parseInt(params.id ?? '0')})
+                    stores.setsStore.load({productId: parseInt(params.id ?? '0')})
                         .then( (newStatus : StoreStatus) => {
-                            if(stores.singleProductsStore.content)
+                            if(stores.setsStore.content)
                             {
-                                refFeatures.current = new ProductFeaturesList(stores.singleProductsStore.content.Features);
-                                setImage(stores.singleProductsStore.content.remoteUrl);
-                                setValue("categoryId", stores.singleProductsStore.content.categoryId);
-                                setValue("name", stores.singleProductsStore.content.name);
-                                setValue("gender", stores.singleProductsStore.content.gender == "M");
-                                setValue("price", stores.singleProductsStore.content.price);
-                                setValue("basePrice", stores.singleProductsStore.content.basePrice);
-                                setValue("description", stores.singleProductsStore.content.description);
-                                setValue("isBestSeller", stores.singleProductsStore.content.isBestSeller);
-                                setValue("isNew", stores.singleProductsStore.content.isNew);
-                                setValue("visible", stores.singleProductsStore.content.visible);
-                                setValue("items", stores.singleProductsStore.content.Features.length);
+                                refFeatures.current = new ProductFeaturesList(stores.setsStore.content.Features);
+                                setImage(stores.setsStore.content.remoteUrl);
+                                setValue("categoryId", stores.setsStore.content.categoryId);
+                                setValue("product1", stores.setsStore.content.product1);
+                                setValue("product2", stores.setsStore.content.product2);
+                                setValue("name", stores.setsStore.content.name);
+                                setValue("gender", stores.setsStore.content.gender == "M");
+                                setValue("price", stores.setsStore.content.price);
+                                setValue("basePrice", stores.setsStore.content.basePrice);
+                                setValue("description", stores.setsStore.content.description);
+                                setValue("isBestSeller", stores.setsStore.content.isBestSeller);
+                                setValue("isNew", stores.setsStore.content.isNew);
+                                setValue("visible", stores.setsStore.content.visible);
+                                setValue("items", stores.setsStore.content.Features.length);
                             }
                                 
                             setStatus(newStatus);
@@ -92,7 +96,7 @@ const EditProduct = () => {
 			submitRef.current = handleSubmit(onSumbit);
         
         // Unmount the component and create a new offer info for new page
-        return () => {stores.singleProductsStore.release()}
+        return () => {stores.setsStore.release()}
     }, []);
 
     useEffect(() => {
@@ -119,13 +123,13 @@ const EditProduct = () => {
 		return () => { stores.categoryStore.release() }
 	}, []);
 
-    const onSumbit = async (data: ProductForm) => {
+    const onSumbit = async (data: SetsForm) => {
         // Append information
         const formData = new FormData(); 
         
         for (const key in data) {
             if (data.hasOwnProperty(key) && key != 'image' && key != 'items' && key != 'gender') {
-                formData.append(key, data[key as keyof ProductForm] as string);
+                formData.append(key, data[key as keyof SetsForm] as string);
             }
         }
         
@@ -156,12 +160,8 @@ const EditProduct = () => {
         <Breadcrumbs pages={[
             { url: '/', label: 'Dashboard' },
             { url: '/products', label: 'Products' },
-            { 
-                url: stores.singleProductsStore.content 
-                    ? `/products/${stores.singleProductsStore.content.productId}` 
-                    : '.',
-                label: stores.singleProductsStore.content?.name || 'Product' },
-            { url: '.', label: 'Edit' },
+            { url: stores.setsStore.content ? `/products/${stores.setsStore.content.productId}` : '.', label: stores.setsStore.content?.name || 'Product' },
+            { url: '.', label: 'Edit set' },
         ]} />
 
         {status == StoreStatus.LOADING ? <Loading /> : ''}
@@ -171,7 +171,7 @@ const EditProduct = () => {
             /* Main component */
             <div className="panel">
                 <div className="panel-header">
-                    <span className="title">Edit product</span>
+                    <span className="title">Edit product set</span>
                 </div>
                 <div className="panel-content">
                     <form>
@@ -232,7 +232,8 @@ const EditProduct = () => {
                             <div className="w-full md:w-8/12 sm:w-7/12">
                                 
                                 <div className="flex flex-wrap gap-3">
-                                <div className="w-full md:w-6/12 sm:w-10/12">
+                                    
+                                    <div className="w-full md:w-6/12 sm:w-10/12">
                                         <label className="form-control w-full max-w-xs">
                                             <div className="label">
                                                 <span className="label-text">Product name</span>
@@ -261,13 +262,81 @@ const EditProduct = () => {
                                                 <span className="label-text">Category</span>
                                             </div>
                                             <select 
-                                                {...register("categoryId")} 
+                                                {...register("categoryId", {
+                                                    validate: value => value !== 0 || "Please select a category",
+                                                    onChange: () => {
+                                                        setValue("product1", 0);
+                                                        setValue("product2", 0);
+                                                    },
+                                                })} 
+                                                defaultValue={categoryId}
                                                 className="select select-bordered w-full max-w-xs"
                                             >
-                                                    {stores.categoryStore.content?.map((category: CategoryContent) => {
+                                                    <option disabled value={0}>Select a category</option>
+                                                    {stores.setSourceStore.content?.map((category: BasicCategory) => {
                                                         return <option key={category.categoryId} value={category.categoryId}>{category.category}</option>
                                                     })}
                                             </select>
+                                            {errors.categoryId && 
+                                                <div className="label">
+                                                    <span className="label-text text-red-500 text-sm">{errors.categoryId.message}</span>
+                                                </div>}
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full md:w-5/12 sm:w-5/12">
+                                        <label className="form-control w-full max-w-xs">
+                                            <div className="label">
+                                                <span className="label-text">First product</span>
+                                            </div>
+                                            <select 
+                                                {...register("product1", {
+                                                    validate: value => value !== 0 || "Please select the first product",
+                                                    onChange: () => {
+                                                        setValue("product2", 0);
+                                                    }
+                                                })} 
+                                                defaultValue={product1}
+                                                className="select select-bordered w-full max-w-xs"
+                                            >
+                                                <option disabled value={0}>{categoryId == 0 ? 'Select the category' : 'Select a product'}</option>
+                                                    {stores.setSourceStore.getProductsOf(categoryId).map((product: BasicProduct) => {
+                                                        return <option key={product.productId} value={product.productId}>{product.name}</option>
+                                                    })}
+                                            </select>
+                                            {errors.product1 && 
+                                                <div className="label">
+                                                    <span className="label-text text-red-500 text-sm">{errors.product1.message}</span>
+                                                </div>}
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full md:w-5/12 sm:w-5/12">
+                                        <label className="form-control w-full max-w-xs">
+                                            <div className="label">
+                                                <span className="label-text">Second product</span>
+                                            </div>
+                                            <select 
+                                                {...register("product2", {
+                                                    validate: value => value !== 0 || "Please select the second product",
+                                                })} 
+                                                defaultValue={product2}
+                                                className="select select-bordered w-full max-w-xs"
+                                            >
+                                                <option disabled value={0}>{categoryId == 0 ? 'Select the category' : ( product1 == 0 ? 'Select the first product' : 'Select the second product')}</option>
+                                                {stores.setSourceStore.getProductsOf(categoryId)
+                                                    .filter((product: BasicProduct) => {
+                                                        return categoryId != 0 && product1 != 0 && product.productId != product1
+                                                    })
+                                                    .map((product: BasicProduct) => {
+                                                        return <option key={product.productId} value={product.productId}>{product.name}</option>
+                                                    })
+                                                }
+                                            </select>
+                                            {errors.product2 && 
+                                                <div className="label">
+                                                    <span className="label-text text-red-500 text-sm">{errors.product2.message}</span>
+                                                </div>}
                                         </label>
                                     </div>
 
@@ -442,4 +511,4 @@ const EditProduct = () => {
     </>
 }
 
-export default EditProduct;
+export default EditSet;

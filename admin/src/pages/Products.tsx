@@ -1,6 +1,6 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { MdDelete, MdOutlineAdd, MdEditSquare, MdEdit, MdOutlineStar, MdFiberNew, MdOutlineRemoveRedEye } from "react-icons/md";
+import { MdDelete, MdOutlineAdd, MdEditSquare, MdEdit, MdOutlineStar, MdFiberNew, MdOutlineRemoveRedEye, MdExpandMore } from "react-icons/md";
 
 import useStores from "../hooks/useStores";
 
@@ -28,6 +28,7 @@ const Products = () => {
     let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
 	let [selected, setSelected] = useState<number|null>(null);
 	let [selectedName, setSelectedName] = useState<string|null>(null);
+	let [isSet, setIsSet] = useState<boolean>(false);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -108,11 +109,20 @@ const Products = () => {
 								<div className="border-2 border-solid border-gray-300">
 									<div className="navbar bg-gray-300 min-h-1 p-1">
 										<div className="flex-1">
-											<NavLink to={"/products/new"} className="btn btn-ghost text-slate-500 btn-sm text-sm mr-2 rounded-none">
-												<MdOutlineAdd /> Add
-											</NavLink>
-												
-											<NavLink to={`/products/${selected}/edit`} className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
+											<div>
+												<NavLink to={"/products/new"} className="btn btn-ghost text-slate-500 btn-sm text-sm rounded-none mr-0">
+													<MdOutlineAdd /> Add
+												</NavLink>
+												<div className="dropdown rounded-none">
+													<div tabIndex={0} role="button" className="btn btn-ghost text-slate-500 btn-sm text-sm ml-0 mr-2 border-l-base-300 rounded-none"><MdExpandMore /></div>
+													<ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-none z-[1] w-52 p-0 shadow">
+														<li className="m-0 p-0">
+															<NavLink to={"/products/new-set"} className="rounded-none">New set</NavLink>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<NavLink to={`/products/${selected}/${isSet? 'edit-set' : 'edit'}`} className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
 														selected ?? "btn-disabled"
 													}`}>
 												<MdEditSquare /> Edit
@@ -166,10 +176,12 @@ const Products = () => {
 													key={product.productId}
 													data-id={product.productId}
 													data-label={product.name}
+													data-set={product.isSet ? '1' : '0'}
 													className={`hover ${product.productId == selected ? "active" : ""} ${!product.visible && 'bg-base-300 line-through'}`}
 													onClick={(e: MouseEvent<HTMLTableRowElement>) => {
-															setSelected(parseInt(e.currentTarget.getAttribute("data-id") ?? "0"))
-															setSelectedName(e.currentTarget.getAttribute("data-label") ?? "-")
+															setSelected(parseInt(e.currentTarget.getAttribute("data-id") ?? "0"));
+															setSelectedName(e.currentTarget.getAttribute("data-label") ?? "-");
+															setIsSet(e.currentTarget.getAttribute("data-set") == '1');
 														}}
 													onDoubleClick={(e: MouseEvent<HTMLTableRowElement>) => {
 															let id = e.currentTarget.getAttribute("data-id") ?? "0";
@@ -182,6 +194,7 @@ const Products = () => {
 																{product.name} 
 																{product.isNew && <MdFiberNew className="text-blue-500 text-lg" />} 
 																{product.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg" />}
+																{product.isSet && <span className="text-xs">(Set)</span>}
 															</div>
 														</td>
 														<td data-label="Category" >{product.category}</td>

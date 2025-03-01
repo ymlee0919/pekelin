@@ -18,6 +18,7 @@ export interface BasicProductInfo {
     basePrice: number;
     variants: number;
     remoteUrl: string;
+    isSet: boolean;
     isNew: boolean;
     isBestSeller: boolean;
     visible: boolean;
@@ -37,6 +38,7 @@ export interface BasicProduct {
     isBestSeller: boolean;
     isNew: boolean;
     visible: boolean;
+    isSet: boolean;
 }
 
 export interface Product extends BasicProduct {

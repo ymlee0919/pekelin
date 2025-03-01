@@ -58,6 +58,15 @@ model Products {
   isBestSeller  Boolean @map("best_seller") @default(false)
   isNew         Boolean @map("is_new") @default(false)
   visible       Boolean @default(true)
+  isSet         Boolean @map("is_set") @default(false)
+  
+  element1Id      Int? @map("product1_id")
+  element2Id      Int? @map("product2_id")
+  Element1        Products?  @relation("Product1Relation", fields: [element1Id], references: [productId])
+  Element2        Products?  @relation("Product2Relation", fields: [element2Id], references: [productId])
+  ProductsInSet1  Products[] @relation("Product1Relation")
+  ProductsInSet2  Products[] @relation("Product2Relation")
+
   Features      ProductFeatures[]
   Variants      ProductVariants[]
   

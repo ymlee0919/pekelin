@@ -4,6 +4,8 @@ import CategoryStore from "./categories/Categories.Store";
 
 import {ProductsStore, SingleProductStore} from "./products/Products.Store";
 import {VariantsStore, SingleVariantStore} from "./variants/Variants.Store";
+import SetsStore from "./sets/Sets.Store";
+import SetSourceStore from "./sets/SetSource.Store";
 
 
 /**
@@ -15,6 +17,10 @@ export default class RemoteStoresFactory {
     private _accountsStore: AccountsStore | null = null;
 
     private _productsStore: ProductsStore | null = null;
+
+    private _setsStore: SetsStore | null = null;
+
+    private _setSourceStore: SetSourceStore | null = null;
 
     private _singleProductsStore: SingleProductStore | null = null;
 
@@ -73,5 +79,19 @@ export default class RemoteStoresFactory {
             this._singleVariantStore = new SingleVariantStore();
 
         return this._singleVariantStore;
+    }
+
+    public get setsStore() : SetsStore {
+        if(this._setsStore == null)
+            this._setsStore = new SetsStore();
+
+        return this._setsStore;
+    }
+
+    public get setSourceStore() : SetSourceStore {
+        if(this._setSourceStore == null)
+            this._setSourceStore = new SetSourceStore();
+
+        return this._setSourceStore;
     }
 }

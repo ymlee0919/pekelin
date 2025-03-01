@@ -54,7 +54,10 @@ const LoginForm: React.FC = () => {
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="card w-full max-w-sm p-8 shadow-lg rounded-lg">
                 <div className="card-body">
-                    <h2 className="card-title text-2xl font-bold text-center">Iniciar Sesión</h2>
+                    <div className='w-full flex justify-center'>
+                            <img src='/icon.png' className='max-w-9'></img>
+                    </div>
+                    <h2 className="card-title text-2xl font-bold justify-center">Iniciar Sesión</h2>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
                             <label htmlFor="user" className="block text-sm font-medium text-gray-700">

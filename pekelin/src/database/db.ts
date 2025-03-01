@@ -107,11 +107,13 @@ export class LocalDatabase {
         let category = this.categories[categoryUrl];
         let product = this.products[categoryUrl][productUrl];
 
-        let {expiry, Features, ...info} = product;
+        let {expiry, element1Id, element2Id, Features, ...info} = product;
 
         return {
             category: category.category,
             categoryUrl: category.url,
+            product1: element1Id,
+            product2: element2Id,
             ...info
         };
     }

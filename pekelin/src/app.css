@@ -59,7 +59,7 @@ div.dropdown > ul > li > a.active {
 
 /* FOOTER */
 .footer {
-    padding: 20px 35px;
+    padding: 40px 30px;
     margin-bottom: 0 !important;
 }
 
@@ -71,7 +71,7 @@ div.dropdown > ul > li > a.active {
 }
 .footer-item{
     display: inline-flex;
-    padding: 5px 0;
+    padding: 12px 0;
 }
 
 .footer-icon{
@@ -80,4 +80,38 @@ div.dropdown > ul > li > a.active {
 
 .footer-text {
     padding: 5px;
+}
+
+.swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.bg-kids {
+    background-image: url('/background.jpg');
+    background-position: center center;
+    background-size: contain;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+div.modal-box {
+    animation: slideUp 0.3s ease-out;
+    transform: none;
+}
+
+.body-no-scroll {
+    overflow: hidden;
 }

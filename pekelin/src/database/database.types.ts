@@ -27,6 +27,9 @@ export interface Product {
 	isBestSeller: boolean,
 	remoteUrl: string,
 	expiry: number,
+	isSet: boolean,
+	element1Id?: number,
+	element2Id?: number,
 	Features: Feature[],
 	Variants: Variant[]
 }
@@ -44,6 +47,9 @@ export interface ProductInfo {
 	price: number,
 	isNew: boolean,
 	isBestSeller: boolean,
+	isSet: boolean,
+	product1?: number,
+	product2?: number,
 	remoteUrl: string,
 	Variants: Variant[]
 }

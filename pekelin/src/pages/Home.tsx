@@ -19,10 +19,10 @@ const Home = () => {
             }}>
             <div className="hero-overlay bg-opacity-50"></div>
             <div className="hero-content text-neutral-content text-center">
-                <div className="max-w-md">
-                <h1 className="mb-5 text-5xl font-bold">Pekelin</h1>
+                <div className="max-w-3xl">
+                <h1 className="mb-10 text-5xl font-bold">Pekelin</h1>
                 <p className="mb-5 text-xl">
-                    Vista a su niña como una princesa y a su niño como un caballero.
+                    <span className="text-2xl">Vista a su niña como una princesa y a su niño como un caballero.</span>
                     <br></br>
                     Ropa de calidad y confortable para su bebé.
                 </p>

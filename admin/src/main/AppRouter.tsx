@@ -13,6 +13,8 @@ import ProductVariants from "../pages/ProductVariants";
 import NewVariant from "../pages/variants/NewVariant";
 import EditVariant from "../pages/variants/EditVariant";
 import ProductInfo from "../pages/products/ProductInfo";
+import NewSet from "../pages/products/NewSet";
+import EditSet from "../pages/products/EditSet";
 
 const AppRouter = createBrowserRouter([
 	{
@@ -42,8 +44,16 @@ const AppRouter = createBrowserRouter([
 				element: <NewProduct />,
 			},
 			{
+				path: "/products/new-set",
+				element: <NewSet />,
+			},
+			{
 				path: "/products/:id/edit",
 				element: <EditProduct />,
+			},
+			{
+				path: "/products/:id/edit-set",
+				element: <EditSet />,
 			},
 			{
 				path: "/products/:productId",
