@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 
 const HttpProvider = axios.create({
 	// .. where we make our configurations
-	baseURL: "http://localhost:3000/api",
+	baseURL: import.meta.env.VITE_API_URL,
 });
 
 //axios.defaults.headers.common["Authorization"] = "AUTH TOKEN";
