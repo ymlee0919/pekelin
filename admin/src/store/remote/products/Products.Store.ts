@@ -41,6 +41,19 @@ export class ProductsStore extends Store<Array<BasicProductInfo>> {
 		return await this.provider.load();
 	}
 
+	get Categories() : Array<string> {
+		
+		let list : Array<string> = [];
+		if(this._content)
+		{
+			this._content.forEach((product: BasicProductInfo) => {
+				if(list.indexOf(product.category) == -1)
+					list.push(product.category)
+			})
+		}
+		return list;
+	}
+
 	async create(offer: FormData): Promise<EventResult<CreatedProduct | null>> {
 		try {
 			let created = await this.provider.createProduct(offer);

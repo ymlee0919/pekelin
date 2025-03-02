@@ -29,6 +29,7 @@ const Products = () => {
 	let [selected, setSelected] = useState<number|null>(null);
 	let [selectedName, setSelectedName] = useState<string|null>(null);
 	let [isSet, setIsSet] = useState<boolean>(false);
+	let [category, setCategory] = useState<string>('All');
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -154,7 +155,28 @@ const Products = () => {
 											<tr>
 												<th className="w-20">Image</th>
 												<th>Product</th>
-												<th>Category</th>
+												<th>
+													<span className="pr-3">Category</span>
+													<div className="dropdown">
+														<div tabIndex={0} role="button"><small className="underline">({category})</small></div>
+														<ul tabIndex={0} className="font-normal dropdown-content menu bg-base-100 z-[1] w-52 p-2 shadow">
+															<li className="rounded-none">
+																<a className="rounded-none" onClick={() => {
+																	setCategory('All')
+																}}>All</a>
+															</li>
+														{
+															stores.productsStore.Categories.map((productCategory: string, index: number) => {
+																return (<li className="rounded-none" key={`category-${index}`}>
+																	<a className="rounded-none" onClick={() => {
+																		setCategory(productCategory)
+																	}}>{productCategory}</a>
+																</li>)
+															})
+														}
+														</ul>
+													</div>
+												</th>
 												<th>Base price</th>
 												<th>Selling Price</th>
 												<th>Variants</th>
@@ -171,44 +193,47 @@ const Products = () => {
 													</td>
 												</tr>
 											) : (
-												stores.productsStore.content?.map((product: BasicProductInfo) => {
-													return (<tr 
-													key={product.productId}
-													data-id={product.productId}
-													data-label={product.name}
-													data-set={product.isSet ? '1' : '0'}
-													className={`hover ${product.productId == selected ? "active" : ""} ${!product.visible && 'bg-base-300 line-through'}`}
-													onClick={(e: MouseEvent<HTMLTableRowElement>) => {
-															setSelected(parseInt(e.currentTarget.getAttribute("data-id") ?? "0"));
-															setSelectedName(e.currentTarget.getAttribute("data-label") ?? "-");
-															setIsSet(e.currentTarget.getAttribute("data-set") == '1');
-														}}
-													onDoubleClick={(e: MouseEvent<HTMLTableRowElement>) => {
-															let id = e.currentTarget.getAttribute("data-id") ?? "0";
-															navigate(`/products/${id}`);
-														}}
-													>
-														<td data-label="Image" className="w-20"><img src={product.remoteUrl} className="w-12"></img></td>
-														<td data-label="Product" >
-															<div className="flex gap-2">
-																{product.name} 
-																{product.isNew && <MdFiberNew className="text-blue-500 text-lg" />} 
-																{product.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg" />}
-																{product.isSet && <span className="text-xs">(Set)</span>}
-															</div>
-														</td>
-														<td data-label="Category" >{product.category}</td>
-														<td data-label="Base price">$ {product.basePrice}</td>
-														<td data-label="Selling price">$ {product.price}</td>
-														<td data-label="Variants">
-															{product.variants} 
-															<NavLink to={`/products/${product.productId}/variants`} className="btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none">
-																<MdEdit />
-															</NavLink>
-														</td>
-													</tr>);
-												})
-											)}
+												stores.productsStore.content?.filter((product: BasicProductInfo) => {
+														return (category == 'All' || product.category == category)
+													}).map((product: BasicProductInfo) => {
+														return (<tr 
+															key={product.productId}
+															data-id={product.productId}
+															data-label={product.name}
+															data-set={product.isSet ? '1' : '0'}
+															className={`hover ${product.productId == selected ? "active" : ""} ${!product.visible && 'bg-base-300 line-through'}`}
+															onClick={(e: MouseEvent<HTMLTableRowElement>) => {
+																	setSelected(parseInt(e.currentTarget.getAttribute("data-id") ?? "0"));
+																	setSelectedName(e.currentTarget.getAttribute("data-label") ?? "-");
+																	setIsSet(e.currentTarget.getAttribute("data-set") == '1');
+																}}
+															onDoubleClick={(e: MouseEvent<HTMLTableRowElement>) => {
+																	let id = e.currentTarget.getAttribute("data-id") ?? "0";
+																	navigate(`/products/${id}`);
+																}}
+															>
+																<td data-label="Image" className="w-20"><img src={product.remoteUrl} className="w-12"></img></td>
+																<td data-label="Product" >
+																	<div className="flex gap-2">
+																		{product.name} 
+																		{product.isNew && <MdFiberNew className="text-blue-500 text-lg" />} 
+																		{product.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg" />}
+																		{product.isSet && <span className="text-xs">(Set)</span>}
+																	</div>
+																</td>
+																<td data-label="Category" >{product.category}</td>
+																<td data-label="Base price">$ {product.basePrice}</td>
+																<td data-label="Selling price">$ {product.price}</td>
+																<td data-label="Variants">
+																	{product.variants} 
+																	<NavLink to={`/products/${product.productId}/variants`} className="btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none">
+																		<MdEdit />
+																	</NavLink>
+																</td>
+															</tr>
+														);
+													})
+												)}
 										</tbody>
 									</table>
 								</div>

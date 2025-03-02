@@ -136,12 +136,21 @@ export class ClientAppService {
                             },
                             where: {
                                 visible: true
+                            },
+                            orderBy: {
+                                name: 'asc'
                             }
                         }
                     },where : {
                         visible: true
+                    },
+                    orderBy: {
+                        name: 'asc'
                     }
                 }
+            },
+            orderBy: {
+                category: 'asc'
             }
         });
 
