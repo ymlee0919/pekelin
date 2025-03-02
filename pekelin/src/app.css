@@ -93,7 +93,7 @@ div.dropdown > ul > li > a.active {
 }
 
 .bg-kids {
-    background-image: url('/background.jpg');
+    background-image: url('/background.png');
     background-position: center center;
     background-size: contain;
 }

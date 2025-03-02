@@ -71,7 +71,7 @@ export class ProductsService {
                 },
                 _count: {
                     select: {
-                        Variants: true
+                        Variants: true,
                     }
                 }
             },
@@ -320,7 +320,7 @@ export class ProductsService {
         if(!category)
             throw new NotFoundException("Selected category do not exists");
 
-        let updated = await this.database.$transaction(async (database) => {
+        let updated : UpdatedProduct = await this.database.$transaction(async (database) => {
 
             let data : Partial<UpdatedProduct> = {
                 categoryId: newProduct.categoryId,
@@ -380,6 +380,8 @@ export class ProductsService {
 
             return record;
         });
+
+        updated.oldImage = oldProduct.image;
 
         return updated;
     }

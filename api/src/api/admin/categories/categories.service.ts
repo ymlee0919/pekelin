@@ -126,16 +126,16 @@ export class CategoriesService {
      */
     async updateCategory(categoryId: number, newCategory: CategoryDTO, newImage?: ImageSrc) : Promise<UpdatedCategory> 
     {
-        let currentService = await this.database.categories.findFirst({where : {
+        let currentCategory = await this.database.categories.findFirst({where : {
             categoryId : categoryId
         }});
 
         // Validate the category exists
-        if(!currentService)
+        if(!currentCategory)
             throw new InvalidOperationError('The category you want to update do not exist');
 
         // Validate the new category name do not exists
-        if(currentService.category.toLowerCase() != newCategory.category.toLowerCase()){
+        if(currentCategory.category.toLowerCase() != newCategory.category.toLowerCase()){
             let exists = await this.existsCategory(newCategory.category);
             if(exists)
                 throw new InvalidOperationError(`The category ${newCategory.category} already exists`);
@@ -154,14 +154,16 @@ export class CategoriesService {
             data.expiry = newImage.expiryRemote;
         }
 
-        let updated = await this.database.categories.update({
+        let updated : UpdatedCategory = await this.database.categories.update({
             where: {
-                categoryId: currentService.categoryId
+                categoryId: currentCategory.categoryId
             }, data, 
             select: {
                 updatedAt: true, ...CategoriesService.defaultSelection
             }
         });
+
+        updated.oldImage = currentCategory.icon;
 
         return updated;
     }

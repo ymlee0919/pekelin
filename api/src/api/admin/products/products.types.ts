@@ -64,6 +64,7 @@ export interface CreatedProduct extends BasicProduct {
 }
 
 export interface UpdatedProduct extends BasicProduct {
+    oldImage?: string;
     updatedAt: Date;
 }
 

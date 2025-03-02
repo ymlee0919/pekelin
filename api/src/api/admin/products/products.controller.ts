@@ -120,7 +120,7 @@ export class ProductsController {
     ) file?: string) : Promise<UpdatedProduct> 
     {
 
-       let fileName = (!!file) ? `${multerConfig.categoriesDest}${file}` : null;
+       let fileName = (!!file) ? `${multerConfig.productsDest}${file}` : null;
 
         try {
             let remoteUrl : string | null = null;
@@ -140,6 +140,14 @@ export class ProductsController {
             let updated = await this.manager.updateProduct(productId, product, (!!file) ? {
                 local: fileName, remote: remoteUrl, expiryRemote: Math.round(Date.now() / 1000) + 72000
             } : null);
+
+            // Delete the old image
+            if(file) {
+                let {oldImage, ...item} = updated;
+                this.fileService.deleteFile(oldImage);
+                this.cloudService.deleteFile(oldImage);
+                updated = item;
+            }
 
             return updated;
         } 

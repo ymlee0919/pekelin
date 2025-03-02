@@ -111,7 +111,7 @@ export class VariantsController {
     @Put(':productId/variants/:variantId')
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
-    async updateImage(
+    async update(
         @Param('productId', ParseIntPipe) productId: number,
         @Param('variantId', ParseIntPipe) variantId: number,
         @Body() body: any,
@@ -141,6 +141,14 @@ export class VariantsController {
             let updated = await this.manager.updateVariant(productId, variantId, product, (!!file) ? {
                 local: fileName, remote: remoteUrl, expiryRemote: Math.round(Date.now() / 1000) + 72000
             } : null);
+
+            // Delete the old image
+            if(file) {
+                let {oldImage, ...item} = updated;
+                this.fileService.deleteFile(oldImage);
+                this.cloudService.deleteFile(oldImage);
+                updated = item;
+            }
 
             return updated;
         } 

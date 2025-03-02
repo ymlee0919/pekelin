@@ -70,6 +70,9 @@ export class VariantsService {
         let result = await this.database.productVariants.findMany({
             where: {
                 productId
+            },
+            orderBy: {
+                name: 'asc'
             }
         });
 
@@ -138,7 +141,7 @@ export class VariantsService {
         if(!oldVariant)
             throw new NotFoundException("The selected variant do not exists");
 
-        let updated = await this.database.$transaction(async (database) => {
+        let updated : UpdatedVariant = await this.database.$transaction(async (database) => {
 
             let data : Partial<UpdatedVariant> = {
                 name: newVariant.name,
@@ -193,6 +196,8 @@ export class VariantsService {
 
             return record;
         });
+
+        updated.oldImage = oldVariant.image;
 
         return updated;
     }

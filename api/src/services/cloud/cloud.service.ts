@@ -64,12 +64,16 @@ export class CloudService {
 		if (process.env.NODE_ENV === 'development')
 			return;
 		
-		const command = new DeleteObjectCommand({
-		  Bucket: cloudConfig.bucketName,
-		  Key: filePath,
-		});
-	
-		await this.s3Client.send(command);
+		try {
+			const command = new DeleteObjectCommand({
+				Bucket: cloudConfig.bucketName,
+				Key: filePath,
+			  });
+		  
+			  await this.s3Client.send(command);
+		} catch(error) {
+			// Silent return
+		}
 
 	  }
 }

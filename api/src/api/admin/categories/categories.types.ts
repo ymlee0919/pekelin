@@ -14,6 +14,7 @@ export interface CreatedCategory extends CategoryInfo {
 }
 
 export interface UpdatedCategory extends CategoryInfo {
+    oldImage?: string;
     updatedAt: Date;
 }
 

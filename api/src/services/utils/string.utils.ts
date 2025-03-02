@@ -12,8 +12,9 @@ export function name2url(text: string) : string {
     }
 
     let item = text.toLowerCase();
-    for(let c in hash)
-        item = item.replace(c, hash[c]);
+    for(let c of item)
+        if(hash.hasOwnProperty(c))
+            item = item.replace(c, hash[c]);
 
     while(item.indexOf('--') != -1)
         item = item.replace('--', '-');

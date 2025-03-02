@@ -78,7 +78,7 @@ export class CategoriesController {
     @Patch('/:categoryId')
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
-    async updateImage(
+    async update(
         @Param('categoryId', ParseIntPipe) categoryId: number,
         @Body() category: CategoryDTO,
         @UploadedFile( 
@@ -101,6 +101,13 @@ export class CategoriesController {
                 expiryRemote: Math.round(Date.now() / 60000) + 72000
             } : null);
 
+            // Delete the old image
+            if(file) {
+                let {oldImage, ...item} = updated;
+                this.fileService.deleteFile(oldImage);
+                this.cloudService.deleteFile(oldImage);
+                updated = item;
+            }
             
             return updated;
         } 

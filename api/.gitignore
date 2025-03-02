@@ -7,6 +7,7 @@ node_modules
 
 # Public dorectory
 public/
+dist/
 
 # Other staff
 TODO.txt

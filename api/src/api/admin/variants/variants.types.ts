@@ -47,5 +47,6 @@ export interface CreatedVariant extends BasicVariant {
 }
 
 export interface UpdatedVariant extends BasicVariant {
+    oldImage?: string;
     updatedAt: Date;
 }
