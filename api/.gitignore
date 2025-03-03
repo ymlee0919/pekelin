@@ -6,7 +6,8 @@ node_modules
 .vscode
 
 # Public dorectory
-public/
+public/images/
+public/info/
 dist/
 
 # Other staff

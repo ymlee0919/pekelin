@@ -60,4 +60,14 @@ export default class ProductsHttpProvider extends AxiosProvider<Array<BasicProdu
 		}
 		return true;
 	}
+
+	async save(): Promise<boolean | null> {
+		try {
+			let saved = await HttpProvider.post<null, boolean>("/products/save");
+			return saved;
+		} catch (error: any) {
+			this.handleError(error, "Unable to save the database");
+		}
+		return null;
+	}
 }

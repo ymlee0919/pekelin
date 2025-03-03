@@ -9,11 +9,13 @@
 	"build": "concurrently \"npm run build-api\" \"npm run build-admin\"",
 	"build-api": "cd api && npm run build",
     "build-admin": "cd admin && npm run build",
+    "build-client": "cd pekelin && npm run build",
 	
-	"deploy": "npm run deploy-index && npm run deploy-assets",
-	"deploy-index": "del client\\apps\\admin\\view\\index.html && copy admin\\dist\\index.html client\\apps\\admin\\view\\index.html",
-	"deploy-assets": "del client\\public\\assets\\index*.*  && copy admin\\dist\\assets\\* client\\public\\assets\\",
-	
+	"deploy": "npm run copy-categories && npm run copy-products && npm run copy-info",
+	"copy-categories": "del pekelin\\public\\images\\categories\\*.jpg && copy api\\public\\images\\categories\\*.jpg pekelin\\public\\images\\categories\\",
+	"copy-products": "del pekelin\\public\\images\\products\\*.png && copy api\\public\\images\\products\\*.png pekelin\\public\\images\\products\\",
+	"copy-info": "del pekelin\\public\\info\\db.json && copy api\\public\\info\\db.json pekelin\\public\\info\\",
+
 	"start": "concurrently \"npm run start-client\" \"npm run start-api\"",
 	"start-client": "cd client && node ./bin/www",
 	"start-api": "cd api && node dist/main"

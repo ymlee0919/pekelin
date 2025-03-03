@@ -160,7 +160,7 @@ const UpdateCategoryDialog = forwardRef( (props: UpdateCategoryDialogProps, ref)
 											>
 												<img
 													src={
-														props.imageUrl 
+														import.meta.env.VITE_IMG_URL + props.imageUrl 
 													}
 												/>
 											</div>

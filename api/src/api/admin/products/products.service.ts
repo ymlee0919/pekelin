@@ -6,7 +6,12 @@ import { ImageSrc } from "src/api/common/types/common.types";
 import { Product, CreatedProduct, UpdatedProduct, BasicProduct, BasicProductInfo, BasicFeature, FeatureStatus, UpdatedSet, CategorySource, ProductSet } from "./products.types";
 import { name2url } from "src/services/utils/string.utils";
 import { CloudService } from 'src/services/cloud/cloud.service';
-import { isSet } from "util/types";
+
+import * as fs from 'fs';
+import { promisify } from 'util';
+import { join } from 'path';
+
+const writeFile = promisify(fs.writeFile);
 
 /**
  * Class to manage the unique settings record of the business
@@ -543,4 +548,91 @@ export class ProductsService {
 
         return deleted;
     }
+
+    /**
+         * Get general app information
+         * 
+         * @returns General information
+         */
+        async save() : Promise<boolean>
+        {
+            //await this.updateExpiryImages();
+            
+            let database = await this.database.categories.findMany({
+                // Categories
+                select: {
+                    categoryId: true,
+                    category: true,
+                    description: true,
+                    url: true,
+                    remoteUrl: true,
+                    expiry: true,
+                    // Product information
+                    Products : {
+                        select : {
+                            productId: true,
+                            categoryId: true,
+                            name: true,
+                            gender: true,
+                            url: true,
+                            description: true,
+                            price: true,
+                            isSet: true,
+                            isNew: true,
+                            element1Id: true,
+                            element2Id: true,
+                            isBestSeller: true,
+                            remoteUrl: true,
+                            expiry: true,
+                            Features: {
+                                select: {
+                                    title: true,
+                                    content: true,
+                                }
+                            },
+                            // Variants
+                            Variants : {
+                                select: {
+                                    variantId: true,
+                                    productId: true,
+                                    name: true,
+                                    description: true,
+                                    isBestSeller: true,
+                                    isNew: true,
+                                    remoteUrl: true,
+                                    expiry: true,
+                                    Features: {
+                                        select: {
+                                            title: true,
+                                            content: true,
+                                        }
+                                    },
+                                },
+                                where: {
+                                    visible: true
+                                },
+                                orderBy: {
+                                    name: 'asc'
+                                }
+                            }
+                        },where : {
+                            visible: true
+                        },
+                        orderBy: {
+                            name: 'asc'
+                        }
+                    }
+                },
+                orderBy: {
+                    category: 'asc'
+                }
+            });
+
+            const jsonData = JSON.stringify(database, null, 2);
+
+            let outputPath = join(__dirname, '../../../../../', '/public/info/db.json');
+            await writeFile(outputPath, jsonData);
+    
+            return true;
+        }
 }

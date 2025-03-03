@@ -129,5 +129,22 @@ export class ProductsStore extends Store<Array<BasicProductInfo>> {
 			};
 		}
 	}
+
+	async save(): Promise<EventResult> {
+		try {
+			await this.provider.save();
+
+			return {
+				success: true,
+				message: "Information saved",
+			};
+		} catch (error) {
+			return {
+				success: false,
+				errorCode: this.provider.lastErrorCode ?? 0,
+				message: String(error),
+			};
+		}
+	}
 }
 

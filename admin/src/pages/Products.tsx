@@ -212,7 +212,9 @@ const Products = () => {
 																	navigate(`/products/${id}`);
 																}}
 															>
-																<td data-label="Image" className="w-20"><img src={product.remoteUrl} className="w-12"></img></td>
+																<td data-label="Image" className="w-20">
+																	<img src={import.meta.env.VITE_IMG_URL + product.remoteUrl} className="w-12"></img>
+																</td>
 																<td data-label="Product" >
 																	<div className="flex gap-2">
 																		{product.name} 

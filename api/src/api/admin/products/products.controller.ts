@@ -211,4 +211,11 @@ export class ProductsController {
 
         throw new BadRequestException('Unable to delete the product');
     }
+
+    @Post('/save')
+    @HttpCode(HttpStatus.OK)
+    async save(): Promise<boolean>{
+        let saved = await this.manager.save();
+        return saved;
+    }
 }

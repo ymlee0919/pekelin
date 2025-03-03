@@ -24,7 +24,7 @@ export class CloudService {
 	async uploadFile(filePath: string): Promise<string> 
 	{
 		if (process.env.NODE_ENV === 'development')
-			return "http://localhost:3000/" + filePath;
+			return "/" + filePath;
 
 		const localFilePath = path.join(process.cwd(), './', `${process.env.UPLOAD_ROOT}${filePath}`);
 
@@ -48,7 +48,8 @@ export class CloudService {
 	async getSharedLink(filePath: string, expiresIn: number = 72000): Promise<string> {
 
 		if (process.env.NODE_ENV === 'development')
-			return "http://localhost:3000/" + filePath;
+			return "/" + filePath;
+			//return "http://localhost:3000/" + filePath;
 
 		const command = new GetObjectCommand({
 			Bucket: cloudConfig.bucketName,

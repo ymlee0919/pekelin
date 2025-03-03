@@ -154,7 +154,7 @@ const Categories = () => {
 								<div key={category.categoryId} className="card card-compact bg-base-100 shadow-xl">
 									<figure>
 										<img
-											src={category.remoteUrl}
+											src={import.meta.env.VITE_IMG_URL + category.remoteUrl}
 											alt={category.category}
 										></img>
 									</figure>

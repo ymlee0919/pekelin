@@ -124,7 +124,7 @@ const ProductInfo = () => {
 						</div>
 						<div className="panel-content p-5">
 							<div className="flex">
-								<img className="flex-none shadow-md w-40 h-40 rounded-md mr-5 mb-5" src={product?.remoteUrl}></img>
+								<img className="flex-none shadow-md w-40 h-40 rounded-md mr-5 mb-5" src={import.meta.env.VITE_IMG_URL + product?.remoteUrl}></img>
 								<div className="flex-1">
 									<p className="border-b text-2xl">
 										{product?.name} 
@@ -171,7 +171,7 @@ const ProductInfo = () => {
 												<div key={variant.variantId} className={`card card-compact ${variant.visible ? 'bg-base-100' : 'bg-base-200'} shadow-xl`}>
 													<figure>
 														<img
-															src={variant.remoteUrl}
+															src={import.meta.env.VITE_IMG_URL + variant.remoteUrl}
 															alt={variant.name}
 														></img>
 													</figure>

@@ -21,7 +21,7 @@ const Loader = (props: CommonProps) => {
     useEffect(() => {
         setStatus(StoreStatus.LOADING);
 
-        HttpProvider.get<any, DataBase>('/app').then((database) => {
+        HttpProvider.get<any, DataBase>('/info/db.json').then((database) => {
             db.setData(database);
             setStatus(StoreStatus.READY);
         }).catch((reason) => {

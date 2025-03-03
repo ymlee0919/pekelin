@@ -5,15 +5,32 @@ import {
 	MdOutlineCases,
 	MdAccountCircle,
 	MdLogout,
+	MdSave,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import toast from 'react-hot-toast';
+import useStores from '../hooks/useStores';
 
 const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
+	const stores = useStores();
+
 	const {logout} = useAuth();
 	
 	const handleLogout = () => {
 		logout();
+	}
+
+	const save = async () => {
+		let loadingToast = toast.loading("Saving database...");
+		let result = await stores.productsStore.save();
+		toast.dismiss(loadingToast);
+
+		if (result.success) {
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
 	}
 
  	return (
@@ -57,6 +74,17 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 						</NavLink>
 					</li>
 					
+					<li></li>
+					<li>
+						<a className="group text-sm text-gray-500 p-3 my-1"
+							onClick={save}
+						>
+							<span>
+								<MdSave className="text-xl" />
+							</span>
+							<span>Save</span>
+						</a>
+					</li>
 					<li></li>
 					<li className='sm:invisible visible'>
 						<a onClick={handleLogout} className="group text-sm text-gray-500 p-3 my-1">

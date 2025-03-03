@@ -216,7 +216,7 @@ const EditVariant = () => {
 														: {}
 												}
 											>
-												<img src={image}/>
+												<img src={import.meta.env.VITE_IMG_URL + image}/>
 											</div>
 										</div>
 									</div>
