@@ -38,8 +38,8 @@ const SingleProduct = () => {
                 
             </div>
         </div>
-        <div className="py-8 px-7">
-            <p className="text-xl my-5 text-sky-900 px-7">Variantes</p>
+        <div className="py-8 px-12">
+            <p className="text-xl my-5 text-sky-900 px-7">Opciones</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 justify-center">
                 {
                     db.getProductVariants(product.productId).map((variant: VariantCardInfo) => {

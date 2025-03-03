@@ -39,7 +39,7 @@ const DeleteCategoryDialog = forwardRef( (props: DeleteServiceDialogProps, ref) 
 								<div className="avatar">
 									<div className="w-32 rounded">
 										<img
-											src={import.meta.env.VITE_IMG_URL + props.imageUrl}
+											src={(import.meta.env.VITE_IMG_URL ?? '') + props.imageUrl}
 										/>
 									</div>
 								</div>

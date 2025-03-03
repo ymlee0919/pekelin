@@ -51,7 +51,7 @@ const Variant = () => {
             </div>
         </div>
         <div className="py-6 px-7">
-            <p className="text-xl my-5 text-sky-900 px-7">Variantes</p>
+            <p className="text-xl my-5 text-sky-900 px-7">Otras opciones</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 justify-center">
                 {
                     db.getProductVariants(variant.productId)

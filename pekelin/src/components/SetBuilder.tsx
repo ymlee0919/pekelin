@@ -38,7 +38,8 @@ const SetBuilder = (props: CarouselProps) => {
 
 	return (
 		<div className="py-8 px-7">
-			<p className="text-xl my-5 text-sky-900 px-7">Crea tu propio juego</p>
+			<p className="text-xl text-center mt-5 text-sky-900 px-7">Crea tu propio juego</p>
+			<p className="text-xs text-center mb-5 text-sky-900 px-7">Desliza las piezas hasta que encuentres la combinación que te gusta.</p>
 			<div className="flex flex-wrap gap-2">
 				<div className="w-full md:w-5/12 sm:w-11/12">
 					<div className='px-5 mx-5 pb-5'>

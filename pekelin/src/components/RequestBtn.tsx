@@ -58,19 +58,19 @@ const RequestBtn = (props: RequestBtnProps) => {
                 <p className="font-bold text-lg mb-3">Comunicarme por</p>
                 <div className="flex justify-center">
                     <div className="m-3 px-4">
-                        <a href={`https://wa.me/54881372&text=${encoded}`} target="_blank">
+                        <a href={`https://wa.me/54881372?text=${encoded}`} target="_blank">
                             <img src="/app-icons/WhatsApp.png" className="max-h-12"></img>
                             <span className="text-xs">WhatsApp</span>
                         </a>
                     </div>
                     <div className="m-3 px-4">
-                        <a href={`https://t.me/@ymlee0919?start=${encoded}`} target="_blank">
+                        <a href={`https://t.me/ymlee0919?text=${encoded}`} target="_blank">
                             <img src="/app-icons/Telegram.png" className="max-h-12"></img>
                             <span className="text-xs">Telegram</span>
                         </a>
                     </div>
                     <div className="m-3 px-4">
-                        <a href={`https://m.me/100010586863647?source=qr_link_share&text${encoded}`} target="_blank">
+                        <a href={`https://m.me/100010586863647?source=qr_link_share&text=${encoded}`} target="_blank">
                             <img src="/app-icons/Messenger.png" className="max-h-12"></img>
                             <span className="text-xs">Messenger</span>
                         </a>

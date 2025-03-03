@@ -218,7 +218,7 @@ const EditProduct = () => {
 														: {}
 												}
 											>
-												<img src={import.meta.env.VITE_IMG_URL + image}/>
+												<img src={(import.meta.env.VITE_IMG_URL ?? '') + image}/>
 											</div>
 										</div>
 									</div>
@@ -230,7 +230,6 @@ const EditProduct = () => {
 								</div>
                             </div>
                             <div className="w-full md:w-8/12 sm:w-7/12">
-                                
                                 <div className="flex flex-wrap gap-3">
                                 <div className="w-full md:w-6/12 sm:w-10/12">
                                         <label className="form-control w-full max-w-xs">
