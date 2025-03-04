@@ -218,7 +218,7 @@
             "productId": 10,
             "name": "Juego de cuna blanco",
             "description": "",
-            "isBestSeller": false,
+            "isBestSeller": true,
             "isNew": false,
             "remoteUrl": "/images/products/d136fd2d-762b-475d-a8b2-57ae581d4cfc.png",
             "expiry": 1740987853,
@@ -279,7 +279,7 @@
             "name": "Juego de cuna rojo de oso y avejas",
             "description": "",
             "isBestSeller": false,
-            "isNew": false,
+            "isNew": true,
             "remoteUrl": "/images/products/efde94c5-da31-40da-abd0-3198aeb151c9.png",
             "expiry": 1740995968,
             "Features": [
@@ -334,6 +334,98 @@
               {
                 "title": "Color",
                 "content": "Blanco"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "productId": 13,
+        "categoryId": 1,
+        "name": "Juego de salón",
+        "gender": "M",
+        "url": "juego-de-salon",
+        "description": "Juego para sacar al bebé del salón de parto.",
+        "price": 1000,
+        "isSet": false,
+        "isNew": false,
+        "element1Id": null,
+        "element2Id": null,
+        "isBestSeller": false,
+        "remoteUrl": "/images/products/758f47f1-f114-460b-ad2b-2f6a7a2db607.jpg",
+        "expiry": 1741004611,
+        "Features": [
+          {
+            "title": "Edad",
+            "content": "Para recién nacido y hasta 2 o 3 meses."
+          },
+          {
+            "title": "Piezas",
+            "content": "Enguatada, pantalón, gorro y guantes."
+          }
+        ],
+        "Variants": [
+          {
+            "variantId": 53,
+            "productId": 13,
+            "name": "Juego de salón azul para varón",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/7506edac-d0bd-42b4-b10f-341e2e70479d.png",
+            "expiry": 1741004664,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Azul"
+              }
+            ]
+          },
+          {
+            "variantId": 55,
+            "productId": 13,
+            "name": "Juego de salón del pájaro loco",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": true,
+            "remoteUrl": "/images/products/2dcc9bbf-3136-4ff8-b535-2a521b678dab.png",
+            "expiry": 1741004802,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Tela estampada con el pájaro loco"
+              }
+            ]
+          },
+          {
+            "variantId": 56,
+            "productId": 13,
+            "name": "Juego de salón rosado para niña",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/8429d0b2-88f2-4ca9-bce6-b3bca0a1b654.png",
+            "expiry": 1741005294,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Rosado"
+              }
+            ]
+          },
+          {
+            "variantId": 54,
+            "productId": 13,
+            "name": "Juego de salón verde de bichitos",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/607e86c1-4710-42fa-8eec-7bf9797d9b33.png",
+            "expiry": 1741004759,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Tela estampada de bichitos verdes"
               }
             ]
           }
@@ -565,7 +657,7 @@
             "name": "Blusa azul de Mini",
             "description": "",
             "isBestSeller": false,
-            "isNew": false,
+            "isNew": true,
             "remoteUrl": "/images/products/523db610-ca22-4e08-abdd-d2dbb96ee916.png",
             "expiry": 1740986679,
             "Features": [
@@ -809,50 +901,6 @@
         "Variants": []
       },
       {
-        "productId": 14,
-        "categoryId": 2,
-        "name": "Juego de salón",
-        "gender": "F",
-        "url": "juego-de-salon",
-        "description": "Juego de salón para sacar la niña del hospital.",
-        "price": 1000,
-        "isSet": false,
-        "isNew": false,
-        "element1Id": null,
-        "element2Id": null,
-        "isBestSeller": false,
-        "remoteUrl": "/images/products/e7965bd0-058a-4413-9185-111e39286dbb.jpg",
-        "expiry": 1741005220,
-        "Features": [
-          {
-            "title": "Edad",
-            "content": "Para niña recién nacida y hasta 2 o 3 meses de nacida"
-          },
-          {
-            "title": "Piezas",
-            "content": "Enguatada, pantalón, gorro y guantes"
-          }
-        ],
-        "Variants": [
-          {
-            "variantId": 56,
-            "productId": 14,
-            "name": "Juego de salón rosado para niña",
-            "description": "",
-            "isBestSeller": false,
-            "isNew": false,
-            "remoteUrl": "/images/products/8429d0b2-88f2-4ca9-bce6-b3bca0a1b654.png",
-            "expiry": 1741005294,
-            "Features": [
-              {
-                "title": "Color",
-                "content": "Rosado"
-              }
-            ]
-          }
-        ]
-      },
-      {
         "productId": 9,
         "categoryId": 2,
         "name": "Juego de short y blusa",
@@ -962,7 +1010,7 @@
             "productId": 12,
             "name": "Monito rosado de Mini",
             "description": "",
-            "isBestSeller": false,
+            "isBestSeller": true,
             "isNew": false,
             "remoteUrl": "/images/products/82a517d2-d6a1-469a-a25b-4bd404c01432.png",
             "expiry": 1740990185,
@@ -1373,7 +1421,7 @@
             "name": "Enguatada color mostaza",
             "description": "",
             "isBestSeller": false,
-            "isNew": false,
+            "isNew": true,
             "remoteUrl": "/images/products/57aef54d-6350-4d94-afad-bae33bf93949.png",
             "expiry": 1741008160,
             "Features": [
@@ -1393,7 +1441,7 @@
             "name": "Enguatada del pájaro loco",
             "description": "",
             "isBestSeller": false,
-            "isNew": false,
+            "isNew": true,
             "remoteUrl": "/images/products/8f327021-3327-4541-946e-384095f27be0.png",
             "expiry": 1741008195,
             "Features": [
@@ -1408,7 +1456,7 @@
             "productId": 20,
             "name": "Enguatada negra",
             "description": "",
-            "isBestSeller": false,
+            "isBestSeller": true,
             "isNew": false,
             "remoteUrl": "/images/products/89767593-f961-4522-ad94-5247ad411ab0.png",
             "expiry": 1741008104,
@@ -1467,82 +1515,6 @@
           }
         ],
         "Variants": []
-      },
-      {
-        "productId": 13,
-        "categoryId": 3,
-        "name": "Juego de salón",
-        "gender": "M",
-        "url": "juego-de-salon",
-        "description": "Juego para sacar al niño del salón de parto.",
-        "price": 1000,
-        "isSet": false,
-        "isNew": false,
-        "element1Id": null,
-        "element2Id": null,
-        "isBestSeller": false,
-        "remoteUrl": "/images/products/758f47f1-f114-460b-ad2b-2f6a7a2db607.jpg",
-        "expiry": 1741004611,
-        "Features": [
-          {
-            "title": "Edad",
-            "content": "Para recién nacido y hasta 2 o 3 meses."
-          },
-          {
-            "title": "Piezas",
-            "content": "Enguatada, pantalón, gorro y guantes."
-          }
-        ],
-        "Variants": [
-          {
-            "variantId": 53,
-            "productId": 13,
-            "name": "Juego de salón azul para varón",
-            "description": "",
-            "isBestSeller": false,
-            "isNew": false,
-            "remoteUrl": "/images/products/7506edac-d0bd-42b4-b10f-341e2e70479d.png",
-            "expiry": 1741004664,
-            "Features": [
-              {
-                "title": "Color",
-                "content": "Azul"
-              }
-            ]
-          },
-          {
-            "variantId": 55,
-            "productId": 13,
-            "name": "Juego de salón del pájaro loco",
-            "description": "",
-            "isBestSeller": false,
-            "isNew": false,
-            "remoteUrl": "/images/products/2dcc9bbf-3136-4ff8-b535-2a521b678dab.png",
-            "expiry": 1741004802,
-            "Features": [
-              {
-                "title": "Color",
-                "content": "Tela estampada con el pájaro loco"
-              }
-            ]
-          },
-          {
-            "variantId": 54,
-            "productId": 13,
-            "name": "Juego de salón verde de bichitos",
-            "description": "",
-            "isBestSeller": false,
-            "isNew": false,
-            "remoteUrl": "/images/products/607e86c1-4710-42fa-8eec-7bf9797d9b33.png",
-            "expiry": 1741004759,
-            "Features": [
-              {
-                "title": "Color",
-                "content": "Tela estampada de bichitos verdes"
-              }
-            ]
-          }
-        ]
       },
       {
         "productId": 7,
@@ -1634,7 +1606,7 @@
             "productId": 21,
             "name": "Pantalón negro y gris",
             "description": "",
-            "isBestSeller": false,
+            "isBestSeller": true,
             "isNew": false,
             "remoteUrl": "/images/products/c3c605bf-5ae2-4a06-b1ad-e01c8f21099b.png",
             "expiry": 1741008501,
@@ -1758,7 +1730,7 @@
             "productId": 4,
             "name": "Pullover rojo",
             "description": "",
-            "isBestSeller": false,
+            "isBestSeller": true,
             "isNew": false,
             "remoteUrl": "/images/products/1531d0be-a88d-4f14-9a84-af43f493058e.png",
             "expiry": 1740987360,
@@ -1893,7 +1865,7 @@
             "productId": 5,
             "name": "Short de puño rojo",
             "description": "",
-            "isBestSeller": false,
+            "isBestSeller": true,
             "isNew": false,
             "remoteUrl": "/images/products/90e58ac4-b112-4562-b9da-b41d77eb0ce7.png",
             "expiry": 1740914750,

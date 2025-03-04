@@ -1,3 +1,7 @@
+body {
+    font-family: Nunito, sans-serif !important;
+}
+
 /* MAIN MENU */
 div.dropdown > ul > li > a {
     padding: 8px;
@@ -33,13 +37,27 @@ div.dropdown > ul > li > a.active {
 .price-label {
     position: absolute;
     bottom: 10px;
-    right: -12px;
+    right: -17px;
     background-color: #e17b1f;
     padding: 4px 12px 4px 15px;
-    border-radius: 9px 0 0 9px;
+    border-radius: 9px 0 2px 9px;
     color: #f3f39f;
     font-size: 17px;
     font-weight: 600;
+}
+
+.price-label::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid #c15e07;
+    border-bottom: 8px solid transparent;
+    
+    transform: rotate(-180deg); /* Ajuste fino para la posición */
 }
 
 .price {
@@ -53,7 +71,7 @@ div.dropdown > ul > li > a.active {
 
 .hero-content p.price-label {
     bottom: 15px;
-    right: -5px;
+    right: -0.5rem;
     font-size: 19px;
 }
 

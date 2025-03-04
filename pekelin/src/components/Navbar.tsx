@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom"
 const Navbar = () => {
 
     return <>
-    <div className="px-5 navbar from-blue-200 to-blue-100 bg-gradient-to-t z-30 rounded-xl fixed m-4 w-auto min-h-4 left-2 right-2 shadow-md text-sky-800">
+    <div className="px-5 navbar from-blue-200 to-blue-100 bg-gradient-to-t z-50 rounded-xl fixed m-4 w-auto min-h-4 left-2 right-2 shadow-md text-sky-800">
         <div className="navbar-start">
             <img src="/icon.png" className="max-h-8"></img>
                  <span className="text-xl pl-1">Pekelin</span>

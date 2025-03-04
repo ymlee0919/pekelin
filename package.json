@@ -2,9 +2,10 @@
   "name": "photos",
   "version": "1.0.0",
   "scripts": {
-    "dev": "concurrently \"npm run dev-api\" \"npm run dev-admin\"",
+    "dev": "concurrently \"npm run dev-api\" \"npm run dev-admin\" \"npm run dev-client\"",
     "dev-api": "cd api && npm run start:dev",
     "dev-admin": "cd admin && npm run dev",
+    "dev-client": "cd pekelin && npm run dev",
 	
 	"build": "concurrently \"npm run build-api\" \"npm run build-admin\"",
 	"build-api": "cd api && npm run build",

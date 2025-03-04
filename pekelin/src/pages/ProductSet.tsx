@@ -51,7 +51,7 @@ const ProductSet = () => {
                         .filter((prod : ProductCardInfo) => {
                             return prod.productId != product.productId
                         }).map((product: ProductCardInfo) => {
-                            return <ProductCard key={product.productId} product={product} />
+                            return <ProductCard key={product.productId} product={product} showBestSeller={true} />
                         })
                 }
             </div>

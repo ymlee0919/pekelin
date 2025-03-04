@@ -100,7 +100,7 @@ const Home = () => {
                 /** Best sellers */
                 <>
                     <br></br>
-                    <p className="text-center text-xl my-5 text-sky-900">Best seller</p>
+                    <p className="text-center text-xl my-5 text-sky-900">Lo más vendido</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 justify-center px-5">
                     {
                         db.bestSellerProductsId.map((productId: number) => 

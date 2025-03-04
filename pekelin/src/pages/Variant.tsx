@@ -4,6 +4,7 @@ import { ProductCardInfo, VariantCardInfo, Feature} from "../database/database.t
 import VariantCircle from "../components/VariantCircle";
 import ProductCard from "../components/ProductCard";
 import RequestBtn from "../components/RequestBtn";
+import { MdStar } from "react-icons/md";
 
 const Variant = () => {
 
@@ -18,7 +19,10 @@ const Variant = () => {
         <div className="pt-20 pb-5 lg:px-32">
             <div className="flex flex-wrap gap-3 pt-2">
                 
-                <div className="md:w-5/12 sm:w-5/12 lg:px-1 px-8">
+                <div className="md:w-5/12 sm:w-5/12 lg:px-1 px-8 relative">
+                    { variant.isBestSeller && <div className="inline-flex bg-orange-500 py-1 px-2 text-yellow-100 text-xs absolute right-3 rounded-xl top-1">
+                        <MdStar className="text-lg pr-1" /> Best Seller
+                    </div> }
                     <img
                         src={variant.remoteUrl}
                         className="w-full lg:max-w-96 rounded-lg shadow-xl p-3" 

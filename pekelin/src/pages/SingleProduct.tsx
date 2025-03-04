@@ -19,7 +19,7 @@ const SingleProduct = () => {
                     <img
                         src={product.remoteUrl}
                         className="w-full lg:max-w-80 rounded-lg shadow-xl" />
-                        <p className="price-label">$ {product.price}</p>
+                        <p className="price-label -right-2">$ {product.price}</p>
                 </div>
                 <div className="px-8 lg:px-20">
                     <h1 className="text-3xl font-bold text-gray-600">
@@ -57,7 +57,7 @@ const SingleProduct = () => {
                         .filter((prod : ProductCardInfo) => {
                             return prod.productId != product.productId
                         }).map((product: ProductCardInfo) => {
-                            return <ProductCard key={product.productId} product={product} />
+                            return <ProductCard key={product.productId} product={product} showBestSeller={true} />
                         })
                 }
             </div>

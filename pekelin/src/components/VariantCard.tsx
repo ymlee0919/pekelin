@@ -11,9 +11,9 @@ const VariantCard = (props: VariantCardProps) => {
         <NavLink to={`/${props.variant.categoryUrl}/${props.variant.productUrl}/v/${props.variant.variantId}`}>
             <div className="shadow-md rounded-sm bg-sky-50 p-2">
                 <div className="relative">
-                <div className="aspect-square w-full flex items-center justify-center bg-white">
-                    <img src={props.variant.remoteUrl} alt="Product Name" className="h-full w-full object-contain bg-white"></img>
-                </div>
+                    <div className="aspect-square w-full flex items-center justify-center bg-white">
+                        <img src={props.variant.remoteUrl} alt="Product Name" className="h-full w-full object-contain bg-white"></img>
+                    </div>
                     <p className="price-label">$ {props.variant.price}</p>
                 </div>
                 <div className="px-4 py-2">

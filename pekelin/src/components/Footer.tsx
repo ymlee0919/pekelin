@@ -35,9 +35,9 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            
-            
-            
+        </div>
+        <div className="py-3 bg-blue-950 text-sky-300 text-center text-xs">
+            <span className="px-3">Desarrollado por Yuriesky Méndez</span>(+53) 54 881372<span></span>
         </div>
         
     </>

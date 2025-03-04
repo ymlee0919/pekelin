@@ -32,7 +32,7 @@ const Category = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 justify-center px-5">
             {
                 db.getProductsOf(categoryUrl).map((product: ProductCardInfo) => 
-                    <ProductCard key={product.productId} product={product} />
+                    <ProductCard key={product.productId} product={product} showBestSeller={true} />
                 )
             }
             </div>
