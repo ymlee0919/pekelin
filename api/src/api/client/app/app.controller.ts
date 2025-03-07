@@ -16,8 +16,14 @@ export class ClientAppController {
     @Public()
     @Get('/')
     async getAll(): Promise<any> {
-        let result = await this.manager.getInfo();
+        let result = await this.manager.getDatabase();
         return result;
     }
 
+    @Public()
+    @Get('/info')
+    async getInfo(): Promise<any> {
+        let result = await this.manager.getInfo();
+        return result;
+    }
 }

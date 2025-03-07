@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { S3Client, PutObjectCommand, DeleteObjectCommand} from '@aws-sdk/client-s3';
 import { cloudConfig } from './cloud.config';
 import * as path from 'path'
 import * as fs from 'fs'
+import mime from 'mime';
 
+interface FilebaseResponse {
+	cid: string;
+	name: string;
+	meta: Object;
+}
 
 @Injectable()
 export class CloudService {
@@ -12,29 +17,31 @@ export class CloudService {
 
 	constructor() {
 		this.s3Client = new S3Client({
+			forcePathStyle: true,
 			endpoint: cloudConfig.endpoint,
 			region: cloudConfig.region,
 			credentials: {
-				accessKeyId: cloudConfig.accessKeyId,
-				secretAccessKey: cloudConfig.secretAccessKey
-			}
+				accessKeyId: cloudConfig.accessKey,
+				secretAccessKey: cloudConfig.secretKey,
+			},
 		});
 	}
 
 	async uploadFile(filePath: string): Promise<string> 
 	{
-		if (process.env.NODE_ENV === 'development')
-			return "/" + filePath;
-
 		const localFilePath = path.join(process.cwd(), './', `${process.env.UPLOAD_ROOT}${filePath}`);
+		
+		if (process.env.NODE_ENV === 'development')
+			return "http://localhost:3000/images/" + localFilePath;
 
 		const fileContent = fs.readFileSync(localFilePath);
+		let contentType = mime.getType(localFilePath);
 
 		const command = new PutObjectCommand({
 			Bucket: cloudConfig.bucketName,
 			Key: filePath,
 			Body: fileContent,
-			ACL: 'public-read', // Make the file publicly accessible
+			ContentType: contentType
 		});
 
 		await this.s3Client.send(command);
@@ -48,9 +55,12 @@ export class CloudService {
 	async getSharedLink(filePath: string, expiresIn: number = 72000): Promise<string> {
 
 		if (process.env.NODE_ENV === 'development')
-			return "/" + filePath;
-			//return "http://localhost:3000/" + filePath;
+			return "http://localhost:3000/" + filePath;
 
+		let url = `https://bopaduxavinnhoicgnqe.supabase.co/storage/v1/object/public/${cloudConfig.bucketName}/${filePath}`;
+		return url;
+		
+		/*
 		const command = new GetObjectCommand({
 			Bucket: cloudConfig.bucketName,
 			Key: filePath,
@@ -58,23 +68,19 @@ export class CloudService {
 		
 		const signedUrl = await getSignedUrl(this.s3Client, command, { expiresIn });
 		return signedUrl;
+		*/
 	}
 
 	async deleteFile(filePath: string): Promise<void> {
 
-		if (process.env.NODE_ENV === 'development')
-			return;
+		if (process.env.NODE_ENV === 'development') return;
 		
-		try {
-			const command = new DeleteObjectCommand({
-				Bucket: cloudConfig.bucketName,
-				Key: filePath,
-			  });
-		  
-			  await this.s3Client.send(command);
-		} catch(error) {
-			// Silent return
-		}
+		const command = new DeleteObjectCommand({
+		  Bucket: cloudConfig.bucketName,
+		  Key: filePath,
+		});
+	
+		await this.s3Client.send(command);
 
 	  }
 }

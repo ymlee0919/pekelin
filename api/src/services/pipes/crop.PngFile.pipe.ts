@@ -21,6 +21,9 @@ export class CropPngFilePipe implements PipeTransform<Express.Multer.File, Promi
         
         // Create folder if doesn't exist
         if (!existsSync(uploadPath)) {
+            if(!existsSync( path.dirname(uploadPath) ) )
+                mkdirSync( path.dirname(uploadPath) );
+            
             mkdirSync(uploadPath);
         }
 

@@ -80,7 +80,7 @@ export class ClientAppService {
      * 
      * @returns General information
      */
-    async getInfo() : Promise<DataBase>
+    async getDatabase() : Promise<DataBase>
     {
         await this.updateExpiryImages();
         
@@ -155,6 +155,18 @@ export class ClientAppService {
         });
 
         return database;
+    }
+
+    async getInfo() : Promise<any> {
+        let [categories, products, variants] = await Promise.all([
+            this.database.categories.count(),
+            this.database.products.count(),
+            this.database.productVariants.count()
+        ]);
+
+        return {
+            categories, products, variants
+        }
     }
 
 }
