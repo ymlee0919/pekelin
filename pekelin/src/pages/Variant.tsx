@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import db from "../database/db";
 import { ProductCardInfo, VariantCardInfo, Feature} from "../database/database.types";
-import VariantCircle from "../components/VariantCircle";
-import ProductCard from "../components/ProductCard";
+import VariantCircle from "../components/cards/VariantCircle";
+import ProductCard from "../components/cards/ProductCard";
 import RequestBtn from "../components/RequestBtn";
 import { MdStar } from "react-icons/md";
 

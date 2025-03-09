@@ -7,6 +7,8 @@ import {VariantsStore, SingleVariantStore} from "./variants/Variants.Store";
 import SetsStore from "./sets/Sets.Store";
 import SetSourceStore from "./sets/SetSource.Store";
 
+import ReviewLinksStore from "./reviews/Reviews.Store";
+
 
 /**
  * Class to provide all stores
@@ -31,6 +33,8 @@ export default class RemoteStoresFactory {
     private _variantsStore: VariantsStore | null = null;
 
     private _singleVariantStore: SingleVariantStore | null = null;
+
+    private _reviewLinksStore: ReviewLinksStore | null = null;
     
     // Public properties
     public get accountsStore() : AccountsStore {
@@ -93,5 +97,12 @@ export default class RemoteStoresFactory {
             this._setSourceStore = new SetSourceStore();
 
         return this._setSourceStore;
+    }
+
+    public get reviewLinksStore() : ReviewLinksStore {
+        if(this._reviewLinksStore == null)
+            this._reviewLinksStore = new ReviewLinksStore();
+
+        return this._reviewLinksStore;
     }
 }

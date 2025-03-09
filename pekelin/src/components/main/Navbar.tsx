@@ -1,6 +1,6 @@
 import { MdDehaze } from "react-icons/md"
-import db from "../database/db"
-import { CategoryInfo } from "../database/database.types"
+import db from "../../database/db"
+import { CategoryInfo } from "../../database/database.types"
 import { NavLink } from "react-router-dom"
 
 const Navbar = () => {

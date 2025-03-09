@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
-import { VariantCardInfo } from "../database/database.types";
-import { CommonProps } from "../types/Common";
+import { VariantCardInfo } from "../../database/database.types";
+import { CommonProps } from "../../types/Common";
 import { MdStar } from "react-icons/md";
 
 export interface VariantCircleProps extends CommonProps {

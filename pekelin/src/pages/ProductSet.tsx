@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import db from "../database/db";
 import { CategoryInfo, ProductCardInfo } from "../database/database.types";
-import ProductCard from "../components/ProductCard";
-import CategoryCard from "../components/CategoryCard";
+import ProductCard from "../components/cards/ProductCard";
+import CategoryCard from "../components/cards/CategoryCard";
 // import RequestBtn from "../components/RequestBtn";
 import SetBuilder from "../components/SetBuilder";
 

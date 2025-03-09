@@ -6,9 +6,9 @@ import { TbTruckDelivery } from "react-icons/tb";
 
 import db from "../database/db";
 import { CategoryInfo } from "../database/database.types";
-import ProductCard from "../components/ProductCard";
-import VariantCard from "../components/VariantCard";
-import CategoryCard from "../components/CategoryCard";
+import ProductCard from "../components/cards/ProductCard";
+import VariantCard from "../components/cards/VariantCard";
+import CategoryCard from "../components/cards/CategoryCard";
 
 const Home = () => {
     return <>

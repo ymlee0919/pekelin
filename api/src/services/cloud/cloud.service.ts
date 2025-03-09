@@ -3,7 +3,8 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand} from '@aws-sdk/client-
 import { cloudConfig } from './cloud.config';
 import * as path from 'path'
 import * as fs from 'fs'
-import mime from 'mime';
+
+import { MimeType } from 'mime-type'
 
 interface FilebaseResponse {
 	cid: string;
@@ -35,7 +36,8 @@ export class CloudService {
 			return "http://localhost:3000/images/" + localFilePath;
 
 		const fileContent = fs.readFileSync(localFilePath);
-		let contentType = mime.getType(localFilePath);
+		const mime = new MimeType()
+		let contentType = mime.lookup(localFilePath);
 
 		const command = new PutObjectCommand({
 			Bucket: cloudConfig.bucketName,

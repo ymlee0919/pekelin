@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import db from "../database/db";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../components/cards/ProductCard";
 import { CategoryInfo, ProductCardInfo } from "../database/database.types";
-import CategoryCard from "../components/CategoryCard";
+import CategoryCard from "../components/cards/CategoryCard";
 
 const Category = () => {
 

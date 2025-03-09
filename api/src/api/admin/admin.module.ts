@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CategoriesModule } from './categories/categories.module';
 import { VariantsModule } from './variants/variants.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
 	imports: [
@@ -21,6 +22,7 @@ import { VariantsModule } from './variants/variants.module';
 		ProductsModule,
 		VariantsModule,
 		CategoriesModule,
+		ReviewsModule,
 		JwtModule.register({
 			global: true,
 			secret: process.env.JWT_SECRET,

@@ -2,7 +2,7 @@ import { Controller, Get, Req} from '@nestjs/common';
 import { ClientAppService } from './app.service';
 import { Public } from 'src/api/admin/auth/guard/public.guard';
 
-@Controller('app')
+@Controller('client/app')
 export class ClientAppController {
 
     /**

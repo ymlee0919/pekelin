@@ -123,3 +123,37 @@ model VariantsFeatures {
 
   @@map("variants_features")
 }
+
+
+model ReviewLinks {
+  linkId        Int     @id @default(autoincrement()) @map("link_id")
+  url           String
+  clientName    String  @map("client_name")
+  Review        Reviews?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+
+  @@map("review_link")
+}
+
+model Reviews {
+  reviewId      Int     @id @default(autoincrement()) @map("review_id")
+  linkId        Int     @unique
+  rate          Int
+  comment       String
+  Link          ReviewLinks @relation(fields: [linkId], references: [linkId])
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime? @map("updated_at")
+
+  @@map("review")
+}
+
+model Notifications {
+  notificationId  Int     @id @default(autoincrement()) @map("notification_id")
+  message         String
+  wellRead        Boolean @default(false)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime? @map("updated_at")
+
+  @@map("notifications")
+}

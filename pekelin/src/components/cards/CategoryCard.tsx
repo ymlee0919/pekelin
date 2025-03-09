@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
-import { CategoryInfo } from "../database/database.types";
-import { CommonProps } from "../types/Common";
+import { CategoryInfo } from "../../database/database.types";
+import { CommonProps } from "../../types/Common";
 
 export interface CategoryCardProps extends CommonProps {
     category: CategoryInfo

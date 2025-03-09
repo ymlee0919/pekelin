@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
 import db from "../database/db";
 import { CategoryInfo, ProductCardInfo, VariantCardInfo } from "../database/database.types";
-import VariantCircle from "../components/VariantCircle";
-import ProductCard from "../components/ProductCard";
-import CategoryCard from "../components/CategoryCard";
+import VariantCircle from "../components/cards/VariantCircle";
+import ProductCard from "../components/cards/ProductCard";
+import CategoryCard from "../components/cards/CategoryCard";
 import RequestBtn from "../components/RequestBtn";
 
 const SingleProduct = () => {

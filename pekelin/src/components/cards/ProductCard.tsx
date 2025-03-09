@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
-import { ProductCardInfo } from "../database/database.types";
-import { CommonProps } from "../types/Common";
+import { ProductCardInfo } from "../../database/database.types";
+import { CommonProps } from "../../types/Common";
 import { MdStar } from "react-icons/md";
 
 export interface ProductCardProps extends CommonProps {

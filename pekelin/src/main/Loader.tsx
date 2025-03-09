@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CommonProps } from "../types/Common";
-import Loading from "../components/Loading";
-import Error from "../components/Error";
+import Loading from "../components/main/Loading";
+import Error from "../components/main/Error";
 import HttpProvider from "../services/HttpProvider";
 import { DataBase } from "../database/database.types";
 import db from "../database/db";

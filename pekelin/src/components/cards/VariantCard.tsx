@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
-import { VariantCardInfo } from "../database/database.types";
-import { CommonProps } from "../types/Common";
+import { VariantCardInfo } from "../../database/database.types";
+import { CommonProps } from "../../types/Common";
 
 export interface VariantCardProps extends CommonProps {
     variant: VariantCardInfo
