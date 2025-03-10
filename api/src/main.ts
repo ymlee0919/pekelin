@@ -3,9 +3,16 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { existsSync, mkdirSync, copyFileSync } from 'fs';
+import { ValidationPipe } from '@nestjs/common';
+import CustomExceptionFactory from './services/validators/customException.factory';
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+	app.useGlobalPipes(new ValidationPipe({
+		exceptionFactory: CustomExceptionFactory,
+		transform: true
+	}));
 
 	//app.useStaticAssets(join(__dirname, '..', 'public'));
 

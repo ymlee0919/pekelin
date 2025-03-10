@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { DatabaseService } from "src/services/database/database.service";
-import { InvalidOperationError } from "src/api/common/errors/invalid.error";
 import { CreatedReviewLink, ReviewLink } from "./reviews.types";
+import { name2url } from "src/services/utils/string.utils";
 
 
 /**
@@ -19,7 +19,7 @@ export class ReviewsService {
     async createLink(clientName: string) : Promise<CreatedReviewLink> {
 
         // Build the url
-        let firstName = clientName.toLowerCase().split(' ')[0];
+        let firstName = name2url(clientName.toLowerCase().split(' ')[0]);
         let today = new Date();
         let date = today.getFullYear().toString() 
                 + today.getMonth().toString().padStart(2,'0') 

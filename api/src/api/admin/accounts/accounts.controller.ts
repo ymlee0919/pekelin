@@ -4,7 +4,6 @@ import { Body,
     Get, 
     HttpStatus,
     Param, 
-    ParseIntPipe, 
     Post,
     Put,
     HttpCode,
@@ -15,6 +14,7 @@ import { AccountsService } from './accounts.service'
 import { AccountInfo, CreatedAccount, UpdatedAccount } from "./accounts.types";
 import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
 import { AccountCreationDTO, AccountCredentialsUpdateDTO, AccountUpdateDTO } from './accounts.dto';
+import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
 
 @Controller('api/accounts')
 export class AccountsController {
@@ -33,39 +33,48 @@ export class AccountsController {
     async create(@Body() account: AccountCreationDTO) : Promise<CreatedAccount> {
         try {
             let createdAccount = await this.manager.createAccount(account);
-            return createdAccount;
+            if(createdAccount)
+                return createdAccount;
+            
         } catch (error) {
             if(error instanceof InvalidOperationError){
                 throw new BadRequestException(error.message);
             }
             throw new BadRequestException(error);
         }
+
+        throw new HttpException('Unable to create the account', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Put('/:id')
     @HttpCode(HttpStatus.OK)
-    async update(@Param('id', ParseIntPipe) userId: number,
+    async update(@Param('id', CustomParseIntPipe) userId: number,
         @Body() account: AccountUpdateDTO) : Promise<UpdatedAccount> 
     {
         try {
             let updatedAccount = await this.manager.update(userId, account.name, account.email);
-            return updatedAccount;
+            if(updatedAccount)
+                return updatedAccount;
+
         } catch (error) {
             if (error instanceof InvalidOperationError) {
               throw new BadRequestException(error.message);
             }
             throw new BadRequestException(error);
         }
+
+        throw new HttpException('Unable to update the account', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Put('/:id/credentials')
     @HttpCode(HttpStatus.OK)
-    async updateCredentials(@Param('id', ParseIntPipe) userId: number, 
+    async updateCredentials(@Param('id', CustomParseIntPipe) userId: number, 
         @Body() account: AccountCredentialsUpdateDTO
     ) : Promise<UpdatedAccount> {
         try {
             let updated = await this.manager.updateCredentials(userId, account);
-            return updated;
+            if(updated)
+                return updated;
         } catch (error) {
             if (error instanceof InvalidOperationError) {
               throw new BadRequestException(error.message);
@@ -78,7 +87,7 @@ export class AccountsController {
 
     @Delete('/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(@Param('id', ParseIntPipe) userId: number) : Promise<void> {
+    async delete(@Param('id', CustomParseIntPipe) userId: number) : Promise<void> {
 
         try {
             let success = await this.manager.deleteAccount(userId);

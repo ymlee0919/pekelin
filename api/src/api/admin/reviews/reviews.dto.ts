@@ -1,9 +1,9 @@
-import { IsDefined, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export class ReviewLinkCreationDTO {
-    @IsDefined()
+    
     @IsString()
-    @IsNotEmpty({message: 'You must provide the name'})
     @MinLength(5, {message: 'The name must contains at least 5 characters'})
+    @IsNotEmpty({message: 'You must provide the name'})
     readonly name: string;
 }

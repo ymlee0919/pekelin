@@ -6,17 +6,17 @@ import { BadRequestException,
     HttpStatus,
     HttpCode,
     Param,
-    ParseIntPipe,
     Post,
     Put,
     UseInterceptors,
     UploadedFile,
     ParseFilePipe,
-    Patch
+    Patch,
+    UsePipes
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreatedProduct, UpdatedProduct, Product, BasicProductInfo } from "./products.types";
-import { ProductDTO, ProductSetDTO } from './products.dto';
+import { ProductDTO } from './products.dto';
 import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig, MulterMemoryOptions } from 'src/services/files/multer.options';
@@ -24,7 +24,8 @@ import { CropJpgFilePipe } from 'src/services/pipes/crop.JpgFile.pipe';
 import { FileService } from 'src/services/files/file.services';
 import { CloudService } from 'src/services/cloud/cloud.service';
 import { ImageSrc } from 'src/api/common/types/common.types';
-import { plainToInstance } from 'class-transformer';
+import { ParseFeaturesPipe } from 'src/services/pipes/parseFeatures.pipe';
+import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
 
 @Controller('api/products')
 export class ProductsController {
@@ -51,7 +52,7 @@ export class ProductsController {
 
     @Get('/:id')
     @HttpCode(HttpStatus.OK)
-    async get(@Param('id', ParseIntPipe) productId: number): Promise<Product>{
+    async get(@Param('id', CustomParseIntPipe) productId: number): Promise<Product>{
         let product = await this.manager.get(productId);
         if(!!product)
             return product;
@@ -66,12 +67,13 @@ export class ProductsController {
     @Post('/')
     @HttpCode(HttpStatus.CREATED)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
+    @UsePipes(ParseFeaturesPipe)
     async create(
         @UploadedFile(
             new ParseFilePipe({ fileIsRequired: true}),
             new CropJpgFilePipe(multerConfig.localProductsDest, 500, 500)
         ) file: string,
-        @Body() body: any
+        @Body() product: ProductDTO
     ): Promise<CreatedProduct>{
         let fileName = `${multerConfig.productsDest}${file}`;
 
@@ -84,14 +86,6 @@ export class ProductsController {
                 remote: remoteUrl,
                 expiryRemote: Math.round(Date.now() / 1000) + 72000
             }
-
-            // Deserialize the features field
-            const features = JSON.parse(body.features);
-            // Create the DTO object
-            const product = plainToInstance(ProductDTO, {
-                ...body,
-                features
-            });
 
             let createdProduct = await this.manager.createProduct(product, image);
             return createdProduct;
@@ -111,9 +105,10 @@ export class ProductsController {
     @Put('/:productId')
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
+    @UsePipes(ParseFeaturesPipe)
     async updateProduct(
-        @Param('productId', ParseIntPipe) productId: number,
-        @Body() body: any,
+        @Param('productId', CustomParseIntPipe) productId: number,
+        @Body() product: ProductDTO,
         @UploadedFile( 
             new ParseFilePipe({ fileIsRequired: false}),
             new CropJpgFilePipe(multerConfig.localProductsDest, 500, 500)
@@ -128,14 +123,6 @@ export class ProductsController {
             // Upload to cloud
             if(file)
                 remoteUrl = await this.cloudService.uploadFile(fileName);
-
-            // Deserialize the features field
-            const features = JSON.parse(body.features);
-            // Create the DTO object
-            const product = plainToInstance(ProductDTO, {
-                ...body,
-                features
-            });
 
             let updated = await this.manager.updateProduct(productId, product, (!!file) ? {
                 local: fileName, remote: remoteUrl, expiryRemote: Math.round(Date.now() / 1000) + 72000
@@ -170,7 +157,7 @@ export class ProductsController {
     @Patch('/:productId/view')
     @HttpCode(HttpStatus.OK)
     async changeVisibility(
-        @Param('productId', ParseIntPipe) productId: number,
+        @Param('productId', CustomParseIntPipe) productId: number,
         ) : Promise<UpdatedProduct> 
     {
         try {
@@ -190,7 +177,7 @@ export class ProductsController {
     @Delete('/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(
-        @Param('id', ParseIntPipe) productId: number
+        @Param('id', CustomParseIntPipe) productId: number
     ): Promise<void>{
         try {
             let deleted = await this.manager.deleteProduct(productId);

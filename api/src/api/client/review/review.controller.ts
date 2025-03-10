@@ -3,6 +3,7 @@ import { ClientReviewService } from './review.service';
 import { Public } from 'src/api/admin/auth/guard/public.guard';
 import { ReviewLink } from "./review.types";
 import { ReviewDTO } from './review.dto';
+import { ReviewLinkPipe } from 'src/services/pipes/reviewLink.pipe';
 
 @Controller('client/review')
 export class ClientReviewController {
@@ -17,7 +18,7 @@ export class ClientReviewController {
 
     @Public()
     @Get('/:url')
-    async getLink( @Param('url') url: string): Promise<ReviewLink> {
+    async getLink( @Param('url', ReviewLinkPipe) url: string): Promise<ReviewLink> {
         let result = await this.manager.getReview(url)
         return result;
     }
@@ -25,7 +26,7 @@ export class ClientReviewController {
     @Public()
     @Post('/:url')
     async makeReview(
-        @Param('url') url: string,
+        @Param('url', ReviewLinkPipe) url: string,
         @Body() review: ReviewDTO
     ): Promise<boolean> {
         let result = await this.manager.makeReview(url, review.rate, review.comment);

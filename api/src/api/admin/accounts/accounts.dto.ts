@@ -1,56 +1,48 @@
 import { IsDefined, IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsStrongPassword } from "src/services/validators/strongPassword.validator";
 
 export class AccountCreationDTO {
     
-    @IsDefined()
     @IsString()
-    @IsNotEmpty({message: 'You must provide the name'})
-    @MinLength(8, {message: 'The name must contains at least 8 characters'})
+    @MinLength(5, {message: 'The name must contains at least 5 characters'})
+    @IsNotEmpty({message: 'The name is required'})
     readonly name: string;
 
-    @IsDefined()
     @IsString()
     @IsNotEmpty({message: 'You must provide the user identifier'})
-    @MinLength(8, {message: 'The user must contains at least 8 characters'})
+    @MinLength(5, {message: 'The user must contains at least 5 characters'})
     readonly user: string;
 
-    @IsDefined()
-    @IsString()
-    @IsNotEmpty({message: 'You must provide an email'})
-    @IsEmail()
+    @IsEmail({}, { message: 'Please provide a valid email address' })
+    @IsNotEmpty({message: 'The email field must not be empty'})
     readonly email: string;
 
-    @IsDefined()
     @IsString()
-    @IsNotEmpty({message: 'Password can not be empty'})
-    @MinLength(8, {message: 'The poasword must contains at least 8 characters'})
-    readonly password: string;
+    @IsStrongPassword({ message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.' })
+    @IsNotEmpty({message: 'The password is required'})
+    password: string;
 }
 
 export class AccountUpdateDTO {
     
-    @IsDefined()
     @IsString()
-    @IsNotEmpty({message: 'You must provide the name'})
-    @MinLength(8, {message: 'The name must contains at least 8 characters'})
+    @MinLength(5, {message: 'The name must contains at least 5 characters'})
+    @IsNotEmpty({message: 'The name is required'})
     readonly name: string;
 
-    @IsDefined()
-    @IsString()
-    @IsNotEmpty({message: 'You must provide an email'})
-    @IsEmail()
+    @IsEmail({}, { message: 'Please provide a valid email address' })
+    @IsNotEmpty({message: 'The email field must not be empty'})
     readonly email: string;
 }
 
 export class AccountCredentialsUpdateDTO {
     
-    @IsDefined()
     @IsString()
+    @MinLength(5, {message: 'The user must contains at least 5 characters'})
     @IsNotEmpty({message: 'You must provide the user identifier'})
-    @MinLength(8, {message: 'The user must contains at least 8 characters'})
     readonly user: string;
 
     @IsString()
-    @MinLength(8, {message: 'The password must contains at least 8 characters'})
+    @IsStrongPassword({ message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.' })
     readonly password?: string;
 }

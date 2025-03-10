@@ -124,11 +124,17 @@ model VariantsFeatures {
   @@map("variants_features")
 }
 
+enum Status {
+  READY
+  SENT
+  DONE
+}
 
 model ReviewLinks {
   linkId        Int     @id @default(autoincrement()) @map("link_id")
   url           String
   clientName    String  @map("client_name")
+  status        Status @default(READY)
   Review        Reviews?
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime? @map("updated_at")

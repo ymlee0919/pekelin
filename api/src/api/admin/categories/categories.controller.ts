@@ -5,7 +5,6 @@ import { Body,
     HttpStatus,
     HttpCode,
     Param,
-    ParseIntPipe,
     Post,
     UseInterceptors,
     UploadedFile,
@@ -22,6 +21,7 @@ import { CategoryDTO } from './categories.dto';
 import { FileService } from 'src/services/files/file.services';
 import { CropJpgFilePipe } from 'src/services/pipes/crop.JpgFile.pipe';
 import { CloudService } from 'src/services/cloud/cloud.service';
+import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
 
 @Controller('api/categories')
 export class CategoriesController {
@@ -79,7 +79,7 @@ export class CategoriesController {
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
     async update(
-        @Param('categoryId', ParseIntPipe) categoryId: number,
+        @Param('categoryId', CustomParseIntPipe) categoryId: number,
         @Body() category: CategoryDTO,
         @UploadedFile( 
             new ParseFilePipe({ fileIsRequired: false}),
@@ -131,7 +131,7 @@ export class CategoriesController {
 
     @Delete('/:id')
     @HttpCode(HttpStatus.NO_CONTENT)
-    async delete(@Param('id', ParseIntPipe) categoryId: number) : Promise<any> {
+    async delete(@Param('id', CustomParseIntPipe) categoryId: number) : Promise<any> {
 
         try {
             let deleted = await this.manager.deleteCategory(categoryId);

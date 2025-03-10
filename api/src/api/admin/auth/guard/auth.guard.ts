@@ -46,7 +46,6 @@ export class AuthGuard implements CanActivate {
             (request as Request)['authContext'] = new AuthRequestContext(payload);
 
         } catch(error) {
-            console.log(error);
             if (error instanceof ForbiddenException) {
                 throw error;
             }

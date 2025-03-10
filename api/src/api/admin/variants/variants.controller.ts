@@ -6,7 +6,6 @@ import { BadRequestException,
     HttpStatus,
     HttpCode,
     Param,
-    ParseIntPipe,
     Post,
     Put,
     UseInterceptors,
@@ -15,17 +14,17 @@ import { BadRequestException,
     Patch
 } from '@nestjs/common';
 import { VariantsService } from './variants.service';
-import { CreatedVariant, UpdatedVariant, BasicVariant, BasicVariantInfo, Variant } from "./variants.types";
+import { CreatedVariant, UpdatedVariant, BasicVariant, Variant } from "./variants.types";
 import { VariantDTO } from './variants.dto';
 import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig, MulterMemoryOptions } from 'src/services/files/multer.options';
-import { CropJpgFilePipe } from 'src/services/pipes/crop.JpgFile.pipe';
 import { FileService } from 'src/services/files/file.services';
 import { CloudService } from 'src/services/cloud/cloud.service';
 import { ImageSrc } from 'src/api/common/types/common.types';
 import { plainToInstance } from 'class-transformer';
 import { CropPngFilePipe } from 'src/services/pipes/crop.PngFile.pipe';
+import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
 
 @Controller('api/products')
 export class VariantsController {
@@ -39,7 +38,7 @@ export class VariantsController {
     @Get(':productId/variants')
     @HttpCode(HttpStatus.OK)
     async getList(
-        @Param('productId', ParseIntPipe) productId: number
+        @Param('productId', CustomParseIntPipe) productId: number
     ): Promise<Array<BasicVariant>>{
         let result = await this.manager.getList(productId);
         return result ?? [];
@@ -48,8 +47,8 @@ export class VariantsController {
     @Get(':productId/variants/:variantId')
     @HttpCode(HttpStatus.OK)
     async get(
-        @Param('productId', ParseIntPipe) productId: number,
-        @Param('variantId', ParseIntPipe) variantId: number
+        @Param('productId', CustomParseIntPipe) productId: number,
+        @Param('variantId', CustomParseIntPipe) variantId: number
     ): Promise<Variant>{
         let variant = await this.manager.get(productId, variantId);
         if(!!variant)
@@ -66,7 +65,7 @@ export class VariantsController {
     @HttpCode(HttpStatus.CREATED)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
     async create(
-        @Param('productId', ParseIntPipe) productId: number,
+        @Param('productId', CustomParseIntPipe) productId: number,
         @UploadedFile(
             new ParseFilePipe({ fileIsRequired: true}),
             new CropPngFilePipe(multerConfig.localProductsDest)
@@ -112,8 +111,8 @@ export class VariantsController {
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
     async update(
-        @Param('productId', ParseIntPipe) productId: number,
-        @Param('variantId', ParseIntPipe) variantId: number,
+        @Param('productId', CustomParseIntPipe) productId: number,
+        @Param('variantId', CustomParseIntPipe) variantId: number,
         @Body() body: any,
         @UploadedFile( 
             new ParseFilePipe({ fileIsRequired: false}),
@@ -171,8 +170,8 @@ export class VariantsController {
     @Patch('/:productId/variants/:variantId/view')
     @HttpCode(HttpStatus.OK)
     async changeVisibility(
-        @Param('productId', ParseIntPipe) productId: number,
-        @Param('variantId', ParseIntPipe) variantId: number
+        @Param('productId', CustomParseIntPipe) productId: number,
+        @Param('variantId', CustomParseIntPipe) variantId: number
         ) : Promise<UpdatedVariant> 
     {
         try {
@@ -192,8 +191,8 @@ export class VariantsController {
     @Delete(':productId/variants/:variantId')
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(
-        @Param('productId', ParseIntPipe) productId: number,
-        @Param('variantId', ParseIntPipe) variantId: number,
+        @Param('productId', CustomParseIntPipe) productId: number,
+        @Param('variantId', CustomParseIntPipe) variantId: number,
     ): Promise<void>{
         try {
             let deleted = await this.manager.deleteVariant(productId, variantId);

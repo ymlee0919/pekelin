@@ -1,83 +1,76 @@
-import { IsBoolean, IsDefined, IsEnum, IsInt, IsNotEmpty, IsString, MinLength, ValidateNested } from "class-validator";
+import { IsBoolean, IsDefined, IsEnum, IsInt, IsNotEmpty, IsString, Length, MinLength, ValidateNested } from "class-validator";
 import { FeatureStatus } from "./products.types";
 import { Transform, Type } from 'class-transformer';
 
 export class FeatureDTO {
 
-    @IsDefined({message:'Unable to take a feature'})
-    @IsNotEmpty()
-    @IsInt()
+    @IsNotEmpty({message: "Invalid empty field"})
+    @IsInt({message: "Invalid feature"})
     featureId: number;
 
-    @IsDefined({message:'Unable to take a feature'})
-    @IsNotEmpty()
+    @IsNotEmpty({message: "Invalid empty field"})
     @IsEnum(FeatureStatus)
 	status: FeatureStatus;
 
-    @IsDefined()
     @IsString()
-    @IsNotEmpty()
-    @MinLength(3, { message : 'The title of a feature must be at least 3 characters lenght'})
+    @IsNotEmpty({message: "The feature title is required"})
+    @MinLength(3, { message : 'The feature title must be longer than 3 characters'})
     title: string;
 
     @IsString()
-    @IsNotEmpty()
-    @MinLength(3, { message : 'The feature of a product must be at least 3 characters lenght'})
+    @IsNotEmpty({message: "The feature description is required"})
+    @MinLength(3, { message : 'The feature description must be longer than 3 characters'})
     content: string;
 }
 
 export class ProductDTO {
     
-    @IsDefined()
-    @IsNotEmpty()
-    @IsInt()
+    @IsNotEmpty({message: "The category is required"})
+    @IsInt({message: "Invalid category information format"})
     @Transform(({ value }) => parseInt(value.toString()))
     categoryId: number;
 
-    @IsDefined()
-    @IsNotEmpty()
     @IsString()
-    @MinLength(3, {message: 'The name of a product must be at least 3 characters lenght'})
+    @IsNotEmpty({message: "The product name is required"})
+    @MinLength(3, { message : 'The product name must be longer than 3 characters'})
     name: string;
 
-    @IsDefined()
-    @IsNotEmpty()
-    @IsInt()
+    
     @Transform(({ value }) => parseInt(value.toString()))
+    @IsInt({message: "The product price must be an integer number"})
+    @IsNotEmpty({message: "The product price is required"})
     price: number;
 
-    @IsDefined()
-    @IsNotEmpty()
-    @IsString()
-    gender: string;
-
-    @IsDefined()
-    @IsNotEmpty()
-    @IsInt()
     @Transform(({ value }) => parseInt(value.toString()))
+    @IsInt({message: "The base price must be an integer number"})
+    @IsNotEmpty({message: "The base price is required"})
     basePrice: number;
+
+    @IsString()
+    @Length(1,1,{ message: "The product gender must be one character (M)ale or (F)emale"})
+    @IsNotEmpty({message: "The product gender can not be empty"})
+    gender: string;
 
     @IsString()
     @MinLength(10, {message: 'You must provide more than 10 characters for description'})
     description?: string;
 
-    @IsNotEmpty()
-    @IsBoolean()
     @Transform(({ value }) => value === 'true')
+    @IsNotEmpty({message: "BestSeller field is required"})
+    @IsBoolean()
     isBestSeller: boolean;
 
-    @IsNotEmpty()
-    @IsBoolean()
     @Transform(({ value }) => value === 'true')
+    @IsNotEmpty({message: "IsNew field is required"})
+    @IsBoolean()
     isNew: boolean;
 
-    @IsNotEmpty()
-    @IsBoolean()
     @Transform(({ value }) => value === 'true')
+    @IsNotEmpty({message: "IsVisible field is required"})
+    @IsBoolean()
     visible: boolean;
 
-    @IsDefined()
-    @IsNotEmpty()
+    @IsNotEmpty({message: "Products features can nt be empty"})
     @ValidateNested({ each: true })
     @MinLength(1, { message: 'The product must have at least one feature'})
     @Type(() => FeatureDTO)
@@ -86,15 +79,13 @@ export class ProductDTO {
 
 export class ProductSetDTO extends ProductDTO {
 
-    @IsDefined()
-    @IsNotEmpty()
-    @IsInt()
+    @IsNotEmpty({message: "First product can not be empty"})
+    @IsInt({message: "Invalid first product"})
     @Transform(({ value }) => parseInt(value.toString()))
     product1: number;
 
-    @IsDefined()
-    @IsNotEmpty()
-    @IsInt()
+    @IsNotEmpty({message: "Second product can not be empty"})
+    @IsInt({message: "Invalid second product"})
     @Transform(({ value }) => parseInt(value.toString()))
     product2: number;
 }
