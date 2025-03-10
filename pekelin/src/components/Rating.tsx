@@ -23,7 +23,7 @@ const Rating: React.FC<RatingProps> = ({ control, name }) => {
                 name={name}
                 className={`mask mask-star-2 bg-yellow-400`}
                 value={star}
-                //checked={value === star}
+                checked={value === star}
                 defaultChecked={(star == 1)}
                 onChange={() => onChange(star)}
             />

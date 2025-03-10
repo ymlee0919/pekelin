@@ -26,7 +26,7 @@ const ReviewForm = (props: ReviewFormProps) => {
     const onSubmit: SubmitHandler<ReviewFormValues> = (data: ReviewFormValues) => {
         setFormStatus(FormStatus.Sending);
 
-        HttpProvider.post<ReviewFormValues, boolean>('/review/' + props.url, data).then((success:boolean) => {
+        HttpProvider.post<ReviewFormValues, boolean>('/review/' + props.url, data).then(() => {
             setFormStatus(FormStatus.Success);
         }).catch(() => {
             setFormStatus(FormStatus.Success);
@@ -36,8 +36,7 @@ const ReviewForm = (props: ReviewFormProps) => {
     return <form onSubmit={handleSubmit(onSubmit)}>
         <div className="pt-24 pb-10 bg-base-200 px-5 text-gray-600">
             <p className='text-sm pt-3 '>
-                Hola {props.clientName}. <br></br><br></br>
-                Es un gusto tenerte de vuelta. Nos gustaría saber cómo te sentiste con nosotros. Será rápido.
+                Hola {props.clientName}. <br></br><br></br> Es un gusto tenerte de vuelta. Nos gustaría saber cómo te sentiste con nosotros. Será rápido.
             </p>
             <label className="form-control w-full max-w-xs py-7">
                 <div className="label">
@@ -46,6 +45,7 @@ const ReviewForm = (props: ReviewFormProps) => {
                 <Controller
                     name="rate"
                     control={control}
+                    defaultValue={1}
                     render={({ field }) => <Rating {...field} control={control}/>}
                     />
             </label>

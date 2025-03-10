@@ -1,8 +1,15 @@
-import { Controller, Get, Req} from '@nestjs/common';
+import { Controller, Get, Req, Res} from '@nestjs/common';
 import { AppService, DashboardInfo} from './app.service';
 import { AuthRequestContext } from '../auth/context/auth.context';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
+import { doubleCsrf } from 'csrf-csrf';
+import { Public } from '../auth/guard/public.guard';
+
+const { generateToken } = doubleCsrf({
+  getSecret: () => 'your-secret-key',
+  cookieName: 'x-csrf-token',
+});
 
 @Controller('api/app')
 export class AppController {
@@ -20,6 +27,16 @@ export class AppController {
         let authContext = request['authContext'] as AuthRequestContext;
         let result = await this.manager.getDashboardInfo();
         return {...result, ...authContext.Obj};
+    }
+
+    @Get('csrf-token')
+    @Public()
+    getCsrfToken(@Req() req: Request, @Res() res: Response) {
+        // Generar el token CSRF
+        const token = generateToken(req, res);
+
+        // Enviar el token en la respuesta (opcional)
+        res.json({ csrfToken: token });
     }
 
 }

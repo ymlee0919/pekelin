@@ -8,11 +8,23 @@ const HttpProvider = axios.create({
 //axios.defaults.headers.common["Authorization"] = "AUTH TOKEN";
 //axios.defaults.headers.post["Content-Type"] = "application/json";
 
-HttpProvider.interceptors.request.use((config) => { 
+async function getCsrfToken() : Promise<string> {
+	let response = await HttpProvider.get<any, {csrfToken: string}>('/app/csrf-token');
+	return response.csrfToken;
+}
+
+HttpProvider.interceptors.request.use(async (config) => { 
 	let token = window.localStorage.getItem("token");
+	
 	if (!!token) {
 		config.headers.Authorization = `Bearer ${JSON.parse(token)}`; 
 	}
+	
+	if(config.method && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(config.method.toUpperCase()) ) {
+		let csrfToken = await getCsrfToken();
+		config.headers['x-csrf-token'] = csrfToken;
+	}
+
 	return config; 
 }, (error) => { 
 	return Promise.reject(error) 

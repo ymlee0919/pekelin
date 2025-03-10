@@ -5,6 +5,7 @@ import { join } from 'path';
 import { existsSync, mkdirSync, copyFileSync } from 'fs';
 import { ValidationPipe } from '@nestjs/common';
 import CustomExceptionFactory from './services/validators/customException.factory';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -13,6 +14,8 @@ async function bootstrap() {
 		exceptionFactory: CustomExceptionFactory,
 		transform: true
 	}));
+
+	app.use(cookieParser());
 
 	//app.useStaticAssets(join(__dirname, '..', 'public'));
 

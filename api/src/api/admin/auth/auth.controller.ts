@@ -1,10 +1,11 @@
-import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { CredentialsDTO } from "./auth.dto";
 import { JwtService } from '@nestjs/jwt';
 import { AccountInfo } from "../accounts/accounts.types";
 import { Public } from "./guard/public.guard";
 import { InvalidOperationError } from "src/api/common/errors/invalid.error";
+import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 
 export interface AuthResponse {
     account: AccountInfo;
@@ -22,6 +23,8 @@ export class AuthController {
     @Public()
     @Post('/')
     @HttpCode(HttpStatus.OK)
+    @UseGuards(ThrottlerGuard)
+    @Throttle({ default: { limit: 60, ttl: 5 } }) // 5 requests in 60 seconds
     async login(@Body() credentials: CredentialsDTO) : Promise<AuthResponse> 
     {
         try {
