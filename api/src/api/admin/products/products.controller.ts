@@ -67,13 +67,13 @@ export class ProductsController {
     @Post('/')
     @HttpCode(HttpStatus.CREATED)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
-    @UsePipes(ParseFeaturesPipe)
     async create(
+        @Body() product: ProductDTO,
         @UploadedFile(
             new ParseFilePipe({ fileIsRequired: true}),
             new CropJpgFilePipe(multerConfig.localProductsDest, 500, 500)
-        ) file: string,
-        @Body() product: ProductDTO
+        ) file: string
+        
     ): Promise<CreatedProduct>{
         let fileName = `${multerConfig.productsDest}${file}`;
 
@@ -105,7 +105,6 @@ export class ProductsController {
     @Put('/:productId')
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(FileInterceptor('image', MulterMemoryOptions))
-    @UsePipes(ParseFeaturesPipe)
     async updateProduct(
         @Param('productId', CustomParseIntPipe) productId: number,
         @Body() product: ProductDTO,

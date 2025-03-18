@@ -33,7 +33,7 @@ export class CloudService {
 		const localFilePath = path.join(process.cwd(), './', `${process.env.UPLOAD_ROOT}${filePath}`);
 		
 		if (process.env.NODE_ENV === 'development')
-			return "http://localhost:3000/images/" + localFilePath;
+			return 'http://localhost:3000/' + filePath;
 
 		const fileContent = fs.readFileSync(localFilePath);
 		const mime = new MimeType()
