@@ -70,7 +70,7 @@ export class VariantsController {
             new ParseFilePipe({ fileIsRequired: true}),
             new CropPngFilePipe(multerConfig.localProductsDest)
         ) file: string,
-        @Body() body: any
+        @Body() variant: VariantDTO
     ): Promise<CreatedVariant>{
         let fileName = `${multerConfig.productsDest}${file}`;
 
@@ -83,14 +83,6 @@ export class VariantsController {
                 remote: remoteUrl,
                 expiryRemote: Math.round(Date.now() / 1000) + 72000
             }
-
-            // Deserialize the features field
-            const features = JSON.parse(body.features);
-            // Create the DTO object
-            const variant = plainToInstance(VariantDTO, {
-                ...body,
-                features
-            });
 
             let createdVariant = await this.manager.createVariant(productId, variant, image);
             return createdVariant;
@@ -113,7 +105,7 @@ export class VariantsController {
     async update(
         @Param('productId', CustomParseIntPipe) productId: number,
         @Param('variantId', CustomParseIntPipe) variantId: number,
-        @Body() body: any,
+        @Body() variant: VariantDTO,
         @UploadedFile( 
             new ParseFilePipe({ fileIsRequired: false}),
             new CropPngFilePipe(multerConfig.localProductsDest)
@@ -129,15 +121,7 @@ export class VariantsController {
             if(file)
                 remoteUrl = await this.cloudService.uploadFile(fileName);
 
-            // Deserialize the features field
-            const features = JSON.parse(body.features);
-            // Create the DTO object
-            const product = plainToInstance(VariantDTO, {
-                ...body,
-                features
-            });
-
-            let updated = await this.manager.updateVariant(productId, variantId, product, (!!file) ? {
+            let updated = await this.manager.updateVariant(productId, variantId, variant, (!!file) ? {
                 local: fileName, remote: remoteUrl, expiryRemote: Math.round(Date.now() / 1000) + 72000
             } : null);
 

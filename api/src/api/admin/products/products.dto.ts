@@ -1,6 +1,7 @@
-import { IsBoolean, IsDefined, IsEnum, IsInt, IsNotEmpty, IsString, Length, MinLength, ValidateNested } from "class-validator";
+import { IsBoolean, IsDefined, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Length, MinLength, ValidateNested } from "class-validator";
 import { FeatureStatus } from "./products.types";
 import { Transform, Type } from 'class-transformer';
+import { BadRequestException } from "@nestjs/common";
 
 export class FeatureDTO {
 
@@ -52,6 +53,7 @@ export class ProductDTO {
     gender: string;
 
     @IsString()
+    @IsOptional()
     @MinLength(10, {message: 'You must provide more than 10 characters for description'})
     description?: string;
 
@@ -70,10 +72,17 @@ export class ProductDTO {
     @IsBoolean()
     visible: boolean;
 
-    @IsNotEmpty({message: "Products features can nt be empty"})
+    @IsNotEmpty({message: "Products features can not be empty"})
     @ValidateNested({ each: true })
-    @MinLength(1, { message: 'The product must have at least one feature'})
+    //@MinLength(1, { message: 'The product must have at least one feature'})
     @Type(() => FeatureDTO)
+    @Transform(({value}) => {
+        try {
+            return JSON.parse(value);
+        }catch(error) {
+            throw new BadRequestException('Invalid features format');
+        }
+    })
     features: FeatureDTO[];
 }
 

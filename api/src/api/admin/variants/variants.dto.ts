@@ -1,44 +1,45 @@
-import { IsBoolean, IsDefined, IsEnum, IsInt, IsNotEmpty, IsString, MinLength, ValidateNested } from "class-validator";
+import { IsBoolean, IsDefined, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
 import { Transform, Type } from 'class-transformer';
 import { FeatureDTO } from "../products/products.dto";
+import { BadRequestException } from "@nestjs/common";
 
 export class VariantDTO {
-    
-    @IsDefined()
-    @IsNotEmpty()
-    @IsInt()
-    @Transform(({ value }) => parseInt(value.toString()))
-    productId: number;
 
-    @IsDefined()
-    @IsNotEmpty()
     @IsString()
-    @MinLength(3, {message: 'The name of a product must be at least 3 characters lenght'})
+    @IsNotEmpty({message: "The product name is required"})
+    @MinLength(3, { message : 'The product name must be longer than 3 characters'})
     name: string;
 
     @IsString()
-    @MinLength(10, {message: 'You must provide more than 10 characters for description'})
+    //@MinLength(10, {message: 'You must provide more than 10 characters for description', always: false})
+    @IsOptional()
     description?: string;
 
-    @IsNotEmpty()
-    @IsBoolean()
     @Transform(({ value }) => value === 'true')
+    @IsNotEmpty({ message: 'BestSeller field is required' })
+    @IsBoolean()
     isBestSeller: boolean;
 
-    @IsNotEmpty()
-    @IsBoolean()
     @Transform(({ value }) => value === 'true')
+    @IsNotEmpty({ message: 'IsNew field is required' })
+    @IsBoolean()
     isNew: boolean;
 
-    @IsNotEmpty()
-    @IsBoolean()
     @Transform(({ value }) => value === 'true')
+    @IsNotEmpty({ message: 'IsVisible field is required' })
+    @IsBoolean()
     visible: boolean;
 
-    @IsDefined()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'Products features can not be empty' })
     @ValidateNested({ each: true })
-    @MinLength(1, { message: 'The product must have at least one feature'})
+    //@MinLength(1, { message: 'The product must have at least one feature'})
     @Type(() => FeatureDTO)
+    @Transform(({ value }) => {
+        try {
+            return JSON.parse(value);
+        } catch (error) {
+            throw new BadRequestException('Invalid features format');
+        }
+    })
     features: FeatureDTO[];
 }
