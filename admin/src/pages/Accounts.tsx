@@ -1,4 +1,4 @@
-import { MouseEvent, useState, useEffect, useRef } from "react";
+import { useEffect, useRef} from "react";
 import { MdDelete, MdEditSquare, MdKey, MdOutlineAdd } from "react-icons/md";
 
 import useStores from "../hooks/useStores";
@@ -18,11 +18,14 @@ import { useDispatch } from "react-redux";
 import { ErrorList, errorToEventResult } from "../types/Errors";
 import { EventResult } from "../types/Events";
 
+import { AgGridWrapper } from "../components/AgGridWrapper";
+import { useGrid } from "../hooks/useGrid";
+
 
 const Accounts =() => {
 
-    let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
-    let [selectedItem, setSelectedItem] = useState<AccountContent|undefined>();
+    const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<AccountContent>();
+
 	const dispatch = useDispatch();
 
     const addModalRef = useRef<HTMLDialogElement>(null);
@@ -96,13 +99,16 @@ const Accounts =() => {
 	// General functions
     const reload = () => {
         setStatus(StoreStatus.LOADING);
-		setSelectedItem(undefined);
+		setSelectedItem(null);
         
         stores.accountsStore.load(null).then(
 			(newStatus: StoreStatus) => {
 				setStatus(newStatus);
-				if (newStatus == StoreStatus.READY && stores.accountsStore.content)
+				if (newStatus == StoreStatus.READY && stores.accountsStore.content){
 					dispatch(setAccounts(stores.accountsStore.content.length));
+					setRowData(stores.accountsStore.content)
+				}
+					
 			}
 		);
     }
@@ -133,8 +139,8 @@ const Accounts =() => {
 						</div>
 						<div className="panel-content no-padding">
 							<div className="overflow-x-auto">
-								<div className="border-2 border-solid border-gray-300">
-									<div className="navbar bg-gray-300 min-h-1 p-1">
+								<div className="border-2 border-solid border-gray-200">
+									<div className="navbar bg-gray-200 min-h-1 p-1">
 										<div className="flex-1">
 											<a
 												className="btn btn-ghost text-slate-500 btn-sm text-sm mr-2 rounded-none"
@@ -179,51 +185,17 @@ const Accounts =() => {
 											</a>
 										</div>
 									</div>
-									<table className="table table-grid">
-										{/* head */}
-										<thead>
-											<tr>
-												<th>User</th>
-												<th>Name</th>
-												<th>Email</th>
-											</tr>
-										</thead>
-										<tbody>
-											{/* rows */}
-											{stores.accountsStore.content?.length == 0 ? (
-												<tr className="text-center">
-													<td colSpan={3} data-label="User">
-														<div className="m-3">
-															No user registered
-														</div>
-													</td>
-												</tr>
-											) : (
-												stores.accountsStore.content?.map((account) => (
-													<tr
-														className={`hover ${
-															account.userId == selectedItem?.userId ? "bg-base-300 font-semibold" : ""
-														}`}
-														data-id={account.userId}
-														key={account.userId}
-														onClick={(e: MouseEvent<HTMLTableRowElement>) => {
-															setSelectedItem(
-																stores.accountsStore.get(
-																	parseInt(
-																		e.currentTarget.getAttribute("data-id") ?? "0"
-																	)
-																)
-															);
-														}}
-													>
-														<td data-label="User">{account.user}</td>
-														<td data-label="Name">{account.name}</td>
-														<td data-label="Name">{account.email}</td>
-													</tr>
-												))
-											)}
-										</tbody>
-									</table>
+									<div className="max-w-full">
+										<AgGridWrapper<AccountContent>
+											rowData={rowData}
+											columnDefs={[
+												{ field: "user"},
+												{ field: "name"},
+												{ field: "email"}
+											]}
+											onRowSelected={onRowSelected}
+										/>
+									</div>
 								</div>
 							</div>
 						</div>

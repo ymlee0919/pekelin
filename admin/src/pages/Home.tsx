@@ -24,51 +24,37 @@ const Home = () => {
 			<br></br>
 			<br></br>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-				<div className="stats shadow bg-base-100">
-					<div className="stat">
-						<div className="stat-figure text-indigo-500">
-							<MdOutlineCases className="text-6xl" />
-						</div>
-						<div className="stat-title text-slate-500">Categories</div>
-						<div className="stat-value text-slate-600">{categories}</div>
-						<div className="stat-actions text-right">
-							<NavLink to={"/categories"} className="btn btn-sm btn-info btn-outline">
-								Edit
-							</NavLink>
+				<NavLink to={"/categories"} className="shadow bg-base-100 rounded-2xl p-3 hover:shadow-md">
+					<div className="stats">
+						<div className="stat">
+							<div className="stat-figure text-indigo-400">
+								<MdOutlineCases className="text-6xl" />
+							</div>
+							<div className="stat-title text-slate-400">Categories</div>
+							<div className="stat-value text-slate-500">{categories}</div>
 						</div>
 					</div>
-				</div>
-
-				<div className="stats shadow bg-base-100">
+				</NavLink>
+				
+				<NavLink to={"/products"} className="shadow bg-base-100 rounded-2xl p-3 hover:shadow-md">
 					<div className="stat">
-						<div className="stat-figure text-indigo-500">
+						<div className="stat-figure text-indigo-400">
 							<MdOutlineBusinessCenter className="text-6xl" />
 						</div>
-						<div className="stat-title text-slate-500">Products</div>
-						<div className="stat-value text-slate-600">{products}</div>
-						<div className="stat-actions text-right">
-							<NavLink to={"/products"} className="btn btn-sm btn-info btn-outline">
-								Edit
-							</NavLink>
-						</div>
+						<div className="stat-title text-slate-400">Products</div>
+						<div className="stat-value text-slate-500">{products}</div>	
 					</div>
-				</div>
+				</NavLink>
 
-				<div className="stats shadow bg-base-100">
+				<NavLink to={"/accounts"} className="shadow bg-base-100 rounded-2xl p-3 hover:shadow-md">
 					<div className="stat">
-						<div className="stat-figure text-indigo-500">
+						<div className="stat-figure text-indigo-400">
 							<MdPeopleAlt className="text-6xl" />
 						</div>
-						<div className="stat-title text-slate-500">Accounts</div>
-						<div className="stat-value text-slate-600">{accounts}</div>
-						<div className="stat-actions text-right">
-							<NavLink to={"/accounts"} className="btn btn-sm btn-info btn-outline">
-								Edit
-							</NavLink>
-						</div>
+						<div className="stat-title text-slate-400">Accounts</div>
+						<div className="stat-value text-slate-500">{accounts}</div>
 					</div>
-				</div>
-
+				</NavLink>
 			</div>
 		</>
 	);

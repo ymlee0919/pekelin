@@ -1,4 +1,4 @@
-import { MouseEvent, useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { MdDelete, MdEditSquare, MdOutlineAdd } from "react-icons/md";
 
 import useStores from "../hooks/useStores";
@@ -10,11 +10,12 @@ import Breadcrumbs from "../components/Breadcrumbs";
 import { ReviewLink } from "../store/remote/reviews/Reviews.Types";
 import NewLinkDialog from "./links/NewLinkDialog";
 
+import { AgGridWrapper } from "../components/AgGridWrapper";
+import { useGrid } from "../hooks/useGrid";
 
 const ReviewLinks =() => {
 
-    let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
-    let [selectedItem, setSelectedItem] = useState<ReviewLink|undefined>();
+	const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<ReviewLink>();
 
     const addModalRef = useRef<HTMLDialogElement>(null);
     //const editModalRef = useRef<HTMLDialogElement>(null);
@@ -25,11 +26,13 @@ const ReviewLinks =() => {
 
     const reload = () => {
         setStatus(StoreStatus.LOADING);
-		setSelectedItem(undefined);
+		setSelectedItem(null);
         
         stores.reviewLinksStore.load(null).then(
 			(newStatus: StoreStatus) => {
 				setStatus(newStatus);
+				if(stores.reviewLinksStore.content)
+					setRowData(stores.reviewLinksStore.content)
 			}
 		);
     }
@@ -60,8 +63,8 @@ const ReviewLinks =() => {
 						</div>
 						<div className="panel-content no-padding">
 							<div className="overflow-x-auto">
-								<div className="border-2 border-solid border-gray-300">
-									<div className="navbar bg-gray-300 min-h-1 p-1">
+								<div className="border-2 border-solid border-gray-200">
+									<div className="navbar bg-gray-200 min-h-1 p-1">
 										<div className="flex-1">
 											<a
 												className="btn btn-ghost text-slate-500 btn-sm text-sm mr-2 rounded-none"
@@ -95,54 +98,18 @@ const ReviewLinks =() => {
 											</a>
 										</div>
 									</div>
-									<table className="table table-grid">
-										{/* head */}
-										<thead>
-											<tr>
-												<th>Client</th>
-												<th>Url</th>
-												<th>Creation date</th>
-												<th>Review date</th>
-											</tr>
-										</thead>
-										<tbody>
-											{/* rows */}
-											{stores.reviewLinksStore.content?.length == 0 ? (
-												<tr className="text-center">
-													<td colSpan={4} data-label="User">
-														<div className="m-3">
-															No links registered
-														</div>
-													</td>
-												</tr>
-											) : (
-												stores.reviewLinksStore.content?.map((link) => (
-													<tr
-														className={`hover ${
-															link.linkId == selectedItem?.linkId ? "bg-base-300 font-semibold" : ""
-														}`}
-														data-id={link.linkId}
-														key={link.linkId}
-														onClick={(e: MouseEvent<HTMLTableRowElement>) => {
-															let id = parseInt(
-																e.currentTarget.getAttribute("data-id") ?? "0"
-															)
-															setSelectedItem(
-																stores.reviewLinksStore.content?.find((link) => {
-																	link.linkId == id
-																})
-															);
-														}}
-													>
-														<td data-label="Client">{link.clientName}</td>
-														<td data-label="Url">{import.meta.env.VITE_REVIEW_URL}{link.url}</td>
-														<td data-label="Created">{link.createdAt.toLocaleDateString()}</td>
-														<td data-label="Review">{link.updatedAt?.toLocaleDateString()}</td>
-													</tr>
-												))
-											)}
-										</tbody>
-									</table>
+									<div className="max-w-full">
+										<AgGridWrapper<ReviewLink>
+											rowData={rowData}
+											columnDefs={[		
+												{ field: "clientName" ,  headerName: "Client"},
+												{ field: "url" ,  headerName: "Url", valueFormatter: params => import.meta.env.VITE_REVIEW_URL + params.value , flex: 3},
+												{ field: "createdAt" ,  headerName: "Created", valueFormatter: params => params.value?.toLocaleDateString(), flex: 1 },
+												{ field: "updatedAt" ,  headerName: "Review", valueFormatter: params => params.value?.toLocaleDateString(), flex: 1},
+											]}
+											onRowSelected={onRowSelected}
+										/>
+									</div>
 								</div>
 							</div>
 						</div>

@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { MdDelete, MdOutlineAdd, MdEditSquare, MdFiberNew, MdOutlineStar, MdOutlineRemoveRedEye } from "react-icons/md";
 
@@ -17,11 +17,42 @@ import { RootState } from "../store/local/store";
 import { setCurrentProduct } from "../store/local/slices/productSlice";
 import { useDispatch } from "react-redux"; 
 
+import type { CustomCellRendererProps } from 'ag-grid-react';
+import { GridOptions} from "ag-grid-community";
+
+import { AgGridWrapper } from "../components/AgGridWrapper";
+import { useGrid } from "../hooks/useGrid";
+
+const ColImage = (params: CustomCellRendererProps<BasicVariantInfo>) => (
+	<span className="h-20">
+		{params.value && (
+			<img     
+				src={(import.meta.env.VITE_IMG_URL ?? '') + params.value}
+				className="h-14 p-1"
+			/>
+		)}
+	</span>
+);
+
+const ColName = (params: CustomCellRendererProps<BasicVariantInfo>) => (
+	<div className="flex gap-1">
+		{params.data?.name} 
+		{params.data?.isNew && <MdFiberNew className="text-blue-500 text-lg mt-2" />} 
+		{params.data?.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg mt-2" />}
+	</div>
+);
+
+const gridOptions : GridOptions<BasicVariantInfo> = {
+	rowClassRules: {
+	  'bg-red-50': (params) => params.data?.visible === false,
+	  'italic': (params) => params.data?.visible === false,
+	},
+};
+
 const ProductVariants = () => {
 
-    let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
-	let [selected, setSelected] = useState<number|null>(null);
-	let [selectedName, setSelectedName] = useState<string|null>(null);
+	const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<BasicVariantInfo>();
+	
 
 	const dispatch = useDispatch();
 	const stores = useStores();
@@ -33,10 +64,13 @@ const ProductVariants = () => {
 
 	let reload = () => {
 		setStatus(StoreStatus.LOADING);
+		setSelectedItem(null);
 
 		stores.variantsStore.load({ productId })
 		.then( (newStatus: StoreStatus) => { 
 				setStatus(newStatus);
+				if(stores.variantsStore.content)
+					setRowData(stores.variantsStore.content)
 			}
 		);
 	}
@@ -59,9 +93,9 @@ const ProductVariants = () => {
 	}, []);
 
 	const onChangeView = async () => {
-		if(selected) {
+		if(selectedItem) {
 			let loadingToast = toast.loading("Updating product variant...");
-			let result = await stores.variantsStore.changeVisibility(productId, selected);
+			let result = await stores.variantsStore.changeVisibility(productId, selectedItem.variantId);
 			toast.dismiss(loadingToast);
 
 			if (result.success) {
@@ -74,9 +108,9 @@ const ProductVariants = () => {
 	}
 
 	const onDelete = async () => {
-		if(selected) {
+		if(selectedItem) {
 			let loadingToast = toast.loading("Deleting product variant...");
-			let result = await stores.variantsStore.delete(productId, selected);
+			let result = await stores.variantsStore.delete(productId, selectedItem.variantId);
 			toast.dismiss(loadingToast);
 
 			if (result.success) {
@@ -122,22 +156,22 @@ const ProductVariants = () => {
 							</div>
 
 							<div className="overflow-x-auto">
-								<div className="border-2 border-solid border-gray-300">
-									<div className="navbar bg-gray-300 min-h-1 p-1">
+								<div className="border-2 border-solid border-gray-200">
+									<div className="navbar bg-gray-200 min-h-1 p-1">
 										<div className="flex-1">
 											<NavLink to={`/products/${product?.productId}/variants/new`} className="btn btn-ghost text-slate-500 btn-sm text-sm mr-2 rounded-none">
 												<MdOutlineAdd /> Add
 											</NavLink>
 												
-											<NavLink to={`/products/${product?.productId}/variants/${selected}/edit`} className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-														selected ?? "btn-disabled"
+											<NavLink to={`/products/${product?.productId}/variants/${selectedItem?.variantId}/edit`} className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
+														selectedItem ?? "btn-disabled"
 													}`}>
 												<MdEditSquare /> Edit
 											</NavLink>
 
 											<a
 												className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-													selected ?? "btn-disabled"
+													selectedItem ?? "btn-disabled"
 												}`}
 												onClick={() => {modalRef.current?.showModal() }}
 											>
@@ -146,7 +180,7 @@ const ProductVariants = () => {
 
 											<a
 												className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-													selected ?? "btn-disabled"
+													selectedItem ?? "btn-disabled"
 												}`}
 												onClick={onChangeView}
 											>
@@ -155,51 +189,18 @@ const ProductVariants = () => {
 
 										</div>
 									</div>
-									<table className="table table-grid">
-										{/* head */}
-										<thead>
-											<tr>
-												<th className="w-20">Image</th>
-												<th>Product</th>
-												<th>Description</th>
-											</tr>
-										</thead>
-										<tbody>
-											{/* rows */}
-											{stores.variantsStore.content?.length == 0 ? (
-												<tr className="text-center">
-													<td colSpan={3} data-label="User">
-														<div className="m-3">
-															No product variants registered
-														</div>
-													</td>
-												</tr>
-											) : (
-												stores.variantsStore.content?.map((variant: BasicVariantInfo) => {
-													return (<tr 
-													key={variant.variantId}
-													data-id={variant.variantId}
-													data-label={variant.name}
-													className={`hover ${variant.variantId == selected ? "bg-base-300 font-semibold" : ""}  ${!variant.visible && 'bg-base-300 line-through'}`}
-													onClick={(e: MouseEvent<HTMLTableRowElement>) => {
-														setSelected(parseInt(e.currentTarget.getAttribute("data-id") ?? "0"))
-														setSelectedName(e.currentTarget.getAttribute("data-label") ?? "-")
-														}}
-													>
-														<td data-label="Image" className="w-20"><img src={(import.meta.env.VITE_IMG_URL ?? '') + variant.remoteUrl} className="w-12"></img></td>
-														<td data-label="Product" >
-															<div className="flex gap-2">
-																{variant.name} 
-																{variant.isNew && <MdFiberNew className="text-blue-500 text-lg" />} 
-																{variant.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg" />}
-															</div>
-														</td>
-														<td data-label="Description" >{variant.description}</td>
-													</tr>);
-												})
-											)}
-										</tbody>
-									</table>
+									<div className="max-w-full">
+										<AgGridWrapper<BasicVariantInfo>
+											rowData={rowData}
+											columnDefs={[
+												{ field: "remoteUrl" ,  headerName: "Image", cellRenderer: ColImage, flex: 1, sortable: false},
+												{ field: "name" ,  headerName: "Variant", cellRenderer: ColName, flex: 2},
+												{ field: "description", flex: 3},
+											]}
+											gridOptions={gridOptions}
+											onRowSelected={onRowSelected}
+										/>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -209,9 +210,9 @@ const ProductVariants = () => {
 					<div className="modal-box bg-base-200">
 						<h3 className="font-bold text-lg">Delete variant</h3>
 						<br></br>
-						<p className="italic">{selectedName}</p>
+						<p className="italic">{selectedItem?.name}</p>
 						<br></br>
-						<p>Are you sure you want to delete the selected variant?</p>
+						<p>Are you sure you want to delete the selectedItem variant?</p>
 						<div className="modal-action">
 							<a className="btn btn-info btn-sm mr-5" onClick={onDelete}>Yes, delete</a>
 							<a className="btn btn-sm" onClick={()=>modalRef.current?.close()}>No, close</a>
