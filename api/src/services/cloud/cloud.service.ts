@@ -33,7 +33,8 @@ export class CloudService {
 		const localFilePath = path.join(process.cwd(), './', `${process.env.UPLOAD_ROOT}${filePath}`);
 		
 		if (process.env.NODE_ENV === 'development')
-			return 'http://localhost:3000/' + filePath;
+			return filePath;
+			//return 'http://localhost:3000/' + filePath;
 
 		const fileContent = fs.readFileSync(localFilePath);
 		const mime = new MimeType()
@@ -57,7 +58,8 @@ export class CloudService {
 	async getSharedLink(filePath: string, expiresIn: number = 72000): Promise<string> {
 
 		if (process.env.NODE_ENV === 'development')
-			return "http://localhost:3000/" + filePath;
+			return filePath;
+			//return "http://localhost:3000/" + filePath;
 
 		let url = `https://bopaduxavinnhoicgnqe.supabase.co/storage/v1/object/public/${cloudConfig.bucketName}/${filePath}`;
 		return url;

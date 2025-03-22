@@ -222,7 +222,7 @@ const ProductInfo = () => {
 					</div>
 
 					<dialog ref={deleteModalRef} className="modal">
-						<div className="modal-box">
+						<div className="modal-box bg-base-200">
 							<h3 className="font-bold text-lg">Delete product variant</h3>
 							<br></br>
 							<p className="italic">{variantName}</p>

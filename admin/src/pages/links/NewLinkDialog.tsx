@@ -44,7 +44,7 @@ const NewLinkDialog = forwardRef( (props : NewLinkDialogProps, ref) => {
     return <>
         <form onSubmit={handleSubmit(onSubmit)}>
             <dialog ref={modalRef} className="modal">
-                <div className="modal-box">
+                <div className="modal-box bg-base-200">
                     <h3 className="font-bold text-lg">New review link</h3>
                     <div className="flex flex-row gap-3">
                         <div className="basis-7/12">

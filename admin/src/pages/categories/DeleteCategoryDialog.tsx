@@ -1,11 +1,13 @@
 import { forwardRef, useRef, useImperativeHandle } from "react";
 import { useForm } from "react-hook-form";
 import { CommonProps } from "../../types/Common";
+import { EventResult } from "../../types/Events";
+import toast from "react-hot-toast";
 
 export interface DeleteServiceDialogProps extends CommonProps {
     imageUrl: string | undefined;
 	category: string | undefined;
-    onChange: () => void;
+    onApply: () => Promise<EventResult>;
 }
 
 const DeleteCategoryDialog = forwardRef( (props: DeleteServiceDialogProps, ref) => {
@@ -24,15 +26,26 @@ const DeleteCategoryDialog = forwardRef( (props: DeleteServiceDialogProps, ref) 
             }
         });
 
-        const onSubmit = async () => { 
-            props.onChange();           
+        const onSubmit = async () => {
+			let loadingToast = toast.loading('Deleteing category...');
+			let result = await props.onApply();
+			toast.dismiss(loadingToast);
+
+			if(result.success)
+			{
+				modalRef.current?.close();
+				toast.success(result.message);
+			}
+			else {
+				toast.error(result.message);
+			}           
         };
 
     return (
 		<>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<dialog ref={modalRef} className="modal">
-					<div className="modal-box">
+					<div className="modal-box bg-base-200">
 						<h3 className="font-bold text-lg">Delete category</h3>
 						<div className="flex gap-2 py-3">
 							<div >

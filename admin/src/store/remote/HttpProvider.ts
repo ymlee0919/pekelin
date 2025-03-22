@@ -42,10 +42,12 @@ HttpProvider.interceptors.response.use(
 				window.localStorage.removeItem('token');
 				window.localStorage.removeItem('user');
 				window.location.href = '/';
-				Promise.reject(error);
+				return Promise.reject(error);
 			}
-			if (!!error.response?.data)
+			if (!!error.response?.data) {
 				return Promise.reject(error.response?.data);
+			}
+				
 			if(error.message)
 				return Promise.reject(error.message);
 		}

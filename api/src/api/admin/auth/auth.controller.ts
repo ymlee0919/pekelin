@@ -40,7 +40,6 @@ export class AuthController {
             }
         }
         catch(error:any) {
-            console.log(error);
             if(error instanceof InvalidOperationError)
                 throw new BadRequestException(error.message);
             else

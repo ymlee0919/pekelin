@@ -4,7 +4,7 @@ import { IsStrongPassword } from "src/services/validators/strongPassword.validat
 export class AccountCreationDTO {
     
     @IsString()
-    @MinLength(5, {message: 'The name must contains at least 5 characters'})
+    @MinLength(8, {message: 'The name must contains at least 5 characters'})
     @IsNotEmpty({message: 'The name is required'})
     readonly name: string;
 

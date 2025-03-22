@@ -2,11 +2,14 @@ admin/node_modules/
 admin/.env
 
 api/dist/
+api/public/images/
+api/public/info/
 api/node_modules/
 api/.env
 
-client/node_modules/
-client/.env
+pekelin/node_modules/
+pekelin/.env
+pekelin/public/
 
 node_modules/
 

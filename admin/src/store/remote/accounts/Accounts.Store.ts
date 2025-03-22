@@ -33,83 +33,55 @@ export default class AccountsStore extends Store<Array<AccountContent>> {
 	}
 
 	async create(newAccount: AccountCreationDTO): Promise<EventResult<CreatedAccount | null>> {
-		try {
-			let created = await this.provider.createAccount(newAccount);
-
-			return {
-				success: true,
-				message: "Account successfully created",
-				info: created,
-			};
-		} catch (error) {
-			return {
-				success: false,
-				errorCode: this.provider.lastErrorCode ?? 0,
-				message: String(error),
-			};
-		}
+		
+		let created = await this.provider.createAccount(newAccount);
+		
+		return {
+			success: true,
+			message: "Account successfully created",
+			info: created,
+		};
 	}
 
 	async update(
 		accountId: string | number,
 		newAccount: AccountUpdateDTO
 	): Promise<EventResult<UpdatedAccount | null>> {
-		try {
-			let id = typeof accountId == "string" ? parseInt(accountId) : accountId;
-			let updated = await this.provider.updateAccount(id, newAccount);
 
-			return {
-				success: true,
-				message: "Account successfully updated",
-				info: updated,
-			};
-		} catch (error) {
-			return {
-				success: false,
-				errorCode: this.provider.lastErrorCode ?? 0,
-				message: String(error),
-			};
-		}
+		let id = typeof accountId == "string" ? parseInt(accountId) : accountId;
+		let updated = await this.provider.updateAccount(id, newAccount);
+
+		return {
+			success: true,
+			message: "Account successfully updated",
+			info: updated,
+		};
 	}
 
 	async updateCredentials(
 		accountId: string | number,
 		newAccount: AccountCredentialsUpdateDTO
 	): Promise<EventResult<UpdatedAccount | null>> {
-		try {
-			let id = typeof accountId == "string" ? parseInt(accountId) : accountId;
-			let updated = await this.provider.updateCredentials(id, newAccount);
 
-			return {
-				success: true,
-				message: "Credentials successfully updated",
-				info: updated
-			};
-		} catch (error) {
-			return {
-				success: false,
-				errorCode: this.provider.lastErrorCode ?? 0,
-				message: String(error),
-			};
-		}
+		let id = typeof accountId == "string" ? parseInt(accountId) : accountId;
+		let updated = await this.provider.updateCredentials(id, newAccount);
+
+		return {
+			success: true,
+			message: "Credentials successfully updated",
+			info: updated
+		};
 	}
 
 	async delete(accountId: string | number): Promise<EventResult> {
-		try {
-			let id = typeof accountId == "string" ? parseInt(accountId) : accountId;
-			await this.provider.deleteAccount(id);
+		
+		let id = typeof accountId == "string" ? parseInt(accountId) : accountId;
+		await this.provider.deleteAccount(id);
 
-			return {
-				success: true,
-				message: "Account successfully deleted",
-			};
-		} catch (error) {
-			return {
-				success: false,
-				errorCode: this.provider.lastErrorCode ?? 0,
-				message: String(error),
-			};
-		}
+		return {
+			success: true,
+			message: "Account successfully deleted",
+		};
 	}
 }
 

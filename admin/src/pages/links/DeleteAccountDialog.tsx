@@ -38,7 +38,7 @@ const DeleteAccountDialog = forwardRef( (props : DeleteAccountDialogProps, ref) 
 
     return <>
         <dialog ref={modalRef} className="modal">
-            <div className="modal-box">
+            <div className="modal-box bg-base-200">
                 <h3 className="font-bold text-lg">Delete account</h3>
                 <br></br>
                 <p>Are you sure you want to delete the account of the user <span className="italic">{props.user}</span>?</p>

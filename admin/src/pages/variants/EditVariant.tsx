@@ -8,7 +8,7 @@ import { ProductFeaturesList } from "../../store/remote/products/ProductFeatures
 import ProductFeatures from "../features/ProductFeatures";
 import toast from "react-hot-toast";
 import useStores from "../../hooks/useStores";
-import { EmptyEvent } from "../../types/Events";
+import { EmptyEvent, EventResult } from "../../types/Events";
 
 import { MdImageSearch } from "react-icons/md";
 
@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from "../../store/local/store"; 
 import { setCurrentProduct } from "../../store/local/slices/productSlice";
 import { useDispatch } from "react-redux"; 
+import { ErrorList, errorToEventResult } from "../../types/Errors";
 
 let features: ProductFeaturesList = new ProductFeaturesList();
 
@@ -44,6 +45,7 @@ const EditVariant = () => {
     
     const {register, 
 		setValue, 
+        setError,
 		watch, 
 		handleSubmit, 
 		formState: { errors }} = useForm<VariantForm>();
@@ -137,18 +139,36 @@ const EditVariant = () => {
 
         // Send to backend
         let loadingToast = toast.loading("Updating product variant...");
-		let result = await stores.variantsStore.update(
-            product?.productId || 0, 
-            params.variantId ?? '0', 
-            formData
-        );
+
+        let result : EventResult;
+        try {
+            result = await stores.variantsStore.update(
+                product?.productId || 0, 
+                params.variantId ?? '0', 
+                formData
+            );
+        } catch (error)
+        {
+            result = errorToEventResult(error, "Unable to create the product");
+        }
+
 		toast.dismiss(loadingToast);
 
-		if (result.success) {
+        if (result.success) {
 			toast.success(result.message);
             navigate(-1);
 		} else {
 			toast.error(result.message);
+
+            if(result.info && result.errorCode === 422) {
+                let errors = result.info as ErrorList;
+
+                Object.keys(data).forEach((key: string) => {
+                    if(errors.hasOwnProperty(key)) {
+                        setError(key as keyof VariantForm, { message: errors[key][0] }  )
+                    }
+                })
+            }
 		}
     }
 

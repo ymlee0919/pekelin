@@ -119,7 +119,7 @@ const ReviewLinks =() => {
 												stores.reviewLinksStore.content?.map((link) => (
 													<tr
 														className={`hover ${
-															link.linkId == selectedItem?.linkId ? "active" : ""
+															link.linkId == selectedItem?.linkId ? "bg-base-300 font-semibold" : ""
 														}`}
 														data-id={link.linkId}
 														key={link.linkId}

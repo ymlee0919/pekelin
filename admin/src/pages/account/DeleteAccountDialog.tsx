@@ -5,7 +5,7 @@ import { EventResult } from "../../types/Events";
 
 export interface DeleteAccountDialogProps extends CommonProps {
     user: string;
-    onChange: () => Promise<EventResult>;
+    onApply: () => Promise<EventResult>;
 }
 
 const DeleteAccountDialog = forwardRef( (props : DeleteAccountDialogProps, ref) => {
@@ -23,7 +23,7 @@ const DeleteAccountDialog = forwardRef( (props : DeleteAccountDialogProps, ref) 
 
     const onDelete = async () => {
         let loadingToast = toast.loading('Deleteing account...');
-        let result = await props.onChange();
+        let result = await props.onApply();
         toast.dismiss(loadingToast);
 
         if(result.success)
@@ -38,7 +38,7 @@ const DeleteAccountDialog = forwardRef( (props : DeleteAccountDialogProps, ref) 
 
     return <>
         <dialog ref={modalRef} className="modal">
-            <div className="modal-box">
+            <div className="modal-box bg-base-200">
                 <h3 className="font-bold text-lg">Delete account</h3>
                 <br></br>
                 <p>Are you sure you want to delete the account of the user <span className="italic">{props.user}</span>?</p>

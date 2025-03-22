@@ -32,7 +32,7 @@ const DeleteFeatureDialog = forwardRef( (props : DeleteFeatureDialogProps, ref) 
 
     return <>
         <dialog ref={modalRef} className="modal">
-            <div className="modal-box">
+            <div className="modal-box bg-base-200">
                 <h3 className="font-bold text-lg">Delete product feature</h3>
                 <br></br>
                 <p className="italic">{props.feature}</p>

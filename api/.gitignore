@@ -9,6 +9,7 @@ node_modules
 public/images/
 public/info/
 dist/
+scripts/
 
 # Other staff
 TODO.txt

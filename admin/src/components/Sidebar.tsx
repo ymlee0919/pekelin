@@ -5,16 +5,16 @@ import {
 	MdOutlineCases,
 	MdAccountCircle,
 	MdLogout,
-	//MdSave,
+	MdSave,
 	MdLink,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-//import toast from 'react-hot-toast';
-//import useStores from '../hooks/useStores';
+import toast from 'react-hot-toast';
+import useStores from '../hooks/useStores';
 
 const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
-	//const stores = useStores();
+	const stores = useStores();
 
 	const {logout} = useAuth();
 	
@@ -22,7 +22,7 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 		logout();
 	}
 
-	/*const save = async () => {
+	const save = async () => {
 		let loadingToast = toast.loading("Saving database...");
 		let result = await stores.productsStore.save();
 		toast.dismiss(loadingToast);
@@ -32,7 +32,7 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 		} else {
 			toast.error(result.message);
 		}
-	}*/
+	}
 
  	return (
 		<aside
@@ -83,7 +83,7 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 						</NavLink>
 					</li>
 					
-					{/*<li></li>
+					<li></li>
 					<li>
 						<a className="group text-sm text-gray-500 p-3 my-1"
 							onClick={save}
@@ -94,7 +94,6 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 							<span>Save</span>
 						</a>
 					</li>
-					*/}
 					<li></li>
 					<li className='sm:invisible visible'>
 						<a onClick={handleLogout} className="group text-sm text-gray-500 p-3 my-1">

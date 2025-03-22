@@ -8,13 +8,14 @@ import { ProductFeaturesList } from "../../store/remote/products/ProductFeatures
 import ProductFeatures from "../features/ProductFeatures";
 import toast from "react-hot-toast";
 import useStores from "../../hooks/useStores";
-import { EmptyEvent } from "../../types/Events";
+import { EmptyEvent, EventResult } from "../../types/Events";
 
 import { MdImageSearch } from "react-icons/md";
 import { StoreStatus } from "../../store/remote/Store";
 import Loading from "../../components/Loading";
 import Error from "../../components/Error";
 import { BasicCategory, BasicProduct, SetsForm } from "../../store/remote/sets/Sets.Types";
+import { ErrorList, errorToEventResult } from "../../types/Errors";
 
 
 let features: ProductFeaturesList = new ProductFeaturesList();
@@ -114,14 +115,32 @@ const NewSet = () => {
 
         // Send to backend
         let loadingToast = toast.loading("Creating product...");
-		let result = await stores.setsStore.create(formData);
+
+        let result : EventResult;
+        try {
+            result = await stores.setsStore.create(formData);
+        } catch (error)
+        {
+            result = errorToEventResult(error, "Unable to create the product");
+        }
+
 		toast.dismiss(loadingToast);
 
-		if (result.success) {
+        if (result.success) {
 			toast.success(result.message);
             navigate('/products');
 		} else {
 			toast.error(result.message);
+
+            if(result.info && result.errorCode === 422) {
+                let errors = result.info as ErrorList;
+
+                Object.keys(data).forEach((key: string) => {
+                    if(errors.hasOwnProperty(key)) {
+                        setError(key as keyof SetsForm, { message: errors[key][0] }  )
+                    }
+                })
+            }
 		}
     }
 

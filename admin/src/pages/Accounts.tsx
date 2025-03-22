@@ -11,10 +11,12 @@ import NewAccountDialog from "./account/NewAccountDialog";
 import DeleteAccountDialog from "./account/DeleteAccountDialog";
 import EditAccountDialog from "./account/EditAccountDialog";
 import CredentialsAccountDialog from "./account/CredentialsAccountDialog";
-import { AccountContent, AccountCreationDTO, AccountCredentialsUpdateDTO, AccountUpdateDTO } from "../store/remote/accounts/Accounts.Types";
+import { AccountContent, AccountCreationDTO, AccountCredentialsUpdateDTO, AccountUpdateDTO, CreatedAccount, UpdatedAccount } from "../store/remote/accounts/Accounts.Types";
 
 import { setAccounts } from "../store/local/slices/globalSlice";
 import { useDispatch } from "react-redux"; 
+import { ErrorList, errorToEventResult } from "../types/Errors";
+import { EventResult } from "../types/Events";
 
 
 const Accounts =() => {
@@ -30,6 +32,68 @@ const Accounts =() => {
 
     const stores = useStores();
 
+	// Components functions
+	const onAdd = async (account: AccountCreationDTO) : Promise<EventResult<CreatedAccount | ErrorList | null>> => {
+		try {
+			let result = await stores.accountsStore.create(account);
+			if (result.success) reload();
+			return result;
+		} catch (error) {
+			return errorToEventResult(error, "Unable to create the account");
+		}
+	}
+
+	const onUpdateCredentials = async (account: AccountCredentialsUpdateDTO) => {
+		try {
+			let result = await stores.accountsStore.updateCredentials(
+				selectedItem?.userId ?? 0,
+				account
+			);
+			if (result.success) reload();
+			return result;
+		} catch (error) {
+			return errorToEventResult(error, "Unable to update credentials");
+		}
+	}
+
+	const onUpdate = async (account: AccountUpdateDTO) : Promise<EventResult<UpdatedAccount | ErrorList | null>> => {
+		if(selectedItem) {
+			try {
+				let result = await stores.accountsStore.update(selectedItem?.userId ?? 0, account);
+				if (result.success) reload();
+				return result;
+			} catch (error) {
+				return errorToEventResult(error, "Unable to update the account");
+			}
+		}
+		
+		return {
+            message: 'Not selected account',
+            success: false,
+            errorCode: 100
+        }
+	}
+
+	const onDelete = async () : Promise<EventResult> => {
+		if(selectedItem) {
+			try {
+				let result = await stores.accountsStore.delete(selectedItem?.userId ?? 0);
+				if (result.success) reload();
+				return result;
+			}
+			catch (error) {
+				return errorToEventResult(error, "Unable to delete the account");
+			}
+		}
+		
+		return {
+            message: 'Not selected category',
+            success: false,
+            errorCode: 100
+        }
+	}
+
+	// General functions
     const reload = () => {
         setStatus(StoreStatus.LOADING);
 		setSelectedItem(undefined);
@@ -138,7 +202,7 @@ const Accounts =() => {
 												stores.accountsStore.content?.map((account) => (
 													<tr
 														className={`hover ${
-															account.userId == selectedItem?.userId ? "active" : ""
+															account.userId == selectedItem?.userId ? "bg-base-300 font-semibold" : ""
 														}`}
 														data-id={account.userId}
 														key={account.userId}
@@ -167,45 +231,26 @@ const Accounts =() => {
 
 					<NewAccountDialog
 						ref={addModalRef}
-						onChange={async (account: AccountCreationDTO) => {
-							let result = await stores.accountsStore.create(account);
-							if (result.success) reload();
-							return result;
-						}}
+						onApply={onAdd}
 					/>
 
 					<CredentialsAccountDialog
 						ref={credentialsModalRef}
 						user={selectedItem?.user ?? ""}
-						onChange={async (account: AccountCredentialsUpdateDTO) => {
-							let result = await stores.accountsStore.updateCredentials(
-								selectedItem?.userId ?? 0,
-								account
-							);
-							if (result.success) reload();
-							return result;
-						}}
+						onApply={onUpdateCredentials}
 					/>
 
 					<EditAccountDialog
 						ref={editModalRef}
 						name={selectedItem?.name ?? ""}
 						email={selectedItem?.email ?? ""}
-						onChange={async (account: AccountUpdateDTO) => {
-							let result = await stores.accountsStore.update(selectedItem?.userId ?? 0, account);
-							if (result.success) reload();
-							return result;
-						}}
+						onApply={onUpdate}
 					/>
 
 					<DeleteAccountDialog
 						ref={deleteModalRef}
 						user={selectedItem?.user ?? ""}
-						onChange={async () => {
-							let result = await stores.accountsStore.delete(selectedItem?.userId ?? 0);
-							if (result.success) reload();
-							return result;
-						}}
+						onApply={onDelete}
 					/>
 				</>
 			) : (

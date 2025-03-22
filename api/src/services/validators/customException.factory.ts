@@ -11,7 +11,7 @@ const CustomExceptionFactory = (errors: ValidationError[]) => {
     }, {});
 
     return new BadRequestException({
-        statusCode: 400,
+        statusCode: 422,
         message: 'Validation failed',
         errors: groupedErrors,
     });

@@ -16,6 +16,7 @@ imports: [
 		{ path: 'client', module: ClientModule },
 	
 	]),
+	
 	ServeStaticModule.forRoot({
 		rootPath: join(__dirname, '../', 'public')
 	})

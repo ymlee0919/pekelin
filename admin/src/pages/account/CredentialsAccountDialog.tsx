@@ -4,18 +4,19 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { EventResult } from "../../types/Events";
 import { AccountCredentialsUpdateDTO } from "../../store/remote/accounts/Accounts.Types";
+import { ErrorList } from "../../types/Errors";
 
 
 export interface CredentialsAccountDialogProps extends CommonProps {
     user: string;
-    onChange: (account: AccountCredentialsUpdateDTO) => Promise<EventResult>;
+    onApply: (account: AccountCredentialsUpdateDTO) => Promise<EventResult>;
 }
 
 const CredentialsAccountDialog = forwardRef( (props : CredentialsAccountDialogProps, ref) => {
 
     let modalRef = useRef<HTMLDialogElement>(null);
 
-    const {register, reset, setValue, handleSubmit, formState: { errors }} = useForm<AccountCredentialsUpdateDTO>({
+    const {register, reset, setValue, setError, handleSubmit, formState: { errors }} = useForm<AccountCredentialsUpdateDTO>({
         defaultValues: {
             user: props.user
         }
@@ -33,7 +34,7 @@ const CredentialsAccountDialog = forwardRef( (props : CredentialsAccountDialogPr
 
     let onSubmit = async (data: AccountCredentialsUpdateDTO) => {
 		let loadingToast = toast.loading("Updating credentials...");
-		let result = await props.onChange(data);
+		let result = await props.onApply(data);
 		toast.dismiss(loadingToast);
 
 		if (result.success) {
@@ -41,13 +42,23 @@ const CredentialsAccountDialog = forwardRef( (props : CredentialsAccountDialogPr
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
+
+            if(result.info && result.errorCode === 422) {
+                let errors = result.info as ErrorList;
+
+                Object.keys(data).forEach((key: string) => {
+                    if(errors.hasOwnProperty(key)) {
+                        setError(key as keyof AccountCredentialsUpdateDTO, { message: errors[key][0] }  )
+                    }
+                })
+            }
 		}
 	};
 
     return <>
         <form onSubmit={handleSubmit(onSubmit)}>
             <dialog ref={modalRef} className="modal">
-                <div className="modal-box">
+                <div className="modal-box bg-base-200">
                     <h3 className="font-bold text-lg">Update credentials</h3>
                     <label className="form-control w-full max-w-xs">
                         <div className="label">

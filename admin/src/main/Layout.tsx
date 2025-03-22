@@ -5,27 +5,27 @@ import Sidebar from '../components/Sidebar';
 import { Toaster } from 'react-hot-toast';
 
 const Layout: React.FC = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const workspaceRef = useRef<HTMLDivElement>(null);
+	const [isSidebarOpen, setSidebarOpen] = useState(false);
+	const workspaceRef = useRef<HTMLDivElement>(null);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
+	const toggleSidebar = () => {
+		setSidebarOpen(!isSidebarOpen);
+	};
 
-  const closeSidebar = () => {
-    setSidebarOpen(false);
-  };
+	const closeSidebar = () => {
+		setSidebarOpen(false);
+	};
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (
-      workspaceRef.current &&
-      !workspaceRef.current.contains(event.target as Node) &&
-      event.target instanceof HTMLElement &&
-      !event.target.closest('.drawer')
-    ) {
-      closeSidebar();
-    }
-  };
+	const handleOutsideClick = (event: MouseEvent) => {
+		if (
+			workspaceRef.current &&
+			!workspaceRef.current.contains(event.target as Node) &&
+			event.target instanceof HTMLElement &&
+			!event.target.closest('.drawer')
+		) {
+			closeSidebar();
+		}
+	};
 
   useEffect(() => {
     if (isSidebarOpen) {
@@ -39,7 +39,7 @@ const Layout: React.FC = () => {
   }, [isSidebarOpen]);
 
   return <>
-    <Toaster/>
+    
     <div className="min-h-screen flex flex-col lg:flex-row">
         <Navbar toggleSidebar={toggleSidebar} isOpen={isSidebarOpen} />
         <Sidebar isOpen={isSidebarOpen} />
@@ -58,6 +58,11 @@ const Layout: React.FC = () => {
             </div>
         </main>
     </div>
+    <Toaster toastOptions={{
+		style: {
+			zIndex: 9000
+		},
+    }}/>
     </>;
 };
 

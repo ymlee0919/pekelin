@@ -151,7 +151,7 @@ const Products = () => {
 									</div>
 									<table className="table table-grid">
 										{/* head */}
-										<thead>
+										<thead >
 											<tr>
 												<th className="w-20">Image</th>
 												<th>Product</th>
@@ -201,7 +201,7 @@ const Products = () => {
 															data-id={product.productId}
 															data-label={product.name}
 															data-set={product.isSet ? '1' : '0'}
-															className={`hover ${product.productId == selected ? "active" : ""} ${!product.visible && 'bg-base-300 line-through'}`}
+															className={`hover ${product.productId == selected ? "bg-base-300 font-semibold" : ""} ${!product.visible && 'bg-base-300 line-through'}`}
 															onClick={(e: MouseEvent<HTMLTableRowElement>) => {
 																	setSelected(parseInt(e.currentTarget.getAttribute("data-id") ?? "0"));
 																	setSelectedName(e.currentTarget.getAttribute("data-label") ?? "-");
@@ -244,7 +244,7 @@ const Products = () => {
 					</div>
 
 				<dialog ref={modalRef} className="modal">
-					<div className="modal-box">
+					<div className="modal-box bg-base-200">
 						<h3 className="font-bold text-lg">Delete product</h3>
 						<br></br>
 						<p className="italic">{selectedName}</p>

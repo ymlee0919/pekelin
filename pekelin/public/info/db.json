@@ -2,7 +2,7 @@
   {
     "categoryId": 1,
     "category": "Canastilla",
-    "description": "Batas, pañales, juegos de cuna, pañaleras...",
+    "description": "Batas, pañales, juegos de cuna, pañaleras, juegos de salón ...",
     "url": "canastilla",
     "remoteUrl": "/images/categories/86dd1a6e-a9e1-413b-a07f-f453b78c7505.jpg",
     "expiry": 29078749,
@@ -19,7 +19,7 @@
         "isNew": false,
         "element1Id": null,
         "element2Id": null,
-        "isBestSeller": false,
+        "isBestSeller": true,
         "remoteUrl": "/images/products/f3ef367d-ea3f-4237-9278-c448fd94be78.jpg",
         "expiry": 1740481199,
         "Features": [
@@ -126,11 +126,31 @@
             ]
           },
           {
+            "variantId": 77,
+            "productId": 2,
+            "name": "Bata fresa fusha",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/542ef73d-be97-4d6b-88f5-bf6a6ea125d5.png",
+            "expiry": 1742401142,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Fresa fusha"
+              },
+              {
+                "title": "Adornos",
+                "content": "Encajes y lazos"
+              }
+            ]
+          },
+          {
             "variantId": 15,
             "productId": 2,
             "name": "Bata roja",
             "description": "",
-            "isBestSeller": false,
+            "isBestSeller": true,
             "isNew": false,
             "remoteUrl": "/images/products/d8091900-0883-4eba-aff4-0f9166d26387.png",
             "expiry": 1740985615,
@@ -186,6 +206,26 @@
               {
                 "title": "Vuelo",
                 "content": "Rosado de mariposas"
+              }
+            ]
+          },
+          {
+            "variantId": 78,
+            "productId": 2,
+            "name": "Bata rosado mamey",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/ce84dd3a-5df2-4d54-85f9-a8f8a9cbd3a5.png",
+            "expiry": 1742401275,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Rosado mamey"
+              },
+              {
+                "title": "Adornos",
+                "content": "Vuelos de corazones, cinta y encajes"
               }
             ]
           }
@@ -382,18 +422,18 @@
             ]
           },
           {
-            "variantId": 55,
+            "variantId": 89,
             "productId": 13,
-            "name": "Juego de salón del pájaro loco",
+            "name": "Juego de salón blanco",
             "description": "",
             "isBestSeller": false,
             "isNew": true,
-            "remoteUrl": "/images/products/2dcc9bbf-3136-4ff8-b535-2a521b678dab.png",
-            "expiry": 1741004802,
+            "remoteUrl": "/images/products/44f60c29-ac95-4541-9d60-2c577d80b31f.png",
+            "expiry": 1742403104,
             "Features": [
               {
                 "title": "Color",
-                "content": "Tela estampada con el pájaro loco"
+                "content": "Blanco"
               }
             ]
           },
@@ -618,6 +658,46 @@
             ]
           }
         ]
+      },
+      {
+        "productId": 24,
+        "categoryId": 1,
+        "name": "Tetera",
+        "gender": "M",
+        "url": "tetera",
+        "description": "Teteras de excelente calidad",
+        "price": 100,
+        "isSet": false,
+        "isNew": false,
+        "element1Id": null,
+        "element2Id": null,
+        "isBestSeller": false,
+        "remoteUrl": "/images/products/7d0affdb-626f-438b-ab1e-acc559a4fdf7.jpg",
+        "expiry": 1742403927,
+        "Features": [
+          {
+            "title": "Edad",
+            "content": "Para recién nacido y meses de nacido"
+          }
+        ],
+        "Variants": [
+          {
+            "variantId": 90,
+            "productId": 24,
+            "name": "Tetera",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/bb4c065a-87c7-405f-a47a-56fcfad63b64.png",
+            "expiry": 1742403980,
+            "Features": [
+              {
+                "title": "Colores disponibles",
+                "content": "Blanco, rosado, amarillo y azul"
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -810,6 +890,78 @@
                 "content": "Lazo y encaje rojo"
               }
             ]
+          },
+          {
+            "variantId": 82,
+            "productId": 3,
+            "name": "Blusa rosada de princesa",
+            "description": "Blusa rosada con calcomanía de princesa. El dibujo de la princesa puede variar en dependencia de la disponibilidad.",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/225bb8de-0687-4d8a-b053-0fe962713fa7.png",
+            "expiry": 1742401546,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Rosado"
+              },
+              {
+                "title": "Adorno",
+                "content": "Calcomanía de princesa (puede variar)"
+              }
+            ]
+          },
+          {
+            "variantId": 81,
+            "productId": 3,
+            "name": "Blusa rosada de vuelos",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/414d37ae-9790-45f4-891c-fd6d8fb1f22f.png",
+            "expiry": 1742401488,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Rosado"
+              }
+            ]
+          },
+          {
+            "variantId": 79,
+            "productId": 3,
+            "name": "Blusa rosado mamey",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/cf3b555b-c812-431f-a45a-bad188bb467b.png",
+            "expiry": 1742401356,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Rosado mamey"
+              }
+            ]
+          },
+          {
+            "variantId": 80,
+            "productId": 3,
+            "name": "Blusa rosado mamey de princesa",
+            "description": "Blusa rosado mamey con calcomanía de princesa. El dibujo de la princesa puede variar en dependencia de la disponibilidad.",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/dad0d2d5-74ba-4895-8385-e5881ff7c73f.png",
+            "expiry": 1742401444,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Rosado mamey"
+              },
+              {
+                "title": "Adornos",
+                "content": "Calcomanía de princesa (puede variar)"
+              }
+            ]
           }
         ]
       },
@@ -836,14 +988,34 @@
         ],
         "Variants": [
           {
+            "variantId": 87,
+            "productId": 18,
+            "name": "Enguatada amarilla",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": true,
+            "remoteUrl": "/images/products/6682225a-4892-4b2d-b54e-8b4168aa6763.png",
+            "expiry": 1742402668,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Amarillo"
+              },
+              {
+                "title": "Adorno",
+                "content": "Calcomanía de princesa (puede variar)"
+              }
+            ]
+          },
+          {
             "variantId": 64,
             "productId": 18,
             "name": "Enguatada blanca",
             "description": "",
             "isBestSeller": false,
             "isNew": false,
-            "remoteUrl": "/images/products/e6a505e1-a026-49b2-82db-8816192b4c71.png",
-            "expiry": 1741007654,
+            "remoteUrl": "/images/products/32bf7dec-8b2a-45e8-b0c3-44b7404299ea.png",
+            "expiry": 1742401599,
             "Features": [
               {
                 "title": "Color",
@@ -872,6 +1044,90 @@
               {
                 "title": "Adorno",
                 "content": "Calcomanía (puede variar)"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "productId": 26,
+        "categoryId": 2,
+        "name": "Juego de bebita",
+        "gender": "F",
+        "url": "juego-de-bebita",
+        "description": "Blusita fresca con vuelo y short. Más belleza, imposible!",
+        "price": 1300,
+        "isSet": false,
+        "isNew": false,
+        "element1Id": null,
+        "element2Id": null,
+        "isBestSeller": false,
+        "remoteUrl": "/images/products/29336c2a-49b8-4e9a-8f41-4a1dc0f6243c.jpg",
+        "expiry": 1742485248,
+        "Features": [
+          {
+            "title": "Edad",
+            "content": "Para niñas de 1 a 3 años"
+          }
+        ],
+        "Variants": [
+          {
+            "variantId": 97,
+            "productId": 26,
+            "name": "Juego de bebita amarillo",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/40e1954f-b7eb-4010-8219-a3aab5ffdcbb.png",
+            "expiry": 1742485373,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Amarillo"
+              },
+              {
+                "title": "Adornos",
+                "content": "Lazo, vuelo y encajes"
+              }
+            ]
+          },
+          {
+            "variantId": 96,
+            "productId": 26,
+            "name": "Juego de bebita rojo",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/aea55dfb-6046-454b-a85b-493563b28b67.png",
+            "expiry": 1742485330,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Rojo"
+              },
+              {
+                "title": "Adornos",
+                "content": "Lazo, vuelo y encajes"
+              }
+            ]
+          },
+          {
+            "variantId": 98,
+            "productId": 26,
+            "name": "Juego de bebita rosado",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/f2cc17fe-b75f-4754-99d0-f118995103b0.png",
+            "expiry": 1742485424,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Rosado"
+              },
+              {
+                "title": "Adornos",
+                "content": "Flor, vuelo y encajes"
               }
             ]
           }
@@ -922,6 +1178,142 @@
           }
         ],
         "Variants": []
+      },
+      {
+        "productId": 25,
+        "categoryId": 2,
+        "name": "Juego deportivo",
+        "gender": "F",
+        "url": "juego-deportivo",
+        "description": "Juego deportivo para niñas de 1 a 3 años. Ideal para el calor de Cuba.",
+        "price": 1300,
+        "isSet": false,
+        "isNew": false,
+        "element1Id": null,
+        "element2Id": null,
+        "isBestSeller": true,
+        "remoteUrl": "/images/products/f4bc3414-36e0-467a-8e72-9708b4823732.jpg",
+        "expiry": 1742484532,
+        "Features": [
+          {
+            "title": "Edad",
+            "content": "Para niñas de 1 a 3 años"
+          }
+        ],
+        "Variants": [
+          {
+            "variantId": 91,
+            "productId": 25,
+            "name": "Juego deportivo amarillo y negro",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/6190aa54-c9da-48b1-a5cc-45c0d5da9003.png",
+            "expiry": 1742484619,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Amarillo y negro"
+              },
+              {
+                "title": "Adornos",
+                "content": "Calcomanía (puede variar)"
+              }
+            ]
+          },
+          {
+            "variantId": 94,
+            "productId": 25,
+            "name": "Juego deportivo blanco de cordones",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/350c1e7c-6e4a-4fc1-ab57-9c4d6154cae7.png",
+            "expiry": 1742484921,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Blanco"
+              },
+              {
+                "title": "Adorno",
+                "content": "Calcomanía (puede variar)"
+              },
+              {
+                "title": "Piezas",
+                "content": "Tope y short de cordón"
+              }
+            ]
+          },
+          {
+            "variantId": 92,
+            "productId": 25,
+            "name": "Juego deportivo blanco de listas",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/4ba7183d-e167-4f58-b924-cd31ed7ad95b.png",
+            "expiry": 1742484726,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Blanco"
+              },
+              {
+                "title": "Piezas",
+                "content": "Tope y short"
+              },
+              {
+                "title": "Adornos",
+                "content": "Listas negras y calcomanía (puede variar)"
+              }
+            ]
+          },
+          {
+            "variantId": 93,
+            "productId": 25,
+            "name": "Juego deportivo blanco y amarillo",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/eb4624a1-697f-4601-a0d4-5f37fea1ba14.png",
+            "expiry": 1742484828,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Amarillo y blanco"
+              },
+              {
+                "title": "Adornos",
+                "content": "Calcomanía (puede variar)"
+              }
+            ]
+          },
+          {
+            "variantId": 95,
+            "productId": 25,
+            "name": "Juego deportivo rosado",
+            "description": "",
+            "isBestSeller": true,
+            "isNew": false,
+            "remoteUrl": "/images/products/4d397880-8321-4758-8c9b-a57ac4bf7034.png",
+            "expiry": 1742484982,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Rosado"
+              },
+              {
+                "title": "Adornos",
+                "content": "Calcomanía (puede variar)"
+              },
+              {
+                "title": "Piezas",
+                "content": "Tope y short de cordón"
+              }
+            ]
+          }
+        ]
       },
       {
         "productId": 11,
@@ -1097,6 +1489,42 @@
           }
         ],
         "Variants": [
+          {
+            "variantId": 84,
+            "productId": 19,
+            "name": "Pantalón de invierno amarillo",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": true,
+            "remoteUrl": "/images/products/9f2de1a7-e24d-44c1-8a0c-91470a677312.png",
+            "expiry": 1742401736,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Amarillo"
+              },
+              {
+                "title": "Adorno",
+                "content": "Calcomanía (puede variar)"
+              }
+            ]
+          },
+          {
+            "variantId": 83,
+            "productId": 19,
+            "name": "Pantalón de invierno blanco",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/e0a74c72-b616-4876-8b21-95132f55b8ab.png",
+            "expiry": 1742401679,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Blanco"
+              }
+            ]
+          },
           {
             "variantId": 66,
             "productId": 19,
@@ -1376,26 +1804,6 @@
         ],
         "Variants": [
           {
-            "variantId": 69,
-            "productId": 20,
-            "name": "Enguatada azul",
-            "description": "",
-            "isBestSeller": false,
-            "isNew": false,
-            "remoteUrl": "/images/products/e3ce7d90-4c29-4511-bdb1-322fd07f813f.png",
-            "expiry": 1741008130,
-            "Features": [
-              {
-                "title": "Color",
-                "content": "Azul"
-              },
-              {
-                "title": "Adorno",
-                "content": "Calcomanía (puede variar)"
-              }
-            ]
-          },
-          {
             "variantId": 67,
             "productId": 20,
             "name": "Enguatada blanca",
@@ -1432,22 +1840,6 @@
               {
                 "title": "Adorno",
                 "content": "Calcomanía (puede variar)"
-              }
-            ]
-          },
-          {
-            "variantId": 71,
-            "productId": 20,
-            "name": "Enguatada del pájaro loco",
-            "description": "",
-            "isBestSeller": false,
-            "isNew": true,
-            "remoteUrl": "/images/products/8f327021-3327-4541-946e-384095f27be0.png",
-            "expiry": 1741008195,
-            "Features": [
-              {
-                "title": "Color",
-                "content": "Tela estampada con el pájaro loco"
               }
             ]
           },
@@ -1528,7 +1920,7 @@
         "isNew": false,
         "element1Id": 4,
         "element2Id": 5,
-        "isBestSeller": false,
+        "isBestSeller": true,
         "remoteUrl": "/images/products/5b6f548a-4380-44dd-8324-ed694554a64c.jpg",
         "expiry": 1740847642,
         "Features": [
@@ -1666,26 +2058,6 @@
             ]
           },
           {
-            "variantId": 51,
-            "productId": 4,
-            "name": "Pullover azul",
-            "description": "",
-            "isBestSeller": false,
-            "isNew": false,
-            "remoteUrl": "/images/products/0ee510ec-807a-4cee-9b67-556e3564121c.png",
-            "expiry": 1741004278,
-            "Features": [
-              {
-                "title": "Color",
-                "content": "Azul"
-              },
-              {
-                "title": "Adorno",
-                "content": "Calcomanía (puede variar)"
-              }
-            ]
-          },
-          {
             "variantId": 52,
             "productId": 4,
             "name": "Pullover blanco",
@@ -1702,6 +2074,42 @@
               {
                 "title": "Adorno",
                 "content": "Calcomanía (puede variar)"
+              }
+            ]
+          },
+          {
+            "variantId": 86,
+            "productId": 4,
+            "name": "Pullover color mostaza",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/b6fdb197-b80e-4566-8ca8-fa6156addb85.png",
+            "expiry": 1742401957,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Mostaza"
+              },
+              {
+                "title": "Adornos",
+                "content": "Calcomanía (puede variar)"
+              }
+            ]
+          },
+          {
+            "variantId": 85,
+            "productId": 4,
+            "name": "Pullover de Mikey",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/5139ebd7-6129-46bc-9a8b-95439d78f205.png",
+            "expiry": 1742401897,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Tela amarilla estampada con Mikey y Pluto"
               }
             ]
           },
@@ -1810,6 +2218,26 @@
             ]
           },
           {
+            "variantId": 76,
+            "productId": 5,
+            "name": "Short de puño azul",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/e6efed3d-47c0-4aec-9d37-e2d9f9ab40f3.png",
+            "expiry": 1742398338,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Azul"
+              },
+              {
+                "title": "Adorno",
+                "content": "Calcomanía (puede variar)"
+              }
+            ]
+          },
+          {
             "variantId": 43,
             "productId": 5,
             "name": "Short de puño color mostaza",
@@ -1872,6 +2300,50 @@
             "Features": []
           },
           {
+            "variantId": 88,
+            "productId": 5,
+            "name": "Short mostaza de corte redondo",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/a3a8cc30-ce31-4648-b8f0-d151e8509a9f.png",
+            "expiry": 1742402826,
+            "Features": [
+              {
+                "title": "Color",
+                "content": "Mostaza"
+              },
+              {
+                "title": "Corte",
+                "content": "Redondo"
+              },
+              {
+                "title": "Adorno",
+                "content": "Calcomanía (puede variar)"
+              }
+            ]
+          },
+          {
+            "variantId": 44,
+            "productId": 5,
+            "name": "Short naranja de listas negras",
+            "description": "",
+            "isBestSeller": false,
+            "isNew": false,
+            "remoteUrl": "/images/products/790ad37a-c2a6-4324-b587-0911029263b2.png",
+            "expiry": 1740994452,
+            "Features": [
+              {
+                "title": "Adornos",
+                "content": "Listas negras y calcomanía (puede variar)"
+              },
+              {
+                "title": "Color",
+                "content": "Anaranjado"
+              }
+            ]
+          },
+          {
             "variantId": 39,
             "productId": 5,
             "name": "Short negro de listas blancas",
@@ -1904,26 +2376,6 @@
               {
                 "title": "Color",
                 "content": "Rojo"
-              }
-            ]
-          },
-          {
-            "variantId": 44,
-            "productId": 5,
-            "name": "Short rojo de listas negras",
-            "description": "",
-            "isBestSeller": false,
-            "isNew": false,
-            "remoteUrl": "/images/products/790ad37a-c2a6-4324-b587-0911029263b2.png",
-            "expiry": 1740994452,
-            "Features": [
-              {
-                "title": "Color",
-                "content": "Rojo"
-              },
-              {
-                "title": "Adornos",
-                "content": "Listas negras y calcomanía (puede variar)"
               }
             ]
           },

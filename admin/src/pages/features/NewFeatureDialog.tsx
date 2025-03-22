@@ -41,7 +41,7 @@ const NewFeatureDialog = forwardRef( (props : NewFeatureDialogProps, ref) => {
 		<>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<dialog ref={modalRef} className="modal">
-					<div className="modal-box">
+					<div className="modal-box bg-base-200">
 						<h3 className="font-bold text-lg">New product feature</h3>
 						<label className="form-control w-full max-w-xs">
 							<div className="label">

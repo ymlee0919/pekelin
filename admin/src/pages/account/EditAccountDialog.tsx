@@ -3,19 +3,21 @@ import { CommonProps } from "../../types/Common";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { EventResult } from "../../types/Events";
-import { AccountUpdateDTO } from "../../store/remote/accounts/Accounts.Types";
+import { AccountUpdateDTO, UpdatedAccount } from "../../store/remote/accounts/Accounts.Types";
+import { ErrorList } from "../../types/Errors";
+
 
 export interface EditAccountDialogProps extends CommonProps {
 	name: string;
     email: string;
-	onChange: (account: AccountUpdateDTO) => Promise<EventResult>;
+	onApply: (account: AccountUpdateDTO) => Promise<EventResult<UpdatedAccount | ErrorList | null>>;
 }
 
 const EditAccountDialog = forwardRef( (props : EditAccountDialogProps, ref) => {
 
     let modalRef = useRef<HTMLDialogElement>(null);
 
-    const {register, reset, setValue, handleSubmit, formState: { errors }} = useForm<AccountUpdateDTO>({
+    const {register, reset, setValue, setError, handleSubmit, formState: { errors }} = useForm<AccountUpdateDTO>({
         defaultValues: {
            name: props.name, email: props.email
         }
@@ -34,7 +36,7 @@ const EditAccountDialog = forwardRef( (props : EditAccountDialogProps, ref) => {
 
     let onSubmit = async (data: AccountUpdateDTO) => {
 		let loadingToast = toast.loading("Updating account...");
-		let result = await props.onChange(data);
+		let result = await props.onApply(data);
 		toast.dismiss(loadingToast);
 
 		if (result.success) {
@@ -42,13 +44,23 @@ const EditAccountDialog = forwardRef( (props : EditAccountDialogProps, ref) => {
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
+
+            if(result.info && result.errorCode === 422) {
+                let errors = result.info as ErrorList;
+
+                Object.keys(data).forEach((key: string) => {
+                    if(errors.hasOwnProperty(key)) {
+                        setError(key as keyof AccountUpdateDTO, { message: errors[key][0] }  )
+                    }
+                })
+            }
 		}
 	};
 
     return <>
         <form onSubmit={handleSubmit(onSubmit)}>
             <dialog ref={modalRef} className="modal">
-                <div className="modal-box">
+                <div className="modal-box bg-base-200">
                     <h3 className="font-bold text-lg">Update account</h3>
                     <label className="form-control w-full max-w-xs">
                         <div className="label">

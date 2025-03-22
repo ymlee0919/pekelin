@@ -3,7 +3,6 @@ import Breadcrumbs from "../components/Breadcrumbs";
 import { StoreStatus } from "../store/remote/Store";
 import useStores from "../hooks/useStores";
 import { MdOutlineAdd, MdEdit, MdDelete } from "react-icons/md";
-import toast from "react-hot-toast";
 import Loading from "../components/Loading";
 import Error  from "../components/Error";
 
@@ -12,8 +11,10 @@ import DeleteCategoryDialog from "./categories/DeleteCategoryDialog";
 import UpdateCategoryDialog from "./categories/UpdateCategoryDialog";
 
 import { useDispatch } from "react-redux"; 
-import { CategoryContent } from "../store/remote/categories/Categories.Types";
+import { CategoryContent, CreatedCategory, UpdatedCategory } from "../store/remote/categories/Categories.Types";
 import { setCategories } from "../store/local/slices/globalSlice";
+import { EventResult } from "../types/Events";
+import { ErrorList, errorToEventResult } from "../types/Errors";
 
 interface HTMLEditCategoryDialogElement extends HTMLDialogElement {
     showDialog : (category: string, description: string) => void;
@@ -66,49 +67,50 @@ const Categories = () => {
         return () => {stores.categoryStore.release()}
     }, []);
 
-    let addCategory = async (data: FormData) => {
-        let loadingToast = toast.loading("Creating category...");
-        let result = await stores.categoryStore.addCategory(data);
-        toast.dismiss(loadingToast);
-
-        if (result.success) {
-            addModalRef.current?.close();
-            toast.success(result.message);
-            reload();
-        } else {
-            toast.error(result.message);
+    let addCategory = async (data: FormData) : Promise<EventResult<CreatedCategory | ErrorList | null>> => {
+        try {
+            let result = await stores.categoryStore.addCategory(data);
+            if (result.success) reload();
+            return result;
+        } catch (error) {
+            return errorToEventResult(error, "Unable to create the category");
         }
     }
 
-    let updateCategory = async (data: FormData) => {
-        if(selected){
-            let loadingToast = toast.loading("Updating category...");
-            let result = await stores.categoryStore.updateCategory(selected.categoryId, data);
-            toast.dismiss(loadingToast);
-
-            if (result.success) {
-                updateModalRef.current?.close();
-                toast.success(result.message);
-                reload();
-            } else {
-                toast.error(result.message);
+    let updateCategory = async (data: FormData) : Promise<EventResult<UpdatedCategory | ErrorList | null>> => {
+        if(selected) {
+            try {
+                let result = await stores.categoryStore.updateCategory(selected.categoryId, data);
+                if (result.success) reload();
+                return result;
+            } catch (error) {
+                return errorToEventResult(error, "Unable to update the category");
             }
+        }
+
+        return {
+            message: 'Not selected category',
+            success: false,
+            errorCode: 100
         }
     }
 
     let deleteCategory = async () => {
         if(selected) {
-            let loadingToast = toast.loading("Deleting category...");
-            let result = await stores.categoryStore.delete(selected.categoryId);
-            toast.dismiss(loadingToast);
-
-            if (result.success) {
-                deleteModalRef.current?.close();
-                toast.success(result.message);
-                reload();
-            } else {
-                toast.error(result.message);
+            try {
+                let result = await stores.categoryStore.delete(selected.categoryId);
+                if (result.success) reload();
+                return result;
+            }   
+            catch (error) {
+                return errorToEventResult(error, "Unable to delete the category");
             }
+        }
+
+        return {
+            message: 'Not selected category',
+            success: false,
+            errorCode: 100
         }
     }
     
@@ -183,19 +185,22 @@ const Categories = () => {
 						})}
 					</div>
 
-					<NewCategoryDialog ref={addModalRef} onChange={addCategory} />
+					<NewCategoryDialog 
+                        ref={addModalRef} 
+                        onApply={addCategory} 
+                    />
 
 					<UpdateCategoryDialog
 						ref={updateModalRef}
 						imageUrl={selected?.remoteUrl}
-						onChange={updateCategory}
+						onApply={updateCategory}
 					/>
 
 					<DeleteCategoryDialog
 						ref={deleteModalRef}
 						category={selected?.category}
 						imageUrl={selected?.remoteUrl}
-						onChange={deleteCategory}
+						onApply={deleteCategory}
 					/>
 				</>
 			) : (

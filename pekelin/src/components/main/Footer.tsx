@@ -16,7 +16,7 @@ const Footer = () => {
                 <div className="xl:w-10/12 w-full justify-center text-center">
                     <div className="flex flex-wrap w-full mb-7 gap-0">
                         <div className="w-full text-center pb-12">
-                            <span className="text-3xl">Pekelin</span>
+                            <span className="text-3xl">Pekelín</span>
                             <p>
                                 Vista a su niña como una princesa y a su niño como un caballero.
                             </p>

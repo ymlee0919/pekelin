@@ -93,7 +93,7 @@ const ProductFeatures = (props: ProductFeaturesProps) => {
 							{props.features.current?.list.map((item) => (
 								item.status == FeatureStatus.Deleted ||
 								<tr
-									className={`hover ${item.featureId == selectedItem?.featureId ? "active" : ""}`}
+									className={`hover ${item.featureId == selectedItem?.featureId ? "bg-base-300 font-semibold" : ""}`}
 									data-id={item.featureId}
 									key={item.featureId}
 									onClick={(e: MouseEvent<HTMLTableRowElement>) => {

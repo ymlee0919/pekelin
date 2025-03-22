@@ -26,56 +26,32 @@ export default class CategoryStore extends Store<Array<CategoryContent>> {
 	}
 
 	async addCategory(data: FormData): Promise<EventResult<CreatedCategory | null>> {
-		try {
-			let created = await this.provider.addCategory(data);
+		let created = await this.provider.addCategory(data);
 
-			return {
-				success: true,
-				message: "Category successfully created",
-				info: created,
-			};
-		} catch (error) {
-			return {
-				success: false,
-				errorCode: this.provider.lastErrorCode ?? 0,
-				message: String(error),
-			};
-		}
+		return {
+			success: true,
+			message: "Category successfully created",
+			info: created,
+		};
 	}
 
 	async updateCategory(categoryId: number, data: FormData): Promise<EventResult<UpdatedCategory | null>> {
-		try {
-			let updated = await this.provider.updateCategory(categoryId, data);
+		let updated = await this.provider.updateCategory(categoryId, data);
 
-			return {
-				success: true,
-				message: "Category successfully updated",
-				info: updated,
-			};
-		} catch (error) {
-			return {
-				success: false,
-				errorCode: this.provider.lastErrorCode ?? 0,
-				message: String(error),
-			};
-		}
+		return {
+			success: true,
+			message: "Category successfully updated",
+			info: updated,
+		};
 	}
 
 	async delete(categoryId: number): Promise<EventResult> {
-		try {
-			await this.provider.delete(categoryId);
+		await this.provider.delete(categoryId);
 
-			return {
-				success: true,
-				message: "Category successfully deleted",
-			};
-		} catch (error) {
-			return {
-				success: false,
-				errorCode: this.provider.lastErrorCode ?? 0,
-				message: String(error),
-			};
-		}
+		return {
+			success: true,
+			message: "Category successfully deleted",
+		};
 	}
 }
 

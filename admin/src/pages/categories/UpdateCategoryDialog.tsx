@@ -2,18 +2,22 @@ import { forwardRef, useRef, useImperativeHandle, useState, useEffect } from "re
 import { useForm, SubmitHandler } from "react-hook-form";
 import { CommonProps } from "../../types/Common";
 import { MdImageSearch } from "react-icons/md";
+import { EventResult } from "../../types/Events";
+import { UpdatedCategory } from "../../store/remote/categories/Categories.Types";
+import { ErrorList } from "../../types/Errors";
+import toast from "react-hot-toast";
 
 type FormValues = { file: FileList; category: string; description: string };
 
 export interface UpdateCategoryDialogProps extends CommonProps {
 	imageUrl: string | undefined;
-	onChange: (data: FormData) => void;
+	onApply: (data: FormData) => Promise<EventResult<UpdatedCategory | ErrorList | null>>;
 }
 
 const UpdateCategoryDialog = forwardRef( (props: UpdateCategoryDialogProps, ref) => {
 
     let modalRef = useRef<HTMLDialogElement>(null);
-    const { register, setValue, handleSubmit, watch, reset, formState : {errors} } = useForm<FormValues>();
+    const { register, setValue, handleSubmit, setError, watch, reset, formState : {errors} } = useForm<FormValues>();
 	const [preview, setPreview] = useState<string | null>(null);
 	const file = watch("file");
 
@@ -33,14 +37,35 @@ const UpdateCategoryDialog = forwardRef( (props: UpdateCategoryDialogProps, ref)
     });
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => { 
-        const formData = new FormData(); 
+        // Prepare data
+		const formData = new FormData(); 
         if (file) {
             formData.append('image', file[0]);
         }
 		formData.append("category", data.category);
 		formData.append("description", data.description);
-		console.log(formData);
-        props.onChange(formData);           
+        
+		// Treat the response
+		let loadingToast = toast.loading("Updating category...");
+		let result = await props.onApply(formData);
+		toast.dismiss(loadingToast);
+
+		if (result.success) {
+			modalRef.current?.close();
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+
+            if(result.info && result.errorCode === 422) {
+                let errors = result.info as ErrorList;
+
+                Object.keys(data).forEach((key: string) => {
+                    if(errors.hasOwnProperty(key)) {
+                        setError(key as keyof FormValues, { message: errors[key][0] }  )
+                    }
+                })
+            }
+		}
     };
 
 	useEffect(() => {
@@ -62,7 +87,7 @@ const UpdateCategoryDialog = forwardRef( (props: UpdateCategoryDialogProps, ref)
 		<>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<dialog ref={modalRef} className="modal">
-					<div className="modal-box">
+					<div className="modal-box bg-base-200">
 						<h3 className="font-bold text-lg">Update category</h3>
 						<br></br>
 						<div className="flex flex-wrap gap-5">

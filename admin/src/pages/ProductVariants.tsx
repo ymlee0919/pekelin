@@ -180,7 +180,7 @@ const ProductVariants = () => {
 													key={variant.variantId}
 													data-id={variant.variantId}
 													data-label={variant.name}
-													className={`hover ${variant.variantId == selected ? "active" : ""}  ${!variant.visible && 'bg-base-300 line-through'}`}
+													className={`hover ${variant.variantId == selected ? "bg-base-300 font-semibold" : ""}  ${!variant.visible && 'bg-base-300 line-through'}`}
 													onClick={(e: MouseEvent<HTMLTableRowElement>) => {
 														setSelected(parseInt(e.currentTarget.getAttribute("data-id") ?? "0"))
 														setSelectedName(e.currentTarget.getAttribute("data-label") ?? "-")
@@ -206,7 +206,7 @@ const ProductVariants = () => {
 					</div>
 
 				<dialog ref={modalRef} className="modal">
-					<div className="modal-box">
+					<div className="modal-box bg-base-200">
 						<h3 className="font-bold text-lg">Delete variant</h3>
 						<br></br>
 						<p className="italic">{selectedName}</p>

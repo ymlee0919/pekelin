@@ -6,18 +6,26 @@ import { existsSync, mkdirSync, copyFileSync } from 'fs';
 import { ValidationPipe } from '@nestjs/common';
 import CustomExceptionFactory from './services/validators/customException.factory';
 import * as cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+	// Validation pipe
 	app.useGlobalPipes(new ValidationPipe({
+		// Custom exception
 		exceptionFactory: CustomExceptionFactory,
-		transform: true
+		// Transform body into objects
+		transform: true,
+		// Skeep not included properties
+		whitelist: true,
+		// Forbid not included properties
+		forbidNonWhitelisted: true,
+		// Default error code: 422
+		errorHttpStatusCode: 422
 	}));
 
 	app.use(cookieParser());
-
-	//app.useStaticAssets(join(__dirname, '..', 'public'));
 
 	// Public assets
 	let uploadPath = join(__dirname, '../../', 'dist/public');
@@ -37,6 +45,7 @@ async function bootstrap() {
 
 	app.useStaticAssets(join(__dirname, '../../', 'public'));
 
+	// CORS
 	const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(';') || [];
 
 	app.enableCors({
@@ -44,6 +53,27 @@ async function bootstrap() {
 		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed methods
 		credentials: true, // Allow credentials (e.g., cookies)
 	});
+
+	// Helmet
+	app.use(
+		helmet({
+			contentSecurityPolicy: false,
+			referrerPolicy: {
+				policy: 'strict-origin-when-cross-origin',
+			},
+			frameguard: { action: 'sameorigin' },
+			dnsPrefetchControl: false,
+			hidePoweredBy: true,
+			hsts: {
+				maxAge: 15552000,
+				includeSubDomains: true,
+				preload: true,
+			},
+			ieNoOpen: true,
+			noSniff: true,
+			xssFilter: true,
+		}),
+	  );
 
 	await app.listen(3000);
 }

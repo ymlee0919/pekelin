@@ -54,7 +54,7 @@ export class ProductsStore extends Store<Array<BasicProductInfo>> {
 		return list;
 	}
 
-	async create(offer: FormData): Promise<EventResult<CreatedProduct | null>> {
+	async create(offer: FormData): Promise<EventResult<CreatedProduct | null | any >> {
 		try {
 			let created = await this.provider.createProduct(offer);
 
@@ -63,11 +63,11 @@ export class ProductsStore extends Store<Array<BasicProductInfo>> {
 				message: "Product successfully created",
 				info: created
 			};
-		} catch (error) {
+		} catch (error: any) {
 			return {
 				success: false,
 				errorCode: this.provider.lastErrorCode ?? 0,
-				message: String(error),
+				message: String(error)
 			};
 		}
 	}

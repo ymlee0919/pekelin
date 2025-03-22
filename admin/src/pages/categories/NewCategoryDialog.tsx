@@ -2,6 +2,10 @@ import { forwardRef, useRef, useImperativeHandle, useState, useEffect } from "re
 import { useForm, SubmitHandler } from "react-hook-form";
 import { CommonProps } from "../../types/Common";
 import { MdImageSearch } from "react-icons/md";
+import { EventResult } from "../../types/Events";
+import { CreatedCategory } from "../../store/remote/categories/Categories.Types";
+import { ErrorList } from "../../types/Errors";
+import toast from "react-hot-toast";
 
 type CategoryFromValues = { 
 	category: string; 
@@ -10,13 +14,13 @@ type CategoryFromValues = {
 };
 
 export interface NewServiceDialogProps extends CommonProps {
-    onChange: (data: FormData) => void;
+    onApply: (data: FormData) => Promise<EventResult<CreatedCategory | ErrorList | null>>;
 }
 
 const NewCategoryDialog = forwardRef( (props: NewServiceDialogProps, ref) => {
 
     let modalRef = useRef<HTMLDialogElement>(null);
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<CategoryFromValues>();
+    const { register, handleSubmit, watch, setError, formState: { errors } } = useForm<CategoryFromValues>();
     const [preview, setPreview] = useState<string | null>(null);
 	const file = watch("file");
 
@@ -32,13 +36,32 @@ const NewCategoryDialog = forwardRef( (props: NewServiceDialogProps, ref) => {
     });
 
     const onSubmit: SubmitHandler<CategoryFromValues> = async (data) => { 
-        const formData = new FormData(); 
+        // Collect information
+		const formData = new FormData(); 
 		if (file) {
             formData.append('image', file[0]);
         }
 		formData.append('category', data.category);
 		formData.append('description', data.description);
-        props.onChange(formData);           
+        let result = await props.onApply(formData);
+
+		// Treat the result
+		if (result.success) {
+			modalRef.current?.close();
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+
+            if(result.info && result.errorCode === 422) {
+                let errors = result.info as ErrorList;
+
+                Object.keys(data).forEach((key: string) => {
+                    if(errors.hasOwnProperty(key)) {
+                        setError(key as keyof CategoryFromValues, { message: errors[key][0] }  )
+                    }
+                })
+            }
+		}
     };
 
 	useEffect(() => {
@@ -60,10 +83,46 @@ const NewCategoryDialog = forwardRef( (props: NewServiceDialogProps, ref) => {
 		<>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<dialog ref={modalRef} className="modal">
-					<div className="modal-box">
+					<div className="modal-box bg-base-200">
 						<h3 className="font-bold text-lg">Add new category</h3>
 						<br></br>
 						<div className="flex flex-wrap gap-5">
+							<div className="w-5/12">
+								<label className="form-control w-full max-w-xs">
+									<div className="label">
+										<span className="label-text">Image <span className="text-gray-500 text-xs">(500px x 500px)</span></span>
+									</div>
+								</label>
+								<div className="indicator">
+									<span className="indicator-item indicator-bottom">
+										<label
+											htmlFor="addServiceUpload"
+											className="flex  bg-slate-700 hover:bg-slate-500 text-sm text-white px-2 py-1 outline-none rounded w-max cursor-pointer mx-auto font-[sans-serif]"
+										>
+											<MdImageSearch className="text-2xl pr-2" />
+											Search
+											<input
+												type="file"
+												id="addServiceUpload"
+												{...register("file", { required: true })}
+												accept="image/*"
+												className="hidden"
+											/>
+										</label>
+									</span>
+
+									{!!preview ? (
+										<div className="avatar">
+											<div className="w-32 rounded">
+												<img src={preview} />
+											</div>
+										</div>
+									) : (
+										<div className="bg-base-300 grid h-32 w-32 place-items-center">No image</div>
+									)}
+								</div>
+							</div>
+
                         	<div className="w-6/12">
 								<label className="form-control w-full max-w-xs">
 									<div className="label">
@@ -111,41 +170,7 @@ const NewCategoryDialog = forwardRef( (props: NewServiceDialogProps, ref) => {
 									)}
 								</label>
 							</div>
-							<div className="w-5/12">
-								<label className="form-control w-full max-w-xs">
-									<div className="label">
-										<span className="label-text">Image <span className="text-gray-500 text-xs">(500px x 500px)</span></span>
-									</div>
-								</label>
-								<div className="indicator">
-									<span className="indicator-item indicator-bottom">
-										<label
-											htmlFor="addServiceUpload"
-											className="flex  bg-slate-700 hover:bg-slate-500 text-sm text-white px-2 py-1 outline-none rounded w-max cursor-pointer mx-auto font-[sans-serif]"
-										>
-											<MdImageSearch className="text-2xl pr-2" />
-											Search
-											<input
-												type="file"
-												id="addServiceUpload"
-												{...register("file", { required: true })}
-												accept="image/*"
-												className="hidden"
-											/>
-										</label>
-									</span>
-
-									{!!preview ? (
-										<div className="avatar">
-											<div className="w-32 rounded">
-												<img src={preview} />
-											</div>
-										</div>
-									) : (
-										<div className="bg-base-300 grid h-32 w-32 place-items-center">No image</div>
-									)}
-								</div>
-							</div>
+							
 						</div>
 						
 						<br></br>

@@ -4,12 +4,12 @@ import NotFound from "./NotFound";
 import Layout from "./Layout";
 
 import Home from "../pages/Home";
-import Products from "../pages/Products";
+import ProductsGrid from "../pages/ProductsGrid";
 import NewProduct from "../pages/products/NewProduct";
 import EditProduct from "../pages/products/EditProduct";
-import Accounts from "../pages/Accounts";
+import AccountsGrid from "../pages/AccountsGrid";
 import Categories from "../pages/Categories";
-import ProductVariants from "../pages/ProductVariants";
+import ProductVariantsGrid from "../pages/ProductVariantsGrid";
 import NewVariant from "../pages/variants/NewVariant";
 import EditVariant from "../pages/variants/EditVariant";
 import ProductInfo from "../pages/products/ProductInfo";
@@ -30,7 +30,7 @@ const AppRouter = createBrowserRouter([
 			},
 			{
 				path: "/accounts",
-				element: <Accounts />,
+				element: <AccountsGrid />,
 			},
 			{
 				path: "/categories",
@@ -38,7 +38,7 @@ const AppRouter = createBrowserRouter([
 			},
 			{
 				path: "/products",
-				element: <Products />,
+				element: <ProductsGrid />,
 			},
 			{
 				path: "/products/new",
@@ -62,7 +62,7 @@ const AppRouter = createBrowserRouter([
 			},
 			{
 				path: "/products/:productId/variants",
-				element: <ProductVariants />,
+				element: <ProductVariantsGrid />,
 			},
 			{
 				path: "/products/:productId/variants/new",

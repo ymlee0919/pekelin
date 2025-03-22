@@ -54,7 +54,7 @@ export class ProductDTO {
 
     @IsString()
     @IsOptional()
-    @MinLength(10, {message: 'You must provide more than 10 characters for description'})
+    //@MinLength(10, {message: 'You must provide more than 10 characters for description'})
     description?: string;
 
     @Transform(({ value }) => value === 'true')
