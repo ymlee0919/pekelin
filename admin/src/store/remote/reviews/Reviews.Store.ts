@@ -19,9 +19,9 @@ export default class ReviewLinksStore extends Store<Array<ReviewLink>> {
 		return this._provider as ReviewsHttpProvider;
 	}
 
-	async create(name: string): Promise<EventResult<CreatedReviewLink | null>> {
+	async create(name: string, place: string): Promise<EventResult<CreatedReviewLink | null>> {
 		try {
-			let created = await this.provider.createLink(name);
+			let created = await this.provider.createLink(name, place);
 
 			return {
 				success: true,

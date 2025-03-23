@@ -134,6 +134,7 @@ model ReviewLinks {
   linkId        Int     @id @default(autoincrement()) @map("link_id")
   url           String
   clientName    String  @map("client_name")
+  place         String
   status        Status @default(READY)
   Review        Reviews?
   createdAt     DateTime @default(now()) @map("created_at")

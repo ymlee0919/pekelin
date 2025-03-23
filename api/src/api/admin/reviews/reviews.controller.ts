@@ -1,14 +1,9 @@
 import { Body, 
     Controller, 
-    Delete, 
     Get, 
     HttpStatus,
-    Param, 
-    ParseIntPipe, 
     Post,
-    Put,
     HttpCode,
-    HttpException,
     BadRequestException 
 } from '@nestjs/common';
 import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
@@ -33,7 +28,7 @@ export class ReviewsController {
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() creationDto: ReviewLinkCreationDTO) : Promise<CreatedReviewLink> {
         try {
-            let createdLink = await this.manager.createLink(creationDto.name);
+            let createdLink = await this.manager.createLink(creationDto.name, creationDto.place);
             return createdLink;
         } catch (error) {
             if(error instanceof InvalidOperationError){

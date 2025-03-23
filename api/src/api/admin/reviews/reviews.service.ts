@@ -16,7 +16,7 @@ export class ReviewsService {
      */
     constructor(private readonly database:DatabaseService){}
 
-    async createLink(clientName: string) : Promise<CreatedReviewLink> {
+    async createLink(clientName: string, place: string) : Promise<CreatedReviewLink> {
 
         // Build the url
         let firstName = name2url(clientName.toLowerCase().split(' ')[0]);
@@ -29,7 +29,7 @@ export class ReviewsService {
 
         let created = this.database.reviewLinks.create({
             data:
-                {clientName, url}
+                {clientName, place, url}
         });
 
         return created;

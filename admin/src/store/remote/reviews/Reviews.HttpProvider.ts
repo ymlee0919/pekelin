@@ -11,6 +11,7 @@ export default class ReviewsHttpProvider extends AxiosProvider<Array<ReviewLink>
 					linkId : info.linkId,
 					url: info.url,
 					clientName: info.clientName,
+					place: info.place,
 					createdAt: new Date(info.createdAt),
 					updatedAt: (!!info.updatedAt) ? new Date(info.updatedAt) : undefined
 				}
@@ -23,10 +24,10 @@ export default class ReviewsHttpProvider extends AxiosProvider<Array<ReviewLink>
 		}
 	}
 
-	async createLink(clientName: string): Promise<CreatedReviewLink | null> {
+	async createLink(clientName: string, place: string): Promise<CreatedReviewLink | null> {
 		try {
 			let created = await HttpProvider.post<CreationReviewLink, CreatedReviewLink>("/reviews", {
-				name: clientName
+				name: clientName, place
 			});
 			return created;
 		} catch (error: any) {

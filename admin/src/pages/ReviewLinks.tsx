@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { MdDelete, MdEditSquare, MdOutlineAdd } from "react-icons/md";
 
 import useStores from "../hooks/useStores";
@@ -12,10 +12,25 @@ import NewLinkDialog from "./links/NewLinkDialog";
 
 import { AgGridWrapper } from "../components/AgGridWrapper";
 import { useGrid } from "../hooks/useGrid";
+import { RowDoubleClickedEvent } from "ag-grid-community";
+import toast from "react-hot-toast";
 
 const ReviewLinks =() => {
 
 	const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<ReviewLink>();
+
+	const onRowDoubleClicked = useCallback((event: RowDoubleClickedEvent<ReviewLink>) => {
+		if(event.node.data)	{
+			let url = import.meta.env.VITE_REVIEW_URL + event.node.data.url;
+			navigator.clipboard.writeText(url)
+			.then(() => {
+				toast.success('Url copied')
+			})
+			.catch(err => {
+				toast.error("Failed to copy text: ", err);
+			});
+		}
+	}, []);
 
     const addModalRef = useRef<HTMLDialogElement>(null);
     //const editModalRef = useRef<HTMLDialogElement>(null);
@@ -103,11 +118,13 @@ const ReviewLinks =() => {
 											rowData={rowData}
 											columnDefs={[		
 												{ field: "clientName" ,  headerName: "Client"},
+												{ field: "place" ,  headerName: "Place"},
 												{ field: "url" ,  headerName: "Url", valueFormatter: params => import.meta.env.VITE_REVIEW_URL + params.value , flex: 3},
 												{ field: "createdAt" ,  headerName: "Created", valueFormatter: params => params.value?.toLocaleDateString(), flex: 1 },
 												{ field: "updatedAt" ,  headerName: "Review", valueFormatter: params => params.value?.toLocaleDateString(), flex: 1},
 											]}
 											onRowSelected={onRowSelected}
+											onRowDoubleClicked={onRowDoubleClicked}
 										/>
 									</div>
 								</div>
@@ -118,8 +135,8 @@ const ReviewLinks =() => {
 					
 					<NewLinkDialog
 						ref={addModalRef}
-						onChange={async (clientName: string) => {
-							let result = await stores.reviewLinksStore.create(clientName);
+						onApply={async (clientName: string, place: string) => {
+							let result = await stores.reviewLinksStore.create(clientName, place);
 							if (result.success) reload();
 							return result;
 						}}

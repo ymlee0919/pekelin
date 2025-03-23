@@ -36,7 +36,7 @@ const ReviewForm = (props: ReviewFormProps) => {
     return <form onSubmit={handleSubmit(onSubmit)}>
         <div className="pt-24 pb-10 bg-base-200 px-5 text-gray-600">
             <p className='text-sm pt-3 '>
-                Hola {props.clientName}. <br></br><br></br> Es un gusto tenerte de vuelta. Nos gustaría saber cómo te sentiste con nosotros. Será rápido.
+                Hola {props.clientName}. <br></br><br></br> Es un gusto tenerte de vuelta. Nos gustaría saber cómo te sentiste con nosotros y cuánto te gustó nuestro producto. Será rápido.
             </p>
             <label className="form-control w-full max-w-xs py-7">
                 <div className="label">
@@ -73,7 +73,10 @@ const ReviewForm = (props: ReviewFormProps) => {
                         {formStatus == FormStatus.Ready ? 'Aceptar' : 'Procesando...'}
                     </button>
                 : <>
-                    <p className='text-sm'>Hemos guardado su reseña.<br></br>Gracias por su comentario y por su tiempo.</p>
+                    <p className='text-sm'>
+                        Hemos guardado su reseña.<br></br>
+                        Gracias por su comentario y por su tiempo.
+                    </p>
                 </>
             }
             </div>

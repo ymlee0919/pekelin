@@ -4,18 +4,22 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { EventResult } from "../../types/Events";
 
-
 export interface NewLinkDialogProps extends CommonProps {
-    onChange: (clientName: string) => Promise<EventResult>;
+    onApply: (clientName: string, place: string) => Promise<EventResult>;
+}
+
+type ClientReview = {
+    clientName: string,
+    place: string
 }
 
 const NewLinkDialog = forwardRef( (props : NewLinkDialogProps, ref) => {
 
     let modalRef = useRef<HTMLDialogElement>(null);
 
-    const {register, reset, handleSubmit, formState: { errors }} = useForm<{clientName: string}>({
+    const {register, reset, handleSubmit, formState: { errors }} = useForm<ClientReview>({
         defaultValues: {
-            clientName: ''
+            clientName: '', place: ''
         }
     });
 
@@ -28,9 +32,9 @@ const NewLinkDialog = forwardRef( (props : NewLinkDialogProps, ref) => {
         }
     });
 
-    let onSubmit = async (data: {clientName: string}) => {
+    let onSubmit = async (data: ClientReview) => {
 		let loadingToast = toast.loading("Creating link...");
-		let result = await props.onChange(data.clientName);
+		let result = await props.onApply(data.clientName, data.place);
 		toast.dismiss(loadingToast);
 
 		if (result.success) {
@@ -46,8 +50,8 @@ const NewLinkDialog = forwardRef( (props : NewLinkDialogProps, ref) => {
             <dialog ref={modalRef} className="modal">
                 <div className="modal-box bg-base-200">
                     <h3 className="font-bold text-lg">New review link</h3>
-                    <div className="flex flex-row gap-3">
-                        <div className="basis-7/12">
+                    <div className="flex flex-wrap gap-3">
+                        <div className="w-7/12">
                             <label className="form-control w-full max-w-xs">
                                 <div className="label">
                                     <span className="label-text">Client Name</span>
@@ -66,6 +70,28 @@ const NewLinkDialog = forwardRef( (props : NewLinkDialogProps, ref) => {
                                 {errors.clientName && 
                                     <div className="label">
                                         <span className="label-text text-red-500 text-sm">{errors.clientName.message}</span>
+                                    </div>}
+                            </label>
+                        </div>
+                        <div className="w-7/12">
+                            <label className="form-control w-full max-w-xs">
+                                <div className="label">
+                                    <span className="label-text">Plance</span>
+                                </div>
+                                <input 
+                                    {...register("place", {
+                                        required: 'The place is required', 
+                                        minLength: {
+                                            value: 5, message: 'The place must contains 5 characters minimun'}
+                                        }
+                                    )} 
+                                    type="text" 
+                                    placeholder="Place" 
+                                    className="input input-bordered w-full max-w-xs" />
+
+                                {errors.place && 
+                                    <div className="label">
+                                        <span className="label-text text-red-500 text-sm">{errors.place.message}</span>
                                     </div>}
                             </label>
                         </div>

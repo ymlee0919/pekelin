@@ -19,8 +19,6 @@ async function bootstrap() {
 		transform: true,
 		// Skeep not included properties
 		whitelist: true,
-		// Forbid not included properties
-		forbidNonWhitelisted: true,
 		// Default error code: 422
 		errorHttpStatusCode: 422
 	}));

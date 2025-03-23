@@ -51,7 +51,7 @@ const LoginForm: React.FC = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-base-100">
+        <div className="flex items-center justify-center min-h-screen bg-sky-800">
             <div className="card w-full max-w-sm p-8 shadow-lg rounded-lg bg-base-200">
                 <div className="card-body">
                     <div className='w-full flex justify-center'>

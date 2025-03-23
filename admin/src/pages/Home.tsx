@@ -20,14 +20,14 @@ const Home = () => {
 					},
 				]}
 			/>
-			<h1 className="text-slate-600 text-3xl text-right">Administration Dashboard</h1>
+			<h1 className="text-slate-500 text-3xl text-right">Administration Dashboard</h1>
 			<br></br>
 			<br></br>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
 				<NavLink to={"/categories"} className="shadow bg-base-100 rounded-2xl p-3 hover:shadow-md">
 					<div className="stats">
 						<div className="stat">
-							<div className="stat-figure text-indigo-400">
+							<div className="stat-figure text-indigo-500">
 								<MdOutlineCases className="text-6xl" />
 							</div>
 							<div className="stat-title text-slate-400">Categories</div>
@@ -38,7 +38,7 @@ const Home = () => {
 				
 				<NavLink to={"/products"} className="shadow bg-base-100 rounded-2xl p-3 hover:shadow-md">
 					<div className="stat">
-						<div className="stat-figure text-indigo-400">
+						<div className="stat-figure text-indigo-500">
 							<MdOutlineBusinessCenter className="text-6xl" />
 						</div>
 						<div className="stat-title text-slate-400">Products</div>
@@ -48,7 +48,7 @@ const Home = () => {
 
 				<NavLink to={"/accounts"} className="shadow bg-base-100 rounded-2xl p-3 hover:shadow-md">
 					<div className="stat">
-						<div className="stat-figure text-indigo-400">
+						<div className="stat-figure text-indigo-500">
 							<MdPeopleAlt className="text-6xl" />
 						</div>
 						<div className="stat-title text-slate-400">Accounts</div>
