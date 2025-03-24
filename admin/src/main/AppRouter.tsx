@@ -4,18 +4,28 @@ import NotFound from "./NotFound";
 import Layout from "./Layout";
 
 import Home from "../pages/Home";
+
 import Products from "../pages/Products";
 import NewProduct from "../pages/products/NewProduct";
 import EditProduct from "../pages/products/EditProduct";
+import ProductInfo from "../pages/products/ProductInfo";
+
 import Accounts from "../pages/Accounts";
+import NewAccount from "../pages/account/pages/NewAccount";
+import EditAccount from "../pages/account/pages/EditAccount";
+import CredentialsAccount from "../pages/account/pages/CredentialsAccount";
+
 import Categories from "../pages/Categories";
+
 import ProductVariants from "../pages/ProductVariants";
 import NewVariant from "../pages/variants/NewVariant";
 import EditVariant from "../pages/variants/EditVariant";
-import ProductInfo from "../pages/products/ProductInfo";
+
 import NewSet from "../pages/products/NewSet";
 import EditSet from "../pages/products/EditSet";
+
 import ReviewLinks from "../pages/ReviewLinks";
+
 
 const AppRouter = createBrowserRouter([
 	{
@@ -31,6 +41,18 @@ const AppRouter = createBrowserRouter([
 			{
 				path: "/accounts",
 				element: <Accounts />,
+			},
+			{
+				path: "/accounts/new",
+				element: <NewAccount />,
+			},
+			{
+				path: "/accounts/:id/edit",
+				element: <EditAccount />,
+			},
+			{
+				path: "/accounts/:id/credentials",
+				element: <CredentialsAccount />,
 			},
 			{
 				path: "/categories",

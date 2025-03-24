@@ -27,9 +27,13 @@ export default class AccountsStore extends Store<Array<AccountContent>> {
 	}
 
 	get(userId: number): AccountContent | undefined {
-		return this._content?.find((account: AccountContent) => {
+		let account = this._content?.find((account: AccountContent) => {
 			return account.userId == userId;
 		});
+		if(!account)
+			this.registerError("Account not found", 404);
+
+		return account;
 	}
 
 	async create(newAccount: AccountCreationDTO): Promise<EventResult<CreatedAccount | null>> {

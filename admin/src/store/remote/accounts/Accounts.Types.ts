@@ -19,6 +19,7 @@ export interface AccountUpdateDTO {
 
 export interface AccountCredentialsUpdateDTO {
 	readonly user: string;
+	readonly prevPassword?: string;
 	readonly password?: string;
 }
 

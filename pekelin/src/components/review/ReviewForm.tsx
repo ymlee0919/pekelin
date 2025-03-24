@@ -3,6 +3,7 @@ import Rating from "../Rating";
 import { useState } from 'react';
 import HttpProvider from "../../services/HttpProvider";
 import { CommonProps } from '../../types/Common';
+import { NavLink } from 'react-router-dom';
 
 interface ReviewFormProps extends CommonProps {
     url: string,
@@ -77,6 +78,10 @@ const ReviewForm = (props: ReviewFormProps) => {
                         Hemos guardado su reseña.<br></br>
                         Gracias por su comentario y por su tiempo.
                     </p>
+                    <p className='text-sm py-3'>
+                        Embúllate y mira lo que tenemos para los pekelines de la casa!
+                    </p>
+                    <NavLink to={'/'} className="btn btn-outline btn-primary btn-sm">Ver ofertas</NavLink>
                 </>
             }
             </div>

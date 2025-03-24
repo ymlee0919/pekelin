@@ -1,21 +1,20 @@
-import { useRef, useImperativeHandle, forwardRef } from "react";
-import { CommonProps } from "../../types/Common";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { EventResult } from "../../types/Events";
-import { AccountCreationDTO, CreatedAccount } from "../../store/remote/accounts/Accounts.Types";
-import { ErrorList } from "../../types/Errors";
+import { EventResult } from "../../../types/Events";
+import { AccountCreationDTO, CreatedAccount } from "../../../store/remote/accounts/Accounts.Types";
+import { ErrorList, errorToEventResult } from "../../../types/Errors";
 import { MdDone, MdOutlineCancel } from "react-icons/md";
+import useStores from "../../../hooks/useStores";
+import { NavLink, useNavigate } from "react-router-dom";
+import Breadcrumbs from "../../../components/Breadcrumbs";
 
-export interface NewAccountDialogProps extends CommonProps {
-    onApply: (account: AccountCreationDTO) => Promise<EventResult<CreatedAccount | ErrorList | null>>;
-}
 
-const NewAccountDialog = forwardRef( (props : NewAccountDialogProps, ref) => {
+const NewAccount = () => {
 
-    let modalRef = useRef<HTMLDialogElement>(null);
+    const stores = useStores();
+    const navigate = useNavigate();
 
-    const {register, reset, watch, handleSubmit, setError, formState: { errors }} = useForm<AccountCreationDTO & {confirmation: string}>({
+    const {register, watch, handleSubmit, setError, formState: { errors }} = useForm<AccountCreationDTO & {confirmation: string}>({
         defaultValues: {
             user: '', name: '', email: '', password: '', confirmation: ''
         }
@@ -31,29 +30,27 @@ const NewAccountDialog = forwardRef( (props : NewAccountDialogProps, ref) => {
         number: /\d/.test(password),
     };
 
-
-    useImperativeHandle(ref, () => {
-        return {
-            showModal: () => {
-                reset();
-                modalRef.current?.showModal();
-            }
+    const add = async (account: AccountCreationDTO) : Promise<EventResult<CreatedAccount | ErrorList | null>> => {
+        try {
+            let result = await stores.accountsStore.create(account);
+            return result;
+        } catch (error) {
+            return errorToEventResult(error, "Unable to create the account");
         }
-    });
+    }
 
     let onSubmit = async (data: AccountCreationDTO & {confirmation: string}) => {
-		let loadingToast = toast.loading("Creating account...", {
-            style: {
-                zIndex: 9900
-            }
-        });
-        let {confirmation, ...dto} = data;
-		let result = await props.onApply(dto);
-		toast.dismiss(loadingToast);
+		let loadingToast = toast.loading("Creating account...");
 
+        // Remove confirmation from data
+        let {confirmation, ...dto} = data;
+        let result = await add(dto);
+        toast.dismiss(loadingToast);
+
+        // Treat resutl
 		if (result.success) {
-			modalRef.current?.close();
 			toast.success(result.message);
+            navigate("/accounts");
 		} else {
 			toast.error(result.message);
 
@@ -70,10 +67,19 @@ const NewAccountDialog = forwardRef( (props : NewAccountDialogProps, ref) => {
 	};
 
     return <>
+        <Breadcrumbs
+				pages={[
+					{ url: "/", label: "Dashboard" },
+					{ url: "/accounts", label: "Accounts" },
+					{ url: ".", label: "Create" },
+				]}
+			/>
         <form onSubmit={handleSubmit(onSubmit)}>
-            <dialog ref={modalRef} className="modal ">
-                <div className="modal-box lg:w-8/12 md:w-10/12 max-w-5xl bg-base-200">
-                    <h3 className="font-bold text-lg">New account</h3>
+            <div className="panel mx-5 shadow-md">
+                <div className="panel-header panel-header-lighten">
+                    <span className="title">New account</span>
+                </div>
+                <div className="panel-content">
                     <div className="flex flex-wrap gap-3">
                         <div className="lg:w-5/12 sm:w-11/12">
                             <label className="form-control w-full max-w-xs">
@@ -121,7 +127,7 @@ const NewAccountDialog = forwardRef( (props : NewAccountDialogProps, ref) => {
                     <fieldset>
                         <legend>Credentials</legend>
                         <div className="flex flex-wrap gap-3">
-							<div className="lg:w-3/12 sm:w-11/12">
+                            <div className="lg:w-3/12 sm:w-11/12">
                                 <label className="form-control w-full min-w-full">
                                     <div className="label">
                                         <span className="label-text">User</span>
@@ -164,7 +170,7 @@ const NewAccountDialog = forwardRef( (props : NewAccountDialogProps, ref) => {
                                             </div>}
                                 </label>
                             </div>
-							
+                            
                             <div className="lg:w-4/12 sm:w-11/12">
                                 <label className="form-control w-full min-w-full">
                                     <div className="label">
@@ -211,14 +217,15 @@ const NewAccountDialog = forwardRef( (props : NewAccountDialogProps, ref) => {
                         }
                     </fieldset>
                     
-                    <div className="modal-action">
-                        <button type="submit" className="btn btn-info btn-sm mr-5">Add</button>
-                        <a className="btn btn-sm" onClick={()=>modalRef.current?.close()}>Close</a>
-                    </div>
+                    
                 </div>
-            </dialog>
+                <div className="panel-footer text-right">
+                    <button type="submit" className="btn btn-info btn-sm mr-5">Create</button>
+                    <NavLink className="btn btn-sm" to="/accounts">Cancel</NavLink>
+                </div>
+            </div>
         </form>
     </>
-});
+};
 
-export default NewAccountDialog;
+export default NewAccount;

@@ -55,8 +55,8 @@
 }
 
 .panel-header.panel-header-lighten{
-    background: #eff6cc;
-    color: #366398;
+    background: #8a85d3;
+    color: #f3f4f6;
 }
 
 div.panel-header>span.title {
@@ -79,7 +79,7 @@ div.panel-header>span.title {
 }
 
 .panel-header.panel-header-lighten>span.title{
-    color: #366398;
+    color: #f3f4f6;
 }
 
 .panel-content {

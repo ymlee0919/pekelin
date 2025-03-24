@@ -1,5 +1,6 @@
 import { FaMedal } from "react-icons/fa"
 import { FaHeartCircleCheck } from "react-icons/fa6"
+import { IoLogoFacebook } from "react-icons/io"
 import { RiShieldCheckFill } from "react-icons/ri"
 
 
@@ -9,8 +10,9 @@ const Footer = () => {
         <div id="footer" className="footer bg-blue-900 text-white">
             <div className="flex flex-wrap w-full gap-0 xl:flex-row-reverse">
                 <div className="xl:w-2/12 w-full text-center">
-                    <div className="inline-flex align-middle">
+                    <div className="inline-block align-middle pb-3">
                         <img src="/icon-white.png" className="max-h-28"></img>
+                        <a href="https://facebook.com/tienda.pekelin" target="_blank" className="btn btn-circle btn-outline btn-md btn-info"><IoLogoFacebook className="text-2xl" /></a>
                     </div>
                 </div>
                 <div className="xl:w-10/12 w-full justify-center text-center">

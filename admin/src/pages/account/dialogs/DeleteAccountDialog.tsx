@@ -1,7 +1,7 @@
 import { useRef, useImperativeHandle, forwardRef } from "react";
-import { CommonProps } from "../../types/Common";
+import { CommonProps } from "../../../types/Common";
 import toast from "react-hot-toast";
-import { EventResult } from "../../types/Events";
+import { EventResult } from "../../../types/Events";
 
 export interface DeleteAccountDialogProps extends CommonProps {
     user: string;
