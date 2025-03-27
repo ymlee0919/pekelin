@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { MdDelete, MdOutlineAdd, MdEditSquare, MdEdit, MdOutlineStar, MdFiberNew, MdOutlineRemoveRedEye, MdExpandMore } from "react-icons/md";
+import { MdEdit, MdOutlineStar, MdFiberNew } from "react-icons/md";
 
 import useStores from "../hooks/useStores";
 
@@ -20,6 +20,8 @@ import { GridOptions, RowDoubleClickedEvent} from "ag-grid-community";
 
 import { AgGridWrapper } from "../components/AgGridWrapper";
 import { useGrid } from "../hooks/useGrid";
+import ProductsTBar from "./products/components/ProductsTBar";
+import DeleteProductModal from "./products/dialogs/DeleteProductModal";
 
 export interface ProductInfoForm {
 	price: number,
@@ -68,6 +70,7 @@ const gridOptions : GridOptions<BasicProductInfo> = {
 const Products = () => {
 
 	const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<BasicProductInfo>();
+	const [showDelete, setShowDelete] = useState<boolean>(false);
     
 	const onRowDoubleClicked = useCallback((event: RowDoubleClickedEvent<BasicProductInfo>) => {
 		let id = event.node.data?.productId || 0;
@@ -77,7 +80,21 @@ const Products = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const stores = useStores();
-	let modalRef = useRef<HTMLDialogElement>(null);
+
+	const onChangeView = async () => {
+		if(selectedItem) {
+			let loadingToast = toast.loading("Updating product...");
+			let result = await stores.productsStore.changeVisibility(selectedItem.productId);
+			toast.dismiss(loadingToast);
+
+			if (result.success) {
+				toast.success(result.message);
+				reload();
+			} else {
+				toast.error(result.message);
+			}
+		}
+	}
 
 	let reload = () => {
 		setStatus(StoreStatus.LOADING);
@@ -98,38 +115,6 @@ const Products = () => {
 		reload();
 		return () => { stores.productsStore.release() }
 	}, []);
-
-	const onChangeView = async () => {
-		if(selectedItem) {
-			let loadingToast = toast.loading("Updating product...");
-			let result = await stores.productsStore.changeVisibility(selectedItem.productId);
-			toast.dismiss(loadingToast);
-
-			if (result.success) {
-				modalRef.current?.close();
-				toast.success(result.message);
-				reload();
-			} else {
-				toast.error(result.message);
-			}
-		}
-	}
-
-	const onDelete = async () => {
-		if(selectedItem) {
-			let loadingToast = toast.loading("Deleting product...");
-			let result = await stores.productsStore.delete(selectedItem.productId);
-			toast.dismiss(loadingToast);
-
-			if (result.success) {
-				modalRef.current?.close();
-				toast.success(result.message);
-				reload();
-			} else {
-				toast.error(result.message);
-			}
-		}
-	}
 
     return (
 		<>
@@ -152,47 +137,12 @@ const Products = () => {
 						<div className="panel-content no-padding">
 							<div className="overflow-x-auto">
 								<div className="border-2 border-solid border-gray-200">
-									<div className="navbar bg-gray-200 min-h-1 p-1">
-										<div className="flex-1">
-											<div>
-												<NavLink to={"/products/new"} className="btn btn-ghost text-slate-500 btn-sm text-sm rounded-none mr-0">
-													<MdOutlineAdd /> Add
-												</NavLink>
-												<div className="dropdown rounded-none">
-													<div tabIndex={0} role="button" className="btn btn-ghost text-slate-500 btn-sm text-sm ml-0 mr-2 border-l-base-300 rounded-none"><MdExpandMore /></div>
-													<ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-none z-[1] w-52 p-0 shadow">
-														<li className="m-0 p-0">
-															<NavLink to={"/products/new-set"} className="rounded-none">New set</NavLink>
-														</li>
-													</ul>
-												</div>
-											</div>
-											<NavLink to={`/products/${selectedItem?.productId}/${selectedItem?.isSet ? 'edit-set' : 'edit'}`} className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-														selectedItem ?? "btn-disabled"
-													}`}>
-												<MdEditSquare /> Edit
-											</NavLink>
+									<ProductsTBar
+										selectedItem={selectedItem}
+										onClickChangeVisibility={onChangeView}
+										onClickDelete={() => {setShowDelete(true)}}
+									/>
 
-											<a
-												className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-													selectedItem ?? "btn-disabled"
-												}`}
-												onClick={() => {modalRef.current?.showModal() }}
-											>
-												<MdDelete /> Delete
-											</a>
-
-											<a
-												className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-													selectedItem ?? "btn-disabled"
-												}`}
-												onClick={onChangeView}
-											>
-												<MdOutlineRemoveRedEye /> Show/Hide
-											</a>
-
-										</div>
-									</div>
 									<div className="max-w-full">
                                         <AgGridWrapper<BasicProductInfo>
                                             rowData={rowData}
@@ -226,19 +176,12 @@ const Products = () => {
 						</div>
 					</div>
 
-				<dialog ref={modalRef} className="modal">
-					<div className="modal-box bg-base-200">
-						<h3 className="font-bold text-lg">Delete product</h3>
-						<br></br>
-						<p className="italic">{selectedItem?.name}</p>
-						<br></br>
-						<p>Are you sure you want to delete the selectedItem product?</p>
-						<div className="modal-action">
-							<a className="btn btn-info btn-sm mr-5" onClick={onDelete}>Yes, delete</a>
-							<a className="btn btn-sm" onClick={()=>modalRef.current?.close()}>No, close</a>
-						</div>
-					</div>
-				</dialog>
+				{ (selectedItem && showDelete) && 
+					<DeleteProductModal 
+						product={selectedItem} 
+						onClose={() => setShowDelete(false)} 
+						reload={reload} /> 
+				}
 				</>
 				
 				/** END OF Main component */

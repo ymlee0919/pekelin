@@ -44,5 +44,9 @@ export class AccountCredentialsUpdateDTO {
 
     @IsString()
     @IsStrongPassword({ message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.' })
+    prevPassword?: string;
+
+    @IsString()
+    @IsStrongPassword({ message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.' })
     readonly password?: string;
 }

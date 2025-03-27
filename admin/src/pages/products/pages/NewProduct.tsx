@@ -1,21 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { MdOutlineCheck, MdClose } from "react-icons/md";
 import { useForm } from "react-hook-form";
 
-import Breadcrumbs from "../../components/Breadcrumbs";
-import { ProductFeaturesList } from "../../store/remote/products/ProductFeatures";
-import ProductFeatures from "../features/ProductFeatures";
+import Breadcrumbs from "../../../components/Breadcrumbs";
+import { ProductFeaturesList } from "../../../store/remote/products/ProductFeatures";
+import ProductFeatures from "../../../components/features/ProductFeatures";
 import toast from "react-hot-toast";
-import useStores from "../../hooks/useStores";
-import { EmptyEvent, EventResult } from "../../types/Events";
-import { BasicCategory, BasicProduct, SetsForm } from "../../store/remote/sets/Sets.Types";
+import useStores from "../../../hooks/useStores";
+import { EmptyEvent, EventResult } from "../../../types/Events";
+import { ProductForm } from "../../../store/remote/products/Products.Types";
 
 import { MdImageSearch } from "react-icons/md";
-import { StoreStatus } from "../../store/remote/Store";
-import Loading from "../../components/Loading";
-import Error from "../../components/Error";
-import { ErrorList, errorToEventResult } from "../../types/Errors";
+import { CategoryContent } from "../../../store/remote/categories/Categories.Types";
+import { StoreStatus } from "../../../store/remote/Store";
+import Loading from "../../../components/Loading";
+import Error from "../../../components/Error";
+import { ErrorList, errorToEventResult } from "../../../types/Errors";
 
 
 let features: ProductFeaturesList = new ProductFeaturesList();
@@ -23,30 +24,29 @@ let features: ProductFeaturesList = new ProductFeaturesList();
 /**
  * Page for new product
  */
-const EditSet = () => {
+const NewProduct = () => {
 
     let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
-    let [image, setImage] = useState<string>("");
-
     const stores = useStores();
     const navigate = useNavigate();
     const refFeatures = useRef<ProductFeaturesList>(features);
-	const params = useParams();
     
-    const {register, 
-		clearErrors, 
-		setError, 
-		setValue, 
-		watch, 
-		reset, 
-		handleSubmit, 
-		formState: { errors }} = useForm<SetsForm & { items: number }>();
+    const {register, clearErrors, setError, setValue, watch, reset, handleSubmit, formState: { errors }} = useForm<ProductForm & { items: number }>({
+        defaultValues: {
+            categoryId: 0,
+            name: '',
+            gender: false,
+            price: 0,
+            basePrice: 0,
+            description: '',
+            isBestSeller: false,
+            isNew: false,
+            visible: true
+        }
+    });
 
     const [preview, setPreview] = useState<string | null>(null);
 	const file = watch("image");
-    const categoryId = watch("categoryId");
-    const product1 = watch("product1");
-    const product2 = watch("product2");
     
     const onItemsUpdated = () => {
         setValue("items", refFeatures.current.list.length);
@@ -59,45 +59,10 @@ const EditSet = () => {
     const submitRef = useRef<EmptyEvent>();
 
     useEffect(() => {
-        stores.setSourceStore.load(null).then(
-            (newPreStatus: StoreStatus) => { 
-                if(newPreStatus == StoreStatus.READY) {
-                    stores.setsStore.load({productId: parseInt(params.id ?? '0')})
-                        .then( (newStatus : StoreStatus) => {
-                            if(stores.setsStore.content)
-                            {
-                                refFeatures.current = new ProductFeaturesList(stores.setsStore.content.Features);
-                                setImage(stores.setsStore.content.remoteUrl);
-                                setValue("categoryId", stores.setsStore.content.categoryId);
-                                setValue("product1", stores.setsStore.content.product1);
-                                setValue("product2", stores.setsStore.content.product2);
-                                setValue("name", stores.setsStore.content.name);
-                                setValue("gender", stores.setsStore.content.gender == "M");
-                                setValue("price", stores.setsStore.content.price);
-                                setValue("basePrice", stores.setsStore.content.basePrice);
-                                setValue("description", stores.setsStore.content.description);
-                                setValue("isBestSeller", stores.setsStore.content.isBestSeller);
-                                setValue("isNew", stores.setsStore.content.isNew);
-                                setValue("visible", stores.setsStore.content.visible);
-                                setValue("items", stores.setsStore.content.Features.length);
-                            }
-                                
-                            setStatus(newStatus);
-                        })
-                } else {
-                    setStatus(newPreStatus);
-                }
-                
-            }
-        );
-
-        
-		
-			reset();
-			submitRef.current = handleSubmit(onSumbit);
-        
         // Unmount the component and create a new offer info for new page
-        return () => {stores.setsStore.release()}
+        reset();
+        submitRef.current = handleSubmit(onSumbit)
+        return () => { features = new ProductFeaturesList(); refFeatures.current = features; }
     }, []);
 
     useEffect(() => {
@@ -124,13 +89,13 @@ const EditSet = () => {
 		return () => { stores.categoryStore.release() }
 	}, []);
 
-    const onSumbit = async (data: SetsForm) => {
+    const onSumbit = async (data: ProductForm) => {
         // Append information
         const formData = new FormData(); 
         
         for (const key in data) {
             if (data.hasOwnProperty(key) && key != 'image' && key != 'items' && key != 'gender') {
-                formData.append(key, data[key as keyof SetsForm] as string);
+                formData.append(key, data[key as keyof ProductForm] as string);
             }
         }
         
@@ -145,11 +110,11 @@ const EditSet = () => {
         formData.append('features', JSON.stringify(refFeatures.current.list));
 
         // Send to backend
-        let loadingToast = toast.loading("Updating product...");
+        let loadingToast = toast.loading("Creating product...");
 
         let result : EventResult;
         try {
-            result = await stores.productsStore.update(params.id ?? '0', formData);
+            result = await stores.productsStore.create(formData);
         } catch (error)
         {
             result = errorToEventResult(error, "Unable to create the product");
@@ -168,7 +133,7 @@ const EditSet = () => {
 
                 Object.keys(data).forEach((key: string) => {
                     if(errors.hasOwnProperty(key)) {
-                        setError(key as keyof SetsForm, { message: errors[key][0] }  )
+                        setError(key as keyof ProductForm, { message: errors[key][0] }  )
                     }
                 })
             }
@@ -179,8 +144,7 @@ const EditSet = () => {
         <Breadcrumbs pages={[
             { url: '/', label: 'Dashboard' },
             { url: '/products', label: 'Products' },
-            { url: stores.setsStore.content ? `/products/${stores.setsStore.content.productId}` : '.', label: stores.setsStore.content?.name || 'Product' },
-            { url: '.', label: 'Edit set' },
+            { url: '.', label: 'New product' },
         ]} />
 
         {status == StoreStatus.LOADING ? <Loading /> : ''}
@@ -190,7 +154,7 @@ const EditSet = () => {
             /* Main component */
             <div className="panel">
                 <div className="panel-header">
-                    <span className="title">Edit product set</span>
+                    <span className="title">New product</span>
                 </div>
                 <div className="panel-content">
                     <form>
@@ -202,56 +166,37 @@ const EditSet = () => {
                                     </div>
                                 </label>
                                 <div className="indicator">
-									<span className="indicator-item indicator-bottom z-50">
-										<label
-											htmlFor="editCategoryUpload"
-											className="flex  bg-slate-700 hover:bg-slate-500 text-sm text-white px-2 py-1 outline-none rounded w-max cursor-pointer mx-auto font-[sans-serif]"
-										>
-											<MdImageSearch className="text-2xl pr-2" />
-												Search
-											<input
-												type="file"
-												id="editCategoryUpload"
-												{...register("image")}
-												accept="image/*"
-												className="hidden"
-											/>
-										</label>
-									</span>
-									<div className="stack">
-										{preview && (
-											<div className="avatar">
-												<div className="w-32 rounded">
-													<img src={preview} className="opacity-95" />
-												</div>
-											</div>
-										)}
-										<div className="avatar">
-											<div
-												className="w-32 rounded"
-												style={
-													preview
-														? {
-																transform: "translateY(7%) translateX(7%) scale(100%)",
-														}
-														: {}
-												}
-											>
-												<img src={(import.meta.env.VITE_IMG_URL ?? '') + image}/>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div className="label">
-									<span className="label-text text-gray-500 text-xs italic pl-2 pt-2">
-										Upload a new image only if you want to update the current
-									</span>
-								</div>
+                                    <span className="indicator-item indicator-bottom">
+                                        <label
+                                            htmlFor="addServiceUpload"
+                                            className="flex  bg-slate-700 hover:bg-slate-500 text-sm text-white px-2 py-1 outline-none rounded w-max cursor-pointer mx-auto font-[sans-serif]"
+                                        >
+                                            <MdImageSearch className="text-2xl pr-2" />
+                                            Search
+                                            <input
+                                                type="file"
+                                                id="addServiceUpload"
+                                                {...register("image", { required: true })}
+                                                accept="image/*"
+                                                className="hidden"
+                                            />
+                                        </label>
+                                    </span>
+
+                                    {!!preview ? (
+                                        <div className="avatar">
+                                            <div className="w-32 rounded">
+                                                <img src={preview} />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="bg-base-300 grid h-32 w-32 place-items-center">No image</div>
+                                    )}
+                                </div>
                             </div>
                             <div className="w-full md:w-8/12 sm:w-7/12">
                                 
                                 <div className="flex flex-wrap gap-3">
-                                    
                                     <div className="w-full md:w-6/12 sm:w-10/12">
                                         <label className="form-control w-full max-w-xs">
                                             <div className="label">
@@ -275,87 +220,21 @@ const EditSet = () => {
                                         </label>
                                     </div>
 
+                                    
+
                                     <div className="w-full md:w-5/12 sm:w-5/12">
                                         <label className="form-control w-full max-w-xs">
                                             <div className="label">
                                                 <span className="label-text">Category</span>
                                             </div>
                                             <select 
-                                                {...register("categoryId", {
-                                                    validate: value => value !== 0 || "Please select a category",
-                                                    onChange: () => {
-                                                        setValue("product1", 0);
-                                                        setValue("product2", 0);
-                                                    },
-                                                })} 
-                                                defaultValue={categoryId}
+                                                {...register("categoryId")} 
                                                 className="select select-bordered w-full max-w-xs"
                                             >
-                                                    <option disabled value={0}>Select a category</option>
-                                                    {stores.setSourceStore.content?.map((category: BasicCategory) => {
+                                                    {stores.categoryStore.content?.map((category: CategoryContent) => {
                                                         return <option key={category.categoryId} value={category.categoryId}>{category.category}</option>
                                                     })}
                                             </select>
-                                            {errors.categoryId && 
-                                                <div className="label">
-                                                    <span className="label-text text-red-500 text-sm">{errors.categoryId.message}</span>
-                                                </div>}
-                                        </label>
-                                    </div>
-
-                                    <div className="w-full md:w-5/12 sm:w-5/12">
-                                        <label className="form-control w-full max-w-xs">
-                                            <div className="label">
-                                                <span className="label-text">First product</span>
-                                            </div>
-                                            <select 
-                                                {...register("product1", {
-                                                    validate: value => value !== 0 || "Please select the first product",
-                                                    onChange: () => {
-                                                        setValue("product2", 0);
-                                                    }
-                                                })} 
-                                                defaultValue={product1}
-                                                className="select select-bordered w-full max-w-xs"
-                                            >
-                                                <option disabled value={0}>{categoryId == 0 ? 'Select the category' : 'Select a product'}</option>
-                                                    {stores.setSourceStore.getProductsOf(categoryId).map((product: BasicProduct) => {
-                                                        return <option key={product.productId} value={product.productId}>{product.name}</option>
-                                                    })}
-                                            </select>
-                                            {errors.product1 && 
-                                                <div className="label">
-                                                    <span className="label-text text-red-500 text-sm">{errors.product1.message}</span>
-                                                </div>}
-                                        </label>
-                                    </div>
-
-                                    <div className="w-full md:w-5/12 sm:w-5/12">
-                                        <label className="form-control w-full max-w-xs">
-                                            <div className="label">
-                                                <span className="label-text">Second product</span>
-                                            </div>
-                                            <select 
-                                                {...register("product2", {
-                                                    validate: value => value !== 0 || "Please select the second product",
-                                                })} 
-                                                defaultValue={product2}
-                                                className="select select-bordered w-full max-w-xs"
-                                            >
-                                                <option disabled value={0}>{categoryId == 0 ? 'Select the category' : ( product1 == 0 ? 'Select the first product' : 'Select the second product')}</option>
-                                                {stores.setSourceStore.getProductsOf(categoryId)
-                                                    .filter((product: BasicProduct) => {
-                                                        return categoryId != 0 && product1 != 0 && product.productId != product1
-                                                    })
-                                                    .map((product: BasicProduct) => {
-                                                        return <option key={product.productId} value={product.productId}>{product.name}</option>
-                                                    })
-                                                }
-                                            </select>
-                                            {errors.product2 && 
-                                                <div className="label">
-                                                    <span className="label-text text-red-500 text-sm">{errors.product2.message}</span>
-                                                </div>}
                                         </label>
                                     </div>
 
@@ -517,7 +396,7 @@ const EditSet = () => {
                         type="button"
                         onClick={() => {if(submitRef.current) submitRef.current()}}
                     >
-                        <MdOutlineCheck className="text-xl" />Update
+                        <MdOutlineCheck className="text-xl" />Create
                     </button>
                     <NavLink to='/products' className="btn bg-base-300 btn-sm mt-0">
                         <MdClose className="text-xl" /> Cancel
@@ -530,4 +409,4 @@ const EditSet = () => {
     </>
 }
 
-export default EditSet;
+export default NewProduct;

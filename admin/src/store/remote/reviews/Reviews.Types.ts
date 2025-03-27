@@ -28,3 +28,21 @@ export interface ReviewLinkInfo {
     createdAt: string;
     updatedAt?: string;
 }
+
+interface ReviewContent {
+    reviewId: number;
+    rate: number;
+    comment: string;
+    createdAt: string;
+    updatedAt?: string;
+}
+
+export interface Review {
+    linkId: number;
+    url: string;
+    clientName: string;
+    place: string
+    createdAt: string;
+    updatedAt?: string;
+    Review?: ReviewContent
+}

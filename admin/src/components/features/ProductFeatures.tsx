@@ -4,9 +4,9 @@ import { CommonProps } from "../../types/Common";
 
 import { ProductFeaturesList, IProductFeature, FeatureStatus } from "../../store/remote/products/ProductFeatures";
 
-import NewFeatureDialog from "../features/NewFeatureDialog";
-import EditOfferItemDialog, {HTMLEditFeatureDialogElement} from "../features/EditFeatureDialog";
-import DeleteOfferItemDialog from "../features/DeleteFeatureDialog";
+import NewFeatureDialog from "./NewFeatureDialog";
+import EditOfferItemDialog, {HTMLEditFeatureDialogElement} from "./EditFeatureDialog";
+import DeleteOfferItemDialog from "./DeleteFeatureDialog";
 import { EmptyEvent } from "../../types/Events";
 
 export interface ProductFeaturesProps extends CommonProps {

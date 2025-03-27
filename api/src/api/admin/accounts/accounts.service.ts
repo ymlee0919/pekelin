@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { DatabaseService } from "src/services/database/database.service";
-import { crypt } from "src/services/crypt/crypt.service";
+import { crypt, decrypt } from "src/services/crypt/crypt.service";
 import { InvalidOperationError } from "src/api/common/errors/invalid.error";
 import { AccountInfo, AccountCreation, CreatedAccount, UpdatedAccount, AccountCredentials } from "./accounts.types";
+import { AccountCredentialsUpdateDTO } from "./accounts.dto";
 
 /**
  * Servie for accounts
@@ -76,7 +77,7 @@ export class AccountsService {
         return updated;
     }
 
-    async updateCredentials(userId: number, newCredentials: AccountCredentials) : Promise<UpdatedAccount> {
+    async updateCredentials(userId: number, newCredentials: AccountCredentialsUpdateDTO) : Promise<UpdatedAccount> {
         
         // Validate the selected account exists
         let account = await this.database.accounts.findFirst({where: {userId}});
@@ -91,14 +92,30 @@ export class AccountsService {
                 throw new InvalidOperationError("The new user already exists. Please, provide another identifier.");
         }
 
+        // Create new credentials
+        let credentials: AccountCredentials = {
+            user: newCredentials.user
+        }
+
         // Crypt password
-        if(newCredentials.password)
-            newCredentials.password = crypt(newCredentials.password);
+        if(newCredentials.password){
+            
+            // Validate the prevPassword is valid
+            if(!newCredentials.prevPassword)
+                throw new InvalidOperationError("You must provide the previous password in order to change it");
+
+            let prev = decrypt(account.password);
+            if(prev != newCredentials.prevPassword)
+                throw new InvalidOperationError("Invalid previous password");
+
+            credentials.password = crypt(newCredentials.password);
+        }
+            
 
         // Update the account
         let updatedAccount = await this.database.accounts.update({
             where: { userId },
-            data: {updatedAt:new Date(), ...newCredentials},
+            data: {updatedAt:new Date(), ...credentials},
             select: {
                 userId: true,
                 user: true,

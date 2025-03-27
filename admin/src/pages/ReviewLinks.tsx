@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
-import { MdDelete, MdEditSquare, MdOutlineAdd } from "react-icons/md";
+import { useCallback, useEffect, useState } from "react";
 
 import useStores from "../hooks/useStores";
 import { StoreStatus } from "../store/remote/Store";
@@ -8,16 +7,20 @@ import Loading from "../components/Loading";
 import Error  from "../components/Error";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { ReviewLink } from "../store/remote/reviews/Reviews.Types";
-import NewLinkDialog from "./links/NewLinkDialog";
 
 import { AgGridWrapper } from "../components/AgGridWrapper";
 import { useGrid } from "../hooks/useGrid";
 import { RowDoubleClickedEvent } from "ag-grid-community";
 import toast from "react-hot-toast";
+import ReviewTBar from "./links/components/ReviewTBar";
+import NewLinkModal from "./links/dialogs/NewLinkModal";
+import ReviewModal from "./links/dialogs/ReviewModal";
 
 const ReviewLinks =() => {
 
 	const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<ReviewLink>();
+	const [showAdd, setShowAdd] = useState<boolean>(false);
+	const [showInfo, setShowInfo] = useState<boolean>(false);
 
 	const onRowDoubleClicked = useCallback((event: RowDoubleClickedEvent<ReviewLink>) => {
 		if(event.node.data)	{
@@ -31,11 +34,6 @@ const ReviewLinks =() => {
 			});
 		}
 	}, []);
-
-    const addModalRef = useRef<HTMLDialogElement>(null);
-    //const editModalRef = useRef<HTMLDialogElement>(null);
-    //const credentialsModalRef = useRef<HTMLDialogElement>(null);
-    //const deleteModalRef = useRef<HTMLDialogElement>(null);
 
     const stores = useStores();
 
@@ -79,40 +77,13 @@ const ReviewLinks =() => {
 						<div className="panel-content no-padding">
 							<div className="overflow-x-auto">
 								<div className="border-2 border-solid border-gray-200">
-									<div className="navbar bg-gray-200 min-h-1 p-1">
-										<div className="flex-1">
-											<a
-												className="btn btn-ghost text-slate-500 btn-sm text-sm mr-2 rounded-none"
-												onClick={() => {
-													addModalRef.current?.showModal();
-												}}
-											>
-												<MdOutlineAdd /> Add
-											</a>
-
-											<a
-												className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-													selectedItem ?? "btn-disabled"
-												}`}
-												onClick={() => {
-													//editModalRef.current?.showModal();
-												}}
-											>
-												<MdEditSquare /> Edit
-											</a>
-
-											<a
-												className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-													selectedItem ?? "btn-disabled"
-												}`}
-												onClick={() => {
-													//deleteModalRef.current?.showModal();
-												}}
-											>
-												<MdDelete /> Delete
-											</a>
-										</div>
-									</div>
+									<ReviewTBar
+										selectedItem={selectedItem}
+										onClickAdd={() => {setShowAdd(true)}}
+										onClickUpdate={() => {}}
+										onClickDelete={() => {}}
+										onClickInfo={() => {setShowInfo(true)}}
+									 />
 									<div className="max-w-full">
 										<AgGridWrapper<ReviewLink>
 											rowData={rowData}
@@ -133,37 +104,13 @@ const ReviewLinks =() => {
 					</div>
 
 					
-					<NewLinkDialog
-						ref={addModalRef}
-						onApply={async (clientName: string, place: string) => {
-							let result = await stores.reviewLinksStore.create(clientName, place);
-							if (result.success) reload();
-							return result;
-						}}
-					/>
-
-					{/*
-					<EditAccountDialog
-						ref={editModalRef}
-						name={selectedItem?.name ?? ""}
-						email={selectedItem?.email ?? ""}
-						onChange={async (account: AccountUpdateDTO) => {
-							let result = await stores.accountsStore.update(selectedItem?.userId ?? 0, account);
-							if (result.success) reload();
-							return result;
-						}}
-					/>
-
-					<DeleteAccountDialog
-						ref={deleteModalRef}
-						user={selectedItem?.user ?? ""}
-						onChange={async () => {
-							let result = await stores.accountsStore.delete(selectedItem?.userId ?? 0);
-							if (result.success) reload();
-							return result;
-						}}
-					/>
-					*/}
+					{showAdd &&
+						<NewLinkModal onClose={() => {setShowAdd(false)} } reload={reload} />
+					}
+					{(showInfo && selectedItem) &&
+						<ReviewModal onClose={() => {setShowInfo(false)} } review={selectedItem} />
+					}
+					
 				</>
 			) : (
 				/** END OF Main component */

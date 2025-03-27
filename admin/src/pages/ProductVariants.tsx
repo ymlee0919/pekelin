@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
-import { NavLink, useParams } from "react-router-dom";
-import { MdDelete, MdOutlineAdd, MdEditSquare, MdFiberNew, MdOutlineStar, MdOutlineRemoveRedEye } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import {MdFiberNew, MdOutlineStar } from "react-icons/md";
 
 import useStores from "../hooks/useStores";
 
@@ -22,6 +22,8 @@ import { GridOptions} from "ag-grid-community";
 
 import { AgGridWrapper } from "../components/AgGridWrapper";
 import { useGrid } from "../hooks/useGrid";
+import VariantsTBar from "./variants/components/VariantsTBar";
+import DeleteVariantModal from "./variants/dialogs/DeleteVariantModal";
 
 const ColImage = (params: CustomCellRendererProps<BasicVariantInfo>) => (
 	<span className="h-20">
@@ -52,15 +54,13 @@ const gridOptions : GridOptions<BasicVariantInfo> = {
 const ProductVariants = () => {
 
 	const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<BasicVariantInfo>();
-	
+	const [showDelete, setShowDelete] = useState<boolean>(false);
 
 	const dispatch = useDispatch();
 	const stores = useStores();
 	const params = useParams();
 	const product = useSelector((state: RootState) => state.currentProduct.product);
 	const productId = parseInt(params.productId ?? '0' );
-
-	let modalRef = useRef<HTMLDialogElement>(null);
 
 	let reload = () => {
 		setStatus(StoreStatus.LOADING);
@@ -107,22 +107,6 @@ const ProductVariants = () => {
 		}
 	}
 
-	const onDelete = async () => {
-		if(selectedItem) {
-			let loadingToast = toast.loading("Deleting product variant...");
-			let result = await stores.variantsStore.delete(productId, selectedItem.variantId);
-			toast.dismiss(loadingToast);
-
-			if (result.success) {
-				modalRef.current?.close();
-				toast.success(result.message);
-				reload();
-			} else {
-				toast.error(result.message);
-			}
-		}
-	}
-
     return (
 		<>
 			<Breadcrumbs
@@ -157,38 +141,11 @@ const ProductVariants = () => {
 
 							<div className="overflow-x-auto">
 								<div className="border-2 border-solid border-gray-200">
-									<div className="navbar bg-gray-200 min-h-1 p-1">
-										<div className="flex-1">
-											<NavLink to={`/products/${product?.productId}/variants/new`} className="btn btn-ghost text-slate-500 btn-sm text-sm mr-2 rounded-none">
-												<MdOutlineAdd /> Add
-											</NavLink>
-												
-											<NavLink to={`/products/${product?.productId}/variants/${selectedItem?.variantId}/edit`} className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-														selectedItem ?? "btn-disabled"
-													}`}>
-												<MdEditSquare /> Edit
-											</NavLink>
-
-											<a
-												className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-													selectedItem ?? "btn-disabled"
-												}`}
-												onClick={() => {modalRef.current?.showModal() }}
-											>
-												<MdDelete /> Delete
-											</a>
-
-											<a
-												className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-													selectedItem ?? "btn-disabled"
-												}`}
-												onClick={onChangeView}
-											>
-												<MdOutlineRemoveRedEye /> Show/Hide
-											</a>
-
-										</div>
-									</div>
+									<VariantsTBar
+										selectedItem={selectedItem}
+										onClickChangeVisibility={onChangeView}
+										onClickDelete={() => { setShowDelete(true)}}
+									/>
 									<div className="max-w-full">
 										<AgGridWrapper<BasicVariantInfo>
 											rowData={rowData}
@@ -206,19 +163,13 @@ const ProductVariants = () => {
 						</div>
 					</div>
 
-				<dialog ref={modalRef} className="modal">
-					<div className="modal-box bg-base-200">
-						<h3 className="font-bold text-lg">Delete variant</h3>
-						<br></br>
-						<p className="italic">{selectedItem?.name}</p>
-						<br></br>
-						<p>Are you sure you want to delete the selectedItem variant?</p>
-						<div className="modal-action">
-							<a className="btn btn-info btn-sm mr-5" onClick={onDelete}>Yes, delete</a>
-							<a className="btn btn-sm" onClick={()=>modalRef.current?.close()}>No, close</a>
-						</div>
-					</div>
-				</dialog>
+					{(selectedItem && showDelete) &&
+						<DeleteVariantModal 
+							variant={selectedItem}
+							reload={reload}
+							onClose={() => setShowDelete(false)}
+						/>
+					}
 				</>
 				
 				/** END OF Main component */

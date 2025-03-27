@@ -1,39 +1,35 @@
-import { useEffect, useRef, useState, MouseEvent } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
 import { MdDelete, MdEdit, MdFiberNew, MdOutlineAdd, MdOutlineRemoveRedEye, MdOutlineStar, MdVisibilityOff} from "react-icons/md";
 
-import useStores from "../../hooks/useStores";
+import useStores from "../../../hooks/useStores";
 
-import { StoreStatus } from "../../store/remote/Store";
+import { StoreStatus } from "../../../store/remote/Store";
 
-import Breadcrumbs from "../../components/Breadcrumbs";
-import Loading from "../../components/Loading";
-import Error  from "../../components/Error";
-import { BasicVariantInfo } from "../../store/remote/variants/Variants.Types";
-import { Product, ProductFeature } from "../../store/remote/products/Products.Types";
+import Breadcrumbs from "../../../components/Breadcrumbs";
+import Loading from "../../../components/Loading";
+import Error  from "../../../components/Error";
+import { BasicVariantInfo } from "../../../store/remote/variants/Variants.Types";
+import { Product, ProductFeature } from "../../../store/remote/products/Products.Types";
 
-import { setCurrentProduct } from "../../store/local/slices/productSlice";
+import { setCurrentProduct } from "../../../store/local/slices/productSlice";
 import { useDispatch } from "react-redux"; 
 import toast from "react-hot-toast";
+import DeleteVariantModal from "../../variants/dialogs/DeleteVariantModal";
 
 const ProductInfo = () => {
 
     let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
 	let [product, setProduct] = useState<Product|null>(null);
-	let [variantId, setVariantId] = useState<number>(0);
-	let [variantName, setVariantName] = useState<string>("");
+	let [variant, setVariant] = useState<BasicVariantInfo|null>(null);
 
 	const dispatch = useDispatch();
 	const stores = useStores();
 	const params = useParams();
 	const productId = parseInt(params.productId ?? '0');
 
-	let deleteModalRef = useRef<HTMLDialogElement>(null);
-
-	const handleVisibilityBtnClick = async (e : MouseEvent<HTMLButtonElement>) => {
-		let variantId = (parseInt(e.currentTarget.getAttribute('data-id') || '0'));
-		if(variantId) {
-			let loadingToast = toast.loading("Updating product variant...");
+	const handleVisibilityBtnClick = async (variantId: number) => {
+		let loadingToast = toast.loading("Updating product variant...");
 			let result = await stores.variantsStore.changeVisibility(productId, variantId);
 			toast.dismiss(loadingToast);
 
@@ -42,30 +38,6 @@ const ProductInfo = () => {
 				reload();
 			} else {
 				toast.error(result.message);
-			}
-		}
-	}
-
-	const handleDeleteBtnClick = (e : MouseEvent<HTMLButtonElement>) => {
-		setVariantId(parseInt(e.currentTarget.getAttribute('data-id') || '0'));
-		setVariantName(e.currentTarget.getAttribute('data-name') || '0');
-
-        deleteModalRef.current?.showModal()
-	}
-
-	const onDeleteVariant = async () => {
-		if(variantId) {
-			let loadingToast = toast.loading("Deleting product variant...");
-			let result = await stores.variantsStore.delete(productId, variantId);
-			toast.dismiss(loadingToast);
-
-			if (result.success) {
-				deleteModalRef.current?.close();
-				toast.success(result.message);
-				reload();
-			} else {
-				toast.error(result.message);
-			}
 		}
 	}
 
@@ -187,9 +159,8 @@ const ProductInfo = () => {
 														<div className="card-actions flex">
 															<div className="flex-1">
 																<button
-																	data-id={variant.variantId}
 																	className="btn btn-success btn-xs btn-outline btn-ghost mx-2"
-																	onClick={handleVisibilityBtnClick}
+																	onClick={ () => {handleVisibilityBtnClick(variant.variantId)}}
 																>
 																	{variant.visible && <MdVisibilityOff className="text-lg" />} 
 																	{!variant.visible && <MdOutlineRemoveRedEye className="text-lg" />} 
@@ -200,10 +171,8 @@ const ProductInfo = () => {
 																	<MdEdit className="text-lg" />
 																</NavLink>
 																<button
-																	data-id={variant.variantId}
-																	data-name={variant.name}
 																	className="btn btn-error btn-xs btn-outline btn-ghost mx-2"
-																	onClick={handleDeleteBtnClick}
+																	onClick={() => setVariant(variant)}
 																>
 																	<MdDelete className="text-lg" />
 																</button>
@@ -221,19 +190,13 @@ const ProductInfo = () => {
 						</div>
 					</div>
 
-					<dialog ref={deleteModalRef} className="modal">
-						<div className="modal-box bg-base-200">
-							<h3 className="font-bold text-lg">Delete product variant</h3>
-							<br></br>
-							<p className="italic">{variantName}</p>
-							<br></br>
-							<p>Are you sure you want to delete the selected variant product?</p>
-							<div className="modal-action">
-								<a className="btn btn-info btn-sm mr-5" onClick={onDeleteVariant}>Yes, delete</a>
-								<a className="btn btn-sm" onClick={()=>deleteModalRef.current?.close()}>No, close</a>
-							</div>
-						</div>
-					</dialog>
+					{variant && 
+						<DeleteVariantModal 
+							variant={variant}
+							reload={reload}
+							onClose={() => setVariant(null)}
+						/>
+					}
 				</>
 				
 				/** END OF Main component */

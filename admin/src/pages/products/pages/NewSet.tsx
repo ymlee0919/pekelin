@@ -3,20 +3,19 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { MdOutlineCheck, MdClose } from "react-icons/md";
 import { useForm } from "react-hook-form";
 
-import Breadcrumbs from "../../components/Breadcrumbs";
-import { ProductFeaturesList } from "../../store/remote/products/ProductFeatures";
-import ProductFeatures from "./../features/ProductFeatures";
+import Breadcrumbs from "../../../components/Breadcrumbs";
+import { ProductFeaturesList } from "../../../store/remote/products/ProductFeatures";
+import ProductFeatures from "../../../components/features/ProductFeatures";
 import toast from "react-hot-toast";
-import useStores from "../../hooks/useStores";
-import { EmptyEvent, EventResult } from "../../types/Events";
-import { ProductForm } from "../../store/remote/products/Products.Types";
+import useStores from "../../../hooks/useStores";
+import { EmptyEvent, EventResult } from "../../../types/Events";
 
 import { MdImageSearch } from "react-icons/md";
-import { CategoryContent } from "../../store/remote/categories/Categories.Types";
-import { StoreStatus } from "../../store/remote/Store";
-import Loading from "../../components/Loading";
-import Error from "../../components/Error";
-import { ErrorList, errorToEventResult } from "../../types/Errors";
+import { StoreStatus } from "../../../store/remote/Store";
+import Loading from "../../../components/Loading";
+import Error from "../../../components/Error";
+import { BasicCategory, BasicProduct, SetsForm } from "../../../store/remote/sets/Sets.Types";
+import { ErrorList, errorToEventResult } from "../../../types/Errors";
 
 
 let features: ProductFeaturesList = new ProductFeaturesList();
@@ -24,16 +23,18 @@ let features: ProductFeaturesList = new ProductFeaturesList();
 /**
  * Page for new product
  */
-const NewProduct = () => {
+const NewSet = () => {
 
     let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
     const stores = useStores();
     const navigate = useNavigate();
     const refFeatures = useRef<ProductFeaturesList>(features);
     
-    const {register, clearErrors, setError, setValue, watch, reset, handleSubmit, formState: { errors }} = useForm<ProductForm & { items: number }>({
+    const {register, clearErrors, setError, setValue, watch, reset, handleSubmit, formState: { errors }} = useForm<SetsForm & { items: number }>({
         defaultValues: {
             categoryId: 0,
+            product1: 0,
+            product2: 0,
             name: '',
             gender: false,
             price: 0,
@@ -47,6 +48,10 @@ const NewProduct = () => {
 
     const [preview, setPreview] = useState<string | null>(null);
 	const file = watch("image");
+    const categoryId = watch("categoryId");
+    const product1 = watch("product1");
+    const product2 = watch("product2");
+    
     
     const onItemsUpdated = () => {
         setValue("items", refFeatures.current.list.length);
@@ -57,13 +62,6 @@ const NewProduct = () => {
     }
 
     const submitRef = useRef<EmptyEvent>();
-
-    useEffect(() => {
-        // Unmount the component and create a new offer info for new page
-        reset();
-        submitRef.current = handleSubmit(onSumbit)
-        return () => { features = new ProductFeaturesList(); refFeatures.current = features; }
-    }, []);
 
     useEffect(() => {
         if (file && file.length > 0) {
@@ -81,21 +79,27 @@ const NewProduct = () => {
     }, [file]);
 
     useEffect(() => {
-		stores.categoryStore.load(null).then(
+		stores.setSourceStore.load(null).then(
             (newStatus: StoreStatus) => { 
                 setStatus(newStatus);
             }
         );
-		return () => { stores.categoryStore.release() }
+        reset();
+        submitRef.current = handleSubmit(onSumbit)
+		return () => { 
+            stores.setSourceStore.release();
+            features = new ProductFeaturesList(); 
+            refFeatures.current = features;
+        }
 	}, []);
 
-    const onSumbit = async (data: ProductForm) => {
+    const onSumbit = async (data: SetsForm) => {
         // Append information
         const formData = new FormData(); 
         
         for (const key in data) {
             if (data.hasOwnProperty(key) && key != 'image' && key != 'items' && key != 'gender') {
-                formData.append(key, data[key as keyof ProductForm] as string);
+                formData.append(key, data[key as keyof SetsForm] as string);
             }
         }
         
@@ -114,7 +118,7 @@ const NewProduct = () => {
 
         let result : EventResult;
         try {
-            result = await stores.productsStore.create(formData);
+            result = await stores.setsStore.create(formData);
         } catch (error)
         {
             result = errorToEventResult(error, "Unable to create the product");
@@ -133,7 +137,7 @@ const NewProduct = () => {
 
                 Object.keys(data).forEach((key: string) => {
                     if(errors.hasOwnProperty(key)) {
-                        setError(key as keyof ProductForm, { message: errors[key][0] }  )
+                        setError(key as keyof SetsForm, { message: errors[key][0] }  )
                     }
                 })
             }
@@ -144,17 +148,17 @@ const NewProduct = () => {
         <Breadcrumbs pages={[
             { url: '/', label: 'Dashboard' },
             { url: '/products', label: 'Products' },
-            { url: '.', label: 'New product' },
+            { url: '.', label: 'New set' },
         ]} />
 
         {status == StoreStatus.LOADING ? <Loading /> : ''}
-        {status == StoreStatus.ERROR ? <Error text={stores.productsStore.lastError} /> : ''}
+        {status == StoreStatus.ERROR ? <Error text={stores.setSourceStore.lastError} /> : ''}
         { status == StoreStatus.READY ? 
            
             /* Main component */
             <div className="panel">
                 <div className="panel-header">
-                    <span className="title">New product</span>
+                    <span className="title">New set</span>
                 </div>
                 <div className="panel-content">
                     <form>
@@ -176,7 +180,7 @@ const NewProduct = () => {
                                             <input
                                                 type="file"
                                                 id="addServiceUpload"
-                                                {...register("image", { required: true })}
+                                                {...register("image", { required: "The image is required" })}
                                                 accept="image/*"
                                                 className="hidden"
                                             />
@@ -193,9 +197,12 @@ const NewProduct = () => {
                                         <div className="bg-base-300 grid h-32 w-32 place-items-center">No image</div>
                                     )}
                                 </div>
+                                {errors.image && 
+                                    <div className="label">
+                                        <span className="label-text text-red-500 text-sm">{errors.image.message}</span>
+                                    </div>}
                             </div>
                             <div className="w-full md:w-8/12 sm:w-7/12">
-                                
                                 <div className="flex flex-wrap gap-3">
                                     <div className="w-full md:w-6/12 sm:w-10/12">
                                         <label className="form-control w-full max-w-xs">
@@ -220,21 +227,87 @@ const NewProduct = () => {
                                         </label>
                                     </div>
 
-                                    
-
                                     <div className="w-full md:w-5/12 sm:w-5/12">
                                         <label className="form-control w-full max-w-xs">
                                             <div className="label">
                                                 <span className="label-text">Category</span>
                                             </div>
                                             <select 
-                                                {...register("categoryId")} 
+                                                {...register("categoryId", {
+                                                    validate: value => value !== 0 || "Please select a category",
+                                                    onChange: () => {
+                                                        setValue("product1", 0);
+                                                        setValue("product2", 0);
+                                                    },
+                                                })} 
+                                                defaultValue={categoryId}
                                                 className="select select-bordered w-full max-w-xs"
                                             >
-                                                    {stores.categoryStore.content?.map((category: CategoryContent) => {
+                                                    <option disabled value={0}>Select a category</option>
+                                                    {stores.setSourceStore.content?.map((category: BasicCategory) => {
                                                         return <option key={category.categoryId} value={category.categoryId}>{category.category}</option>
                                                     })}
                                             </select>
+                                            {errors.categoryId && 
+                                                <div className="label">
+                                                    <span className="label-text text-red-500 text-sm">{errors.categoryId.message}</span>
+                                                </div>}
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full md:w-5/12 sm:w-5/12">
+                                        <label className="form-control w-full max-w-xs">
+                                            <div className="label">
+                                                <span className="label-text">First product</span>
+                                            </div>
+                                            <select 
+                                                {...register("product1", {
+                                                    validate: value => value !== 0 || "Please select the first product",
+                                                    onChange: () => {
+                                                        setValue("product2", 0);
+                                                    }
+                                                })} 
+                                                defaultValue={product1}
+                                                className="select select-bordered w-full max-w-xs"
+                                            >
+                                                <option disabled value={0}>{categoryId == 0 ? 'Select the category' : 'Select a product'}</option>
+                                                    {stores.setSourceStore.getProductsOf(categoryId).map((product: BasicProduct) => {
+                                                        return <option key={product.productId} value={product.productId}>{product.name}</option>
+                                                    })}
+                                            </select>
+                                            {errors.product1 && 
+                                                <div className="label">
+                                                    <span className="label-text text-red-500 text-sm">{errors.product1.message}</span>
+                                                </div>}
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full md:w-5/12 sm:w-5/12">
+                                        <label className="form-control w-full max-w-xs">
+                                            <div className="label">
+                                                <span className="label-text">Second product</span>
+                                            </div>
+                                            <select 
+                                                {...register("product2", {
+                                                    validate: value => value !== 0 || "Please select the second product",
+                                                })} 
+                                                defaultValue={product2}
+                                                className="select select-bordered w-full max-w-xs"
+                                            >
+                                               <option disabled value={0}>{categoryId == 0 ? 'Select the category' : ( product1 == 0 ? 'Select the first product' : 'Select the second product')}</option>
+                                                {stores.setSourceStore.getProductsOf(categoryId)
+                                                    .filter((product: BasicProduct) => {
+                                                        return categoryId != 0 && product1 != 0 && product.productId != product1
+                                                    })
+                                                    .map((product: BasicProduct) => {
+                                                        return <option key={product.productId} value={product.productId}>{product.name}</option>
+                                                    })
+                                                }
+                                            </select>
+                                            {errors.product2 && 
+                                                <div className="label">
+                                                    <span className="label-text text-red-500 text-sm">{errors.product2.message}</span>
+                                                </div>}
                                         </label>
                                     </div>
 
@@ -409,4 +482,4 @@ const NewProduct = () => {
     </>
 }
 
-export default NewProduct;
+export default NewSet;

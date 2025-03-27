@@ -4,12 +4,16 @@ import { Body,
     HttpStatus,
     Post,
     HttpCode,
-    BadRequestException 
+    BadRequestException, 
+    Delete,
+    Param,
+    NotFoundException
 } from '@nestjs/common';
 import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
 import { ReviewsService } from './reviews.service';
 import { CreatedReviewLink, ReviewLink } from './reviews.types';
 import { ReviewLinkCreationDTO } from './reviews.dto';
+import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
 
 
 @Controller('api/reviews')
@@ -24,6 +28,17 @@ export class ReviewsController {
         return result ?? [];
     }
 
+    @Get('/:id')
+    @HttpCode(HttpStatus.OK)
+    async get(@Param('id', CustomParseIntPipe) linkId: number): Promise<ReviewLink>{
+        let result = await this.manager.get(linkId);
+        
+        if(result)
+            return result;
+        
+        throw new NotFoundException("Link not found");
+    }
+
     @Post('')
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() creationDto: ReviewLinkCreationDTO) : Promise<CreatedReviewLink> {
@@ -32,6 +47,21 @@ export class ReviewsController {
             return createdLink;
         } catch (error) {
             if(error instanceof InvalidOperationError){
+                throw new BadRequestException(error.message);
+            }
+            throw new BadRequestException(error);
+        }
+    }
+
+    @Delete('/:id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async delete(@Param('id', CustomParseIntPipe) linkId: number) : Promise<ReviewLink> {
+
+        try {
+            let deleted = await this.manager.deleteLink(linkId);
+            return deleted;
+        } catch (error) {
+            if (error instanceof InvalidOperationError) {
                 throw new BadRequestException(error.message);
             }
             throw new BadRequestException(error);

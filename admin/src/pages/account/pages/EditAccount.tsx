@@ -161,8 +161,8 @@ const UpdateAccount = () => {
                     <NavLink className="btn btn-sm" to="/accounts">Cancel</NavLink>
                 </div>
             </div>
-        </form>) : <>
-        </>}
+        </form>) : <></>
+        }
     </>
 };
 

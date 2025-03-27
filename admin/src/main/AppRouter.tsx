@@ -6,9 +6,9 @@ import Layout from "./Layout";
 import Home from "../pages/Home";
 
 import Products from "../pages/Products";
-import NewProduct from "../pages/products/NewProduct";
-import EditProduct from "../pages/products/EditProduct";
-import ProductInfo from "../pages/products/ProductInfo";
+import NewProduct from "../pages/products/pages/NewProduct";
+import EditProduct from "../pages/products/pages/EditProduct";
+import ProductInfo from "../pages/products/pages/ProductInfo";
 
 import Accounts from "../pages/Accounts";
 import NewAccount from "../pages/account/pages/NewAccount";
@@ -16,13 +16,15 @@ import EditAccount from "../pages/account/pages/EditAccount";
 import CredentialsAccount from "../pages/account/pages/CredentialsAccount";
 
 import Categories from "../pages/Categories";
+import NewCategory from "../pages/categories/pages/NewCategory";
+import EditCategory from "../pages/categories/pages/EditCategory";
 
 import ProductVariants from "../pages/ProductVariants";
-import NewVariant from "../pages/variants/NewVariant";
-import EditVariant from "../pages/variants/EditVariant";
+import NewVariant from "../pages/variants/pages/NewVariant";
+import EditVariant from "../pages/variants/pages/EditVariant";
 
-import NewSet from "../pages/products/NewSet";
-import EditSet from "../pages/products/EditSet";
+import NewSet from "../pages/products/pages/NewSet";
+import EditSet from "../pages/products/pages/EditSet";
 
 import ReviewLinks from "../pages/ReviewLinks";
 
@@ -57,6 +59,14 @@ const AppRouter = createBrowserRouter([
 			{
 				path: "/categories",
 				element: <Categories />,
+			},
+			{
+				path: "/categories/new",
+				element: <NewCategory />,
+			},
+			{
+				path: "/categories/:id/edit",
+				element: <EditCategory />,
 			},
 			{
 				path: "/products",

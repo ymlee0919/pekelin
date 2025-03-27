@@ -1,108 +1,101 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { MdOutlineCheck, MdClose } from "react-icons/md";
 import { useForm } from "react-hook-form";
 
-import Breadcrumbs from "../../components/Breadcrumbs";
-import { ProductFeaturesList } from "../../store/remote/products/ProductFeatures";
-import ProductFeatures from "../features/ProductFeatures";
+import Breadcrumbs from "../../../components/Breadcrumbs";
+import { ProductFeaturesList } from "../../../store/remote/products/ProductFeatures";
+import ProductFeatures from "../../../components/features/ProductFeatures";
 import toast from "react-hot-toast";
-import useStores from "../../hooks/useStores";
-import { EmptyEvent, EventResult } from "../../types/Events";
+import useStores from "../../../hooks/useStores";
+import { EmptyEvent, EventResult } from "../../../types/Events";
+import { ProductForm } from "../../../store/remote/products/Products.Types";
 
 import { MdImageSearch } from "react-icons/md";
+import { CategoryContent } from "../../../store/remote/categories/Categories.Types";
+import { StoreStatus } from "../../../store/remote/Store";
+import Loading from "../../../components/Loading";
+import Error from "../../../components/Error";
+import { ErrorList, errorToEventResult } from "../../../types/Errors";
 
-import { StoreStatus } from "../../store/remote/Store";
-import Loading from "../../components/Loading";
-import Error from "../../components/Error";
-import { VariantForm } from "../../store/remote/variants/Variants.Types";
-import { useSelector } from 'react-redux'; 
-import { RootState } from "../../store/local/store"; 
-import { setCurrentProduct } from "../../store/local/slices/productSlice";
-import { useDispatch } from "react-redux"; 
-import { ErrorList, errorToEventResult } from "../../types/Errors";
 
 let features: ProductFeaturesList = new ProductFeaturesList();
 
 /**
  * Page for new product
  */
-const EditVariant = () => {
+const EditProduct = () => {
 
     let [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
     let [image, setImage] = useState<string>("");
-    const [item, setItems] = useState<number>(0);
-    const product = useSelector((state: RootState) => state.currentProduct.product);
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
     const stores = useStores();
+    const navigate = useNavigate();
     const refFeatures = useRef<ProductFeaturesList>(features);
-	
-    const params = useParams();
-    const productId = parseInt(params.productId ?? '0');
-    const variantId = parseInt(params.variantId ?? '0');
+	const params = useParams();
     
     const {register, 
+		clearErrors, 
+		setError, 
 		setValue, 
-        setError,
 		watch, 
+		reset, 
 		handleSubmit, 
-		formState: { errors }} = useForm<VariantForm>();
+		formState: { errors }} = useForm<ProductForm & { items: number }>();
 
     const [preview, setPreview] = useState<string | null>(null);
 	const file = watch("image");
     
     const onItemsUpdated = () => {
-        setItems(Date.now());
+        setValue("items", refFeatures.current.list.length);
+        if(refFeatures.current.list.length > 0)
+            clearErrors("items");
+        else
+            setError("items", { message: "The product must have at least one feature" });
     }
 
     const submitRef = useRef<EmptyEvent>();
 
-    const handleGoBack = () => {
-        // Navigate to the previous URL
-        navigate(-1);
-    };
-
-    const loadVariant = () => {
-        stores.singleVariantStore.load({ productId, variantId})
-            .then( (newStatus : StoreStatus) => {
-                if(stores.singleVariantStore.content)
-                {
-                    refFeatures.current = new ProductFeaturesList(stores.singleVariantStore.content.Features);
-                    setImage(stores.singleVariantStore.content.remoteUrl);
-                    setValue("name", stores.singleVariantStore.content.name);
-                    setValue("description", stores.singleVariantStore.content.description);
-                    setValue("isBestSeller", stores.singleVariantStore.content.isBestSeller);
-                    setValue("isNew", stores.singleVariantStore.content.isNew);
-                    setValue("visible", stores.singleVariantStore.content.visible);
-                }
-                setStatus(newStatus);
-            })
-    }
-
-    // Page initialization
     useEffect(() => {
-        if(!!product && product.productId == productId)
-			loadVariant();
-		else {
-			stores.singleProductsStore.load({ productId }).then(
-				(status: StoreStatus) => {
-					if(status == StoreStatus.READY && stores.singleProductsStore.content) {
-						dispatch(setCurrentProduct(stores.singleProductsStore.content));
-						loadVariant();
-					}
-				}
-			);
-		}
+        stores.categoryStore.load(null).then(
+            (newPreStatus: StoreStatus) => { 
+                if(newPreStatus == StoreStatus.READY) {
+                    stores.singleProductsStore.load({productId: parseInt(params.id ?? '0')})
+                        .then( (newStatus : StoreStatus) => {
+                            if(stores.singleProductsStore.content)
+                            {
+                                refFeatures.current = new ProductFeaturesList(stores.singleProductsStore.content.Features);
+                                setImage(stores.singleProductsStore.content.remoteUrl);
+                                setValue("categoryId", stores.singleProductsStore.content.categoryId);
+                                setValue("name", stores.singleProductsStore.content.name);
+                                setValue("gender", stores.singleProductsStore.content.gender == "M");
+                                setValue("price", stores.singleProductsStore.content.price);
+                                setValue("basePrice", stores.singleProductsStore.content.basePrice);
+                                setValue("description", stores.singleProductsStore.content.description);
+                                setValue("isBestSeller", stores.singleProductsStore.content.isBestSeller);
+                                setValue("isNew", stores.singleProductsStore.content.isNew);
+                                setValue("visible", stores.singleProductsStore.content.visible);
+                                setValue("items", stores.singleProductsStore.content.Features.length);
+                            }
+                                
+                            setStatus(newStatus);
+                        })
+                } else {
+                    setStatus(newPreStatus);
+                }
+                
+            }
+        );
+
         
-        submitRef.current = handleSubmit(onSumbit);
+		
+			reset();
+			submitRef.current = handleSubmit(onSumbit);
         
         // Unmount the component and create a new offer info for new page
-        return () => {stores.singleVariantStore.release()}
+        return () => {stores.singleProductsStore.release()}
     }, []);
 
-    // File preview treatment
     useEffect(() => {
         if (file && file.length > 0) {
             const selectedFile = file[0];
@@ -118,13 +111,22 @@ const EditVariant = () => {
         }
     }, [file]);
 
-    const onSumbit = async (data: VariantForm) => {
+    useEffect(() => {
+		stores.categoryStore.load(null).then(
+            (newStatus: StoreStatus) => { 
+                setStatus(newStatus);
+            }
+        );
+		return () => { stores.categoryStore.release() }
+	}, []);
+
+    const onSumbit = async (data: ProductForm) => {
         // Append information
         const formData = new FormData(); 
         
         for (const key in data) {
-            if (data.hasOwnProperty(key) && key != 'image' && key != 'items') {
-                formData.append(key, data[key as keyof VariantForm] as string);
+            if (data.hasOwnProperty(key) && key != 'image' && key != 'items' && key != 'gender') {
+                formData.append(key, data[key as keyof ProductForm] as string);
             }
         }
         
@@ -135,18 +137,15 @@ const EditVariant = () => {
                 formData.append('image', data.image[0]);
         }
 
+        formData.append("gender", data.gender ? "M" : "F");
         formData.append('features', JSON.stringify(refFeatures.current.list));
 
         // Send to backend
-        let loadingToast = toast.loading("Updating product variant...");
+        let loadingToast = toast.loading("Updating product...");
 
         let result : EventResult;
         try {
-            result = await stores.variantsStore.update(
-                product?.productId || 0, 
-                params.variantId ?? '0', 
-                formData
-            );
+            result = await stores.productsStore.update(params.id ?? '0', formData);
         } catch (error)
         {
             result = errorToEventResult(error, "Unable to create the product");
@@ -156,7 +155,7 @@ const EditVariant = () => {
 
         if (result.success) {
 			toast.success(result.message);
-            navigate(-1);
+            navigate('/products');
 		} else {
 			toast.error(result.message);
 
@@ -165,7 +164,7 @@ const EditVariant = () => {
 
                 Object.keys(data).forEach((key: string) => {
                     if(errors.hasOwnProperty(key)) {
-                        setError(key as keyof VariantForm, { message: errors[key][0] }  )
+                        setError(key as keyof ProductForm, { message: errors[key][0] }  )
                     }
                 })
             }
@@ -176,20 +175,22 @@ const EditVariant = () => {
         <Breadcrumbs pages={[
             { url: '/', label: 'Dashboard' },
             { url: '/products', label: 'Products' },
-            { url: `/products/${product?.productId}`, label: product?.name || 'Product' },
-            { url: `/products/${product?.productId}/variants`, label: 'Variants' },
-            { url: '.', label: stores.singleVariantStore.content?.name  ?? ''},
-            { url: '.', label: 'Edit'},
+            { 
+                url: stores.singleProductsStore.content 
+                    ? `/products/${stores.singleProductsStore.content.productId}` 
+                    : '.',
+                label: stores.singleProductsStore.content?.name || 'Product' },
+            { url: '.', label: 'Edit' },
         ]} />
 
         {status == StoreStatus.LOADING ? <Loading /> : ''}
-        {status == StoreStatus.ERROR ? <Error text={stores.variantsStore.lastError} /> : ''}
+        {status == StoreStatus.ERROR ? <Error text={stores.productsStore.lastError} /> : ''}
         { status == StoreStatus.READY ? 
            
             /* Main component */
             <div className="panel">
                 <div className="panel-header">
-                    <span className="title" data-features={item}>Variant {stores.singleVariantStore.content?.name} of {product?.name}</span>
+                    <span className="title">Edit product</span>
                 </div>
                 <div className="panel-content">
                     <form>
@@ -248,7 +249,6 @@ const EditVariant = () => {
 								</div>
                             </div>
                             <div className="w-full md:w-8/12 sm:w-7/12">
-                                
                                 <div className="flex flex-wrap gap-3">
                                 <div className="w-full md:w-6/12 sm:w-10/12">
                                         <label className="form-control w-full max-w-xs">
@@ -270,6 +270,84 @@ const EditVariant = () => {
                                                 <div className="label">
                                                     <span className="label-text text-red-500 text-sm">{errors.name.message}</span>
                                                 </div>}
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full md:w-5/12 sm:w-5/12">
+                                        <label className="form-control w-full max-w-xs">
+                                            <div className="label">
+                                                <span className="label-text">Category</span>
+                                            </div>
+                                            <select 
+                                                {...register("categoryId")} 
+                                                className="select select-bordered w-full max-w-xs"
+                                            >
+                                                    {stores.categoryStore.content?.map((category: CategoryContent) => {
+                                                        return <option key={category.categoryId} value={category.categoryId}>{category.category}</option>
+                                                    })}
+                                            </select>
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full md:w-3/12 sm:w-6/12">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <span className="label-text">Base price</span>
+                                            </div>
+                                            <input 
+                                                type="number" 
+                                                placeholder="Basic product price" 
+                                                className="input input-bordered w-full max-w-xs"
+                                                {...register("basePrice", {
+                                                    required: "The base price is required", 
+                                                    valueAsNumber: true,
+                                                    min: {
+                                                        value: 1, message: 'The product must cost more than $1'}
+                                                    }
+                                                )}  
+                                            />
+                                            {errors.basePrice && 
+                                                <div className="label">
+                                                    <span className="label-text text-red-500 text-sm">{errors.basePrice.message}</span>
+                                                </div>}
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full md:w-3/12 sm:w-6/12">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <span className="label-text">Price</span>
+                                            </div>
+                                            <input 
+                                                type="number" 
+                                                placeholder="Selling price" 
+                                                className="input input-bordered w-full max-w-xs"
+                                                {...register("price", {
+                                                    required: "The selling price is required", 
+                                                    valueAsNumber: true,
+                                                    min: {
+                                                        value: 1, message: 'The product must cost more than $1'}
+                                                    }
+                                                )}  
+                                            />
+                                            {errors.price && 
+                                                <div className="label">
+                                                    <span className="label-text text-red-500 text-sm">{errors.price.message}</span>
+                                                </div>}
+                                        </label>
+                                    </div>
+
+                                    <div className="w-full md:w-3/12 sm:w-6/12">
+                                        <label className="form-control w-full">
+                                            <div className="label">
+                                                <span className="label-text">Gender</span>
+                                            </div>
+                                            
+                                            <label className="label cursor-pointer">
+                                                <span className="label-text">Male</span>
+                                                <input type="checkbox" {...register("gender")} className="toggle toggle-success" defaultChecked />
+                                                <span className="label-text">Female</span>
+                                            </label>
                                         </label>
                                     </div>
 
@@ -342,12 +420,26 @@ const EditVariant = () => {
                                 </div>                  
                             </div>
                         </div>
-                        
+                        <input 
+                            type="hidden" 
+                            className="hidden"
+                            {...register("items", {
+                                required: true, 
+                                valueAsNumber: true,
+                                min: {
+                                    value: 1, message: 'The product must have at least one feature'}
+                                }
+                            )}
+                        />
                     </form>
                     <br></br>
 
                     <ProductFeatures features={refFeatures} onUpdate={onItemsUpdated} />
-
+                    
+                    {errors.items && 
+                        <div className="label">
+                            <span className="label-text text-red-500 text-sm">{errors.items.message}</span>
+                        </div>}
                 </div>
                 <div className="panel-footer text-right">
                     <button 
@@ -357,9 +449,9 @@ const EditVariant = () => {
                     >
                         <MdOutlineCheck className="text-xl" />Update
                     </button>
-                    <a href="#" onClick={handleGoBack} className="btn bg-base-300 btn-sm mt-0">
+                    <NavLink to='/products' className="btn bg-base-300 btn-sm mt-0">
                         <MdClose className="text-xl" /> Cancel
-                    </a>
+                    </NavLink>
                 </div>
             </div>
             /* END of Main component */
@@ -368,4 +460,4 @@ const EditVariant = () => {
     </>
 }
 
-export default EditVariant;
+export default EditProduct;

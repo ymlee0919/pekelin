@@ -15,7 +15,7 @@ type LoginResponse = {
     account: {
         userId: number;
         user: string;
-        userName: string;
+        name: string;
     },
     accessToken: string;
 }
@@ -39,7 +39,7 @@ const LoginForm: React.FC = () => {
                 dispatch(
                     setUser({
                         user: auth.account.user, 
-                        userName: auth.account.userName
+                        userName: auth.account.name
                     })
                 );
             }).catch((error:any) => {

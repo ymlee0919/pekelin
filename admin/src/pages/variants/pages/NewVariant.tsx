@@ -3,24 +3,24 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MdOutlineCheck, MdClose } from "react-icons/md";
 import { useForm } from "react-hook-form";
 
-import Breadcrumbs from "../../components/Breadcrumbs";
-import { ProductFeaturesList } from "../../store/remote/products/ProductFeatures";
-import ProductFeatures from "../features/ProductFeatures";
+import Breadcrumbs from "../../../components/Breadcrumbs";
+import { ProductFeaturesList } from "../../../store/remote/products/ProductFeatures";
+import ProductFeatures from "../../../components/features/ProductFeatures";
 import toast from "react-hot-toast";
-import useStores from "../../hooks/useStores";
-import { EmptyEvent, EventResult } from "../../types/Events";
+import useStores from "../../../hooks/useStores";
+import { EmptyEvent, EventResult } from "../../../types/Events";
 
 import { MdImageSearch } from "react-icons/md";
 
 import { useSelector } from 'react-redux'; 
-import { RootState } from "../../store/local/store"; 
-import { VariantForm } from "../../store/remote/variants/Variants.Types";
-import { StoreStatus } from "../../store/remote/Store";
-import { setCurrentProduct } from "../../store/local/slices/productSlice";
+import { RootState } from "../../../store/local/store"; 
+import { VariantForm } from "../../../store/remote/variants/Variants.Types";
+import { StoreStatus } from "../../../store/remote/Store";
+import { setCurrentProduct } from "../../../store/local/slices/productSlice";
 import { useDispatch } from "react-redux"; 
-import Loading from "../../components/Loading";
-import Error from "../../components/Error";
-import { ErrorList, errorToEventResult } from "../../types/Errors";
+import Loading from "../../../components/Loading";
+import Error from "../../../components/Error";
+import { ErrorList, errorToEventResult } from "../../../types/Errors";
 
 let features: ProductFeaturesList = new ProductFeaturesList();
 

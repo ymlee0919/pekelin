@@ -1,11 +1,13 @@
-import { useRef, useImperativeHandle, forwardRef } from "react";
-import { CommonProps } from "../../types/Common";
-import { useForm } from "react-hook-form";
+import { CommonProps } from "../../../types/Common";
 import toast from "react-hot-toast";
-import { EventResult } from "../../types/Events";
+import { EmptyEvent} from "../../../types/Events";
+import { useForm } from "react-hook-form";
+import useStores from "../../../hooks/useStores";
+import { errorToEventResult } from "../../../types/Errors";
 
-export interface NewLinkDialogProps extends CommonProps {
-    onApply: (clientName: string, place: string) => Promise<EventResult>;
+export interface NewLinkModalProps extends CommonProps {
+    reload: EmptyEvent;
+	onClose: EmptyEvent;
 }
 
 type ClientReview = {
@@ -13,33 +15,34 @@ type ClientReview = {
     place: string
 }
 
-const NewLinkDialog = forwardRef( (props : NewLinkDialogProps, ref) => {
+const NewLinkModal = (props : NewLinkModalProps) => {
 
-    let modalRef = useRef<HTMLDialogElement>(null);
+    const stores = useStores()
 
-    const {register, reset, handleSubmit, formState: { errors }} = useForm<ClientReview>({
+    const {register, handleSubmit, formState: { errors }} = useForm<ClientReview>({
         defaultValues: {
             clientName: '', place: ''
         }
     });
 
-    useImperativeHandle(ref, () => {
-        return {
-            showModal: () => {
-                reset();
-                modalRef.current?.showModal();
-            }
+    const onAdd = async (clientName: string, place: string) => {
+        try {
+            return await stores.reviewLinksStore.create(clientName, place);
         }
-    });
+        catch (error) {
+            return errorToEventResult(error, "Unable to delete the account");
+        }
+    }
 
     let onSubmit = async (data: ClientReview) => {
 		let loadingToast = toast.loading("Creating link...");
-		let result = await props.onApply(data.clientName, data.place);
+		let result = await onAdd(data.clientName, data.place);
 		toast.dismiss(loadingToast);
 
 		if (result.success) {
-			modalRef.current?.close();
 			toast.success(result.message);
+            props.reload();
+            props.onClose();
 		} else {
 			toast.error(result.message);
 		}
@@ -47,7 +50,7 @@ const NewLinkDialog = forwardRef( (props : NewLinkDialogProps, ref) => {
 
     return <>
         <form onSubmit={handleSubmit(onSubmit)}>
-            <dialog ref={modalRef} className="modal">
+            <dialog className="modal modal-open">
                 <div className="modal-box bg-base-200">
                     <h3 className="font-bold text-lg">New review link</h3>
                     <div className="flex flex-wrap gap-3">
@@ -76,7 +79,7 @@ const NewLinkDialog = forwardRef( (props : NewLinkDialogProps, ref) => {
                         <div className="w-7/12">
                             <label className="form-control w-full max-w-xs">
                                 <div className="label">
-                                    <span className="label-text">Plance</span>
+                                    <span className="label-text">Place</span>
                                 </div>
                                 <input 
                                     {...register("place", {
@@ -99,12 +102,12 @@ const NewLinkDialog = forwardRef( (props : NewLinkDialogProps, ref) => {
                     
                     <div className="modal-action">
                         <button type="submit" className="btn btn-info btn-sm mr-5">Add</button>
-                        <a className="btn btn-sm" onClick={()=>modalRef.current?.close()}>Close</a>
+                        <a className="btn btn-sm" onClick={props.onClose}>Close</a>
                     </div>
                 </div>
             </dialog>
         </form>
     </>
-});
+};
 
-export default NewLinkDialog;
+export default NewLinkModal;

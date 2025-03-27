@@ -149,7 +149,7 @@ const CredentialsAccount = () => {
                                                         }
                                                     }
                                                 })} 
-                                                type="text" 
+                                                type="password" 
                                                 placeholder="Previous password" 
                                                 className="input input-bordered w-full min-w-full" />
                                                 {errors.prevPassword && 
@@ -187,7 +187,7 @@ const CredentialsAccount = () => {
                                             </div>
                                             <input 
                                                 {...register('confirmation', { 
-                                                    validate: (value, record) => (!record.password && value === password) || "Confirmation missmatch" 
+                                                    validate: (value, record) => (!record.password || value === password) || "Confirmation missmatch" 
                                                 })} 
                                                 type="password" 
                                                 placeholder="Confirm new password" 
