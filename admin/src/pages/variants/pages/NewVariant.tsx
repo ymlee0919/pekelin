@@ -19,7 +19,7 @@ import { StoreStatus } from "../../../store/remote/Store";
 import { setCurrentProduct } from "../../../store/local/slices/productSlice";
 import { useDispatch } from "react-redux"; 
 import Loading from "../../../components/Loading";
-import Error from "../../../components/Error";
+import ErrorMessage from "../../../components/ErrorMessage";
 import { ErrorList, errorToEventResult } from "../../../types/Errors";
 
 let features: ProductFeaturesList = new ProductFeaturesList();
@@ -136,7 +136,7 @@ const NewVariant = () => {
 
         if (result.success) {
 			toast.success(result.message);
-            navigate(`/products/${product?.productId}/variants`);
+            navigate(-1);
 		} else {
 			toast.error(result.message);
 
@@ -162,7 +162,7 @@ const NewVariant = () => {
         ]} />
 
         {status == StoreStatus.LOADING ? <Loading /> : ''}
-        {status == StoreStatus.ERROR ? <Error text={stores.variantsStore.lastError} /> : ''}
+        {status == StoreStatus.ERROR ? <ErrorMessage text={stores.variantsStore.lastError} /> : ''}
         { status == StoreStatus.READY ? 
            
            /* Main component */

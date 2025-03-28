@@ -9,8 +9,9 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import { useEffect, useState } from "react";
 import { StoreStatus } from "../../../store/remote/Store";
 import Loading from "../../../components/Loading";
-import Error from "../../../components/Error";
+import ErrorMessage from "../../../components/ErrorMessage";
 import { MdDone, MdOutlineCancel } from "react-icons/md";
+import RouterTable from "../../../router/router.table";
 
 interface AccountCredentialsFormField extends AccountCredentialsUpdateDTO {
     confirmation: string
@@ -58,7 +59,7 @@ const CredentialsAccount = () => {
         // Treat the result
 		if (result.success) {
 			toast.success(result.message);
-            navigate('/accounts')
+            navigate(RouterTable.accounts.root)
 		} else {
 			toast.error(result.message);
 
@@ -99,7 +100,7 @@ const CredentialsAccount = () => {
 				]}
 			/>
             {status == StoreStatus.LOADING ? <Loading /> : ""}
-			{status == StoreStatus.ERROR ? <Error text={stores.accountsStore.lastError} /> : ""}
+			{status == StoreStatus.ERROR ? <ErrorMessage text={stores.accountsStore.lastError} /> : ""}
 
 			{status == StoreStatus.READY ? (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -230,7 +231,7 @@ const CredentialsAccount = () => {
                 </div>
                 <div className="panel-footer text-right">
                     <button type="submit" className="btn btn-info btn-sm mr-5">Apply</button>
-                    <NavLink className="btn btn-sm" to="/accounts">Cancel</NavLink>
+                    <NavLink className="btn btn-sm" to={RouterTable.accounts.root}>Cancel</NavLink>
                 </div>
             </div>
         </form>) : <>

@@ -8,7 +8,8 @@ import SetsStore from "./sets/Sets.Store";
 import SetSourceStore from "./sets/SetSource.Store";
 
 import ReviewLinksStore from "./reviews/Reviews.Store";
-
+import { PermissionsStore, RolesStore } from "./roles/Roles.Store";
+import ClientsStore from "./clients/Clients.Store";
 
 /**
  * Class to provide all stores
@@ -35,6 +36,12 @@ export default class RemoteStoresFactory {
     private _singleVariantStore: SingleVariantStore | null = null;
 
     private _reviewLinksStore: ReviewLinksStore | null = null;
+
+    private _rolesStore: RolesStore | null = null;
+    
+    private _permissionsStore: PermissionsStore | null = null;
+
+    private _clientsStore: ClientsStore | null = null;
     
     // Public properties
     public get accountsStore() : AccountsStore {
@@ -104,5 +111,26 @@ export default class RemoteStoresFactory {
             this._reviewLinksStore = new ReviewLinksStore();
 
         return this._reviewLinksStore;
+    }
+
+    public get rolesStore() : RolesStore {
+        if(this._rolesStore == null)
+            this._rolesStore = new RolesStore();
+
+        return this._rolesStore;
+    }
+
+    public get permissionsStore() : PermissionsStore {
+        if(this._permissionsStore == null)
+            this._permissionsStore = new PermissionsStore();
+
+        return this._permissionsStore;
+    }
+
+    public get clientsStore() : ClientsStore {
+        if(this._clientsStore == null)
+            this._clientsStore = new ClientsStore();
+
+        return this._clientsStore;
     }
 }

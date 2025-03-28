@@ -4,13 +4,14 @@ import { StoreStatus } from "../store/remote/Store";
 import useStores from "../hooks/useStores";
 import { MdOutlineAdd, MdEdit, MdDelete } from "react-icons/md";
 import Loading from "../components/Loading";
-import Error  from "../components/Error";
+import ErrorMessage  from "../components/ErrorMessage";
 
 import { useDispatch } from "react-redux"; 
 import { CategoryContent } from "../store/remote/categories/Categories.Types";
 import { setCategories } from "../store/local/slices/globalSlice";
 import { Link } from "react-router-dom";
 import DeleteCategoryModal from "./categories/dialogs/DeleteCategoryModal";
+import RouterTable from "../router/router.table";
 
 const Categories = () => {
     const [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
@@ -48,13 +49,13 @@ const Categories = () => {
 			/>
 
 			{status == StoreStatus.LOADING ? <Loading /> : ""}
-			{status == StoreStatus.ERROR ? <Error text={stores.categoryStore.lastError} /> : ""}
+			{status == StoreStatus.ERROR ? <ErrorMessage text={stores.categoryStore.lastError} /> : ""}
 
 			{status == StoreStatus.READY ? (
 				/** Main component */
 				<>
 					<div className="text-right">
-						<Link to="/categories/new"
+						<Link to={RouterTable.categories.new}
 							className="btn btn-primary btn-sm">
 							<MdOutlineAdd className="text-xl" /> Add
 						</Link>
@@ -85,7 +86,7 @@ const Categories = () => {
 										<p>{category.description}</p>
 										<div className="card-actions justify-end">
 											<Link
-                                                to={`/categories/${category.categoryId}/edit`}
+                                                to={RouterTable.categories.edit(category.categoryId)}
 												className="btn btn-info btn-xs btn-outline btn-ghost"
 											>
 												<MdEdit className="text-lg" />

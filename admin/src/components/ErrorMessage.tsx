@@ -5,7 +5,7 @@ interface ErrorProps extends CommonProps {
     text: any
 }
 
-const Error = (props: ErrorProps) => {
+const ErrorMessage = (props: ErrorProps) => {
 
     return <div className="flex justify-center px-5 pt-5">
         <div role="alert" className="alert alert-error shadow-md p-4 border-l-4 border-red-600 text-slate-700">
@@ -15,4 +15,4 @@ const Error = (props: ErrorProps) => {
     </div>
 };
 
-export default Error;
+export default ErrorMessage;

@@ -14,7 +14,7 @@ import { MdImageSearch } from "react-icons/md";
 
 import { StoreStatus } from "../../../store/remote/Store";
 import Loading from "../../../components/Loading";
-import Error from "../../../components/Error";
+import ErrorMessage from "../../../components/ErrorMessage";
 import { VariantForm } from "../../../store/remote/variants/Variants.Types";
 import { useSelector } from 'react-redux'; 
 import { RootState } from "../../../store/local/store"; 
@@ -183,7 +183,7 @@ const EditVariant = () => {
         ]} />
 
         {status == StoreStatus.LOADING ? <Loading /> : ''}
-        {status == StoreStatus.ERROR ? <Error text={stores.variantsStore.lastError} /> : ''}
+        {status == StoreStatus.ERROR ? <ErrorMessage text={stores.variantsStore.lastError} /> : ''}
         { status == StoreStatus.READY ? 
            
             /* Main component */

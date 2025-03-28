@@ -14,8 +14,9 @@ import { BasicCategory, BasicProduct, SetsForm } from "../../../store/remote/set
 import { MdImageSearch } from "react-icons/md";
 import { StoreStatus } from "../../../store/remote/Store";
 import Loading from "../../../components/Loading";
-import Error from "../../../components/Error";
+import ErrorMessage from "../../../components/ErrorMessage";
 import { ErrorList, errorToEventResult } from "../../../types/Errors";
+import RouterTable from "../../../router/router.table";
 
 
 let features: ProductFeaturesList = new ProductFeaturesList();
@@ -159,7 +160,7 @@ const EditSet = () => {
 
         if (result.success) {
 			toast.success(result.message);
-            navigate('/products');
+            navigate(RouterTable.products.root);
 		} else {
 			toast.error(result.message);
 
@@ -184,7 +185,7 @@ const EditSet = () => {
         ]} />
 
         {status == StoreStatus.LOADING ? <Loading /> : ''}
-        {status == StoreStatus.ERROR ? <Error text={stores.productsStore.lastError} /> : ''}
+        {status == StoreStatus.ERROR ? <ErrorMessage text={stores.productsStore.lastError} /> : ''}
         { status == StoreStatus.READY ? 
            
             /* Main component */
@@ -519,7 +520,7 @@ const EditSet = () => {
                     >
                         <MdOutlineCheck className="text-xl" />Update
                     </button>
-                    <NavLink to='/products' className="btn bg-base-300 btn-sm mt-0">
+                    <NavLink to={RouterTable.products.root} className="btn bg-base-300 btn-sm mt-0">
                         <MdClose className="text-xl" /> Cancel
                     </NavLink>
                 </div>

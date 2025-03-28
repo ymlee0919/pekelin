@@ -10,7 +10,8 @@ import { UpdatedCategory } from "../../../store/remote/categories/Categories.Typ
 import { StoreStatus } from "../../../store/remote/Store";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import Loading from "../../../components/Loading";
-import Error from "../../../components/Error";
+import ErrorMessage from "../../../components/ErrorMessage";
+import RouterTable from "../../../router/router.table";
 
 type FormValues = { file: FileList; category: string; description: string };
 
@@ -54,7 +55,7 @@ const EditCategory = () => {
 
 		if (result.success) {
 			toast.success(result.message);
-			navigate("/categories");
+			navigate(RouterTable.categories.root);
 		} else {
 			toast.error(result.message);
 
@@ -114,7 +115,7 @@ const EditCategory = () => {
 			/>
 			
 			{status == StoreStatus.LOADING ? <Loading /> : ""}
-			{status == StoreStatus.ERROR ? <Error text={stores.accountsStore.lastError} /> : ""}
+			{status == StoreStatus.ERROR ? <ErrorMessage text={stores.accountsStore.lastError} /> : ""}
 			{status == StoreStatus.READY ? (
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="panel mx-5 shadow-md">
@@ -234,7 +235,7 @@ const EditCategory = () => {
 					</div>
 					<div className="panel-footer text-right">
 						<button type="submit" className="btn btn-info btn-sm mr-5">Apply</button>
-						<Link className="btn btn-sm" to="/categories">Cancel</Link>
+						<Link className="btn btn-sm" to={RouterTable.categories.root}>Cancel</Link>
 					</div>
 				</div>
 			</form>) : <></>

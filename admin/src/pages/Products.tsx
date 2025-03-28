@@ -8,7 +8,7 @@ import { StoreStatus } from "../store/remote/Store";
 
 import Breadcrumbs from "../components/Breadcrumbs";
 import Loading from "../components/Loading";
-import Error  from "../components/Error";
+import ErrorMessage  from "../components/ErrorMessage";
 import toast from "react-hot-toast";
 import { BasicProductInfo } from "../store/remote/products/Products.Types";
 
@@ -126,7 +126,7 @@ const Products = () => {
 			/>
 
 			{status == StoreStatus.LOADING ? <Loading /> : ''}
-			{status == StoreStatus.ERROR ? <Error text={stores.productsStore.lastError} /> : ''}
+			{status == StoreStatus.ERROR ? <ErrorMessage text={stores.productsStore.lastError} /> : ''}
 			{status == StoreStatus.READY ? 
 				/** Main component */
 					<>

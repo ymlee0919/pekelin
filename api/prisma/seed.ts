@@ -15,6 +15,19 @@ async function main() {
                 password: crypt('Admin.2025')
             }
         });
+    
+    let modules = await prisma.systemModule.count();
+    if(modules == 0)
+        await prisma.systemModule.createMany({
+            data: [
+                { module: 'Roles', details: 'Manage system roles'},
+                { module: 'Account', details: 'Manage user accounts'},
+                { module: 'Categories', details: 'Manage product categories'},
+                { module: 'Products', details: 'Manage products and product variants'},
+                { module: 'Review', details: 'Manage client reviews'},
+                { module: 'Clients', details: 'Manage clients'},
+            ]
+        })
 
     console.log('Seed process completed')
 }

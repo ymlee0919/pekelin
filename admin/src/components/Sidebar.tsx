@@ -7,11 +7,14 @@ import {
 	MdLogout,
 	MdSave,
 	MdLink,
+	MdManageAccounts,
+	MdSupervisorAccount,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import toast from 'react-hot-toast';
 import useStores from '../hooks/useStores';
+import RouterTable from '../router/router.table';
 
 const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 	const stores = useStores();
@@ -51,7 +54,15 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 						</NavLink>
 					</li>
 					<li>
-						<NavLink to="/accounts" className="group text-sm text-gray-500 p-3 my-1">
+						<NavLink to={RouterTable.roles.root} className="group text-sm text-gray-500 p-3 my-1">
+							<span>
+								<MdManageAccounts className="text-xl" />
+							</span>
+							<span>Roles</span>
+						</NavLink>
+					</li>
+					<li>
+						<NavLink to={RouterTable.accounts.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
 								<MdAccountCircle className="text-xl" />
 							</span>
@@ -59,7 +70,7 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 						</NavLink>
 					</li>
 					<li>
-						<NavLink to="/categories" className="group text-sm text-gray-500 p-3 my-1">
+						<NavLink to={RouterTable.categories.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
 								<MdOutlineCases className="text-xl" />
 							</span>
@@ -67,7 +78,7 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 						</NavLink>
 					</li>
 					<li>
-						<NavLink to="/products" className="group text-sm text-gray-500 p-3 my-1">
+						<NavLink to={RouterTable.products.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
 								<MdBusinessCenter className="text-xl" />
 							</span>
@@ -75,7 +86,15 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 						</NavLink>
 					</li>
 					<li>
-						<NavLink to="/links" className="group text-sm text-gray-500 p-3 my-1">
+						<NavLink to={RouterTable.clients.root} className="group text-sm text-gray-500 p-3 my-1">
+							<span>
+								<MdSupervisorAccount className="text-xl" />
+							</span>
+							<span>Clients</span>
+						</NavLink>
+					</li>
+					<li>
+						<NavLink to={RouterTable.links.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
 								<MdLink className="text-xl" />
 							</span>

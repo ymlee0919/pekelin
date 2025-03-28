@@ -9,7 +9,8 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import { useEffect, useState } from "react";
 import { StoreStatus } from "../../../store/remote/Store";
 import Loading from "../../../components/Loading";
-import Error from "../../../components/Error";
+import ErrorMessage from "../../../components/ErrorMessage";
+import RouterTable from "../../../router/router.table";
 
 const UpdateAccount = () => {
 
@@ -39,7 +40,7 @@ const UpdateAccount = () => {
 
 		if (result.success) {
 			toast.success(result.message);
-            navigate('/accounts')
+            navigate(RouterTable.accounts.root)
 		} else {
 			toast.error(result.message);
 
@@ -82,7 +83,7 @@ const UpdateAccount = () => {
 				]}
 			/>
             {status == StoreStatus.LOADING ? <Loading /> : ""}
-			{status == StoreStatus.ERROR ? <Error text={stores.accountsStore.lastError} /> : ""}
+			{status == StoreStatus.ERROR ? <ErrorMessage text={stores.accountsStore.lastError} /> : ""}
 
 			{status == StoreStatus.READY ? (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -158,7 +159,7 @@ const UpdateAccount = () => {
                 </div>
                 <div className="panel-footer text-right">
                     <button type="submit" className="btn btn-info btn-sm mr-5">Apply</button>
-                    <NavLink className="btn btn-sm" to="/accounts">Cancel</NavLink>
+                    <NavLink className="btn btn-sm" to={RouterTable.accounts.root}>Cancel</NavLink>
                 </div>
             </div>
         </form>) : <></>

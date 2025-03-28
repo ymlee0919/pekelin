@@ -8,7 +8,7 @@ import { StoreStatus } from "../store/remote/Store";
 
 import Breadcrumbs from "../components/Breadcrumbs";
 import Loading from "../components/Loading";
-import Error  from "../components/Error";
+import ErrorMessage  from "../components/ErrorMessage";
 import toast from "react-hot-toast";
 import { BasicVariantInfo } from "../store/remote/variants/Variants.Types";
 import { useSelector } from 'react-redux'; 
@@ -119,7 +119,7 @@ const ProductVariants = () => {
 			/>
 
 			{status == StoreStatus.LOADING ? <Loading /> : ''}
-			{status == StoreStatus.ERROR ? <Error text={stores.variantsStore.lastError} /> : ''}
+			{status == StoreStatus.ERROR ? <ErrorMessage text={stores.variantsStore.lastError} /> : ''}
 			{status == StoreStatus.READY ? 
 				/** Main component */
 					<>

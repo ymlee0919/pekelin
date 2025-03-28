@@ -7,6 +7,7 @@ import { MdDone, MdOutlineCancel } from "react-icons/md";
 import useStores from "../../../hooks/useStores";
 import { NavLink, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
+import RouterTable from "../../../router/router.table";
 
 
 const NewAccount = () => {
@@ -50,7 +51,7 @@ const NewAccount = () => {
         // Treat resutl
 		if (result.success) {
 			toast.success(result.message);
-            navigate("/accounts");
+            navigate(RouterTable.accounts.root);
 		} else {
 			toast.error(result.message);
 
@@ -221,7 +222,7 @@ const NewAccount = () => {
                 </div>
                 <div className="panel-footer text-right">
                     <button type="submit" className="btn btn-info btn-sm mr-5">Create</button>
-                    <NavLink className="btn btn-sm" to="/accounts">Cancel</NavLink>
+                    <NavLink className="btn btn-sm" to={RouterTable.accounts.root}>Cancel</NavLink>
                 </div>
             </div>
         </form>

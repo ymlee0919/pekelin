@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import useStores from "../../../hooks/useStores";
 import Breadcrumbs from "../../../components/Breadcrumbs";
+import RouterTable from "../../../router/router.table";
 
 type CategoryFromValues = { 
 	category: string; 
@@ -45,7 +46,7 @@ const NewCategory = () => {
 		// Treat the result
 		if (result.success) {
 			toast.success(result.message);
-			navigate('/categories');
+			navigate(RouterTable.categories.root);
 		} else {
 			toast.error(result.message);
 
@@ -178,7 +179,7 @@ const NewCategory = () => {
                 </div>
                 <div className="panel-footer text-right">
                     <button type="submit" className="btn btn-info btn-sm mr-5">Create</button>
-                    <Link className="btn btn-sm" to="/categories">Cancel</Link>
+                    <Link className="btn btn-sm" to={RouterTable.categories.root}>Cancel</Link>
                 </div>
             </div>
         </form>

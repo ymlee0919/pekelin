@@ -14,15 +14,38 @@ datasource db {
 }
 
 model Accounts {
-  userId      Int     @id @default(autoincrement()) @map("user_id")
-  user        String  @unique
+  userId      Int       @id @default(autoincrement()) @map("user_id")
+  user        String    @unique
   name        String
-  email       String  @unique
+  email       String    @unique
   password    String
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime? @map("updated_at")
+  roleId      Int?
+  Role        Roles?    @relation(fields: [roleId], references: [roleId], "user_roles")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @map("updated_at") @updatedAt
 
   @@map("accounts")
+}
+
+model Roles {
+  roleId      Int             @id @default(autoincrement()) @map("role_id")
+  role        String
+  details     String
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime?       @updatedAt @map("updated_at")
+  modules     SystemModule[]  @relation("permitions")
+  user        Accounts[]      @relation("user_roles")
+
+  @@map("roles")
+}
+
+model SystemModule {
+  moduleId    Int     @id @default(autoincrement()) @map("module_id")
+  module      String
+  details     String
+  roles       Roles[] @relation("permitions")
+
+  @@map("modules")
 }
 
 model Categories {
@@ -37,7 +60,7 @@ model Categories {
   Products      Products[]
 
   createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime? @map("updated_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
   
   @@map("categories")
 }
@@ -71,7 +94,7 @@ model Products {
   Variants      ProductVariants[]
   
   createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime? @map("updated_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
 
   @@map("products")
 }
@@ -84,7 +107,7 @@ model ProductFeatures {
   content       String
 
   createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime? @map("updated_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
 
   @@map("product_features")
 }
@@ -106,7 +129,7 @@ model ProductVariants {
   Features      VariantsFeatures[]
 
   createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime? @map("updated_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
 
   @@map("product_variants")
 }
@@ -119,7 +142,7 @@ model VariantsFeatures {
   content       String
 
   createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime? @map("updated_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
 
   @@map("variants_features")
 }
@@ -138,7 +161,7 @@ model ReviewLinks {
   status        Status @default(READY)
   Review        Reviews?
   createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime? @map("updated_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
 
   @@map("review_link")
 }
@@ -150,7 +173,7 @@ model Reviews {
   comment       String
   Link          ReviewLinks @relation(fields: [linkId], references: [linkId])
   createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime? @map("updated_at")
+  updatedAt     DateTime? @updatedAt @map("updated_at")
 
   @@map("review")
 }
@@ -160,7 +183,18 @@ model Notifications {
   message         String
   wellRead        Boolean @default(false)
   createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime? @map("updated_at")
+  updatedAt       DateTime? @updatedAt @map("updated_at")
 
   @@map("notifications")
+}
+
+model Clients {
+  clientId  Int      @id @default(autoincrement()) @map("client_id")
+  name      String
+  place     String
+  phone     String?   // Optional field
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("clients")
 }

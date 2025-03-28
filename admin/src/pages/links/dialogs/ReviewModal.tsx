@@ -5,7 +5,7 @@ import { Review, ReviewLink } from "../../../store/remote/reviews/Reviews.Types"
 import { useEffect, useState } from "react";
 import { StoreStatus } from "../../../store/remote/Store";
 import Loading from "../../../components/Loading";
-import Error from "../../../components/Error";
+import ErrorMessage from "../../../components/ErrorMessage";
 import { BsStar, BsStarFill } from "react-icons/bs";
 
 export interface ReviewModalProps extends CommonProps {
@@ -42,7 +42,7 @@ const ReviewModal = (props : ReviewModalProps) => {
             <div className="modal-box bg-base-200">
                 <h3 className="font-bold text-lg pb-2">Review information</h3>
                 {status == StoreStatus.LOADING && <Loading />}
-			    {status == StoreStatus.ERROR && <Error text={error} />}
+			    {status == StoreStatus.ERROR && <ErrorMessage text={error} />}
 
 			    {(status == StoreStatus.READY && review) && <>
                     <p><strong>Client:</strong> {review.clientName}</p>

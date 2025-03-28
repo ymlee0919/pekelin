@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { MdDelete, MdEdit, MdFiberNew, MdOutlineAdd, MdOutlineRemoveRedEye, MdOutlineStar, MdVisibilityOff} from "react-icons/md";
 
 import useStores from "../../../hooks/useStores";
@@ -8,7 +8,7 @@ import { StoreStatus } from "../../../store/remote/Store";
 
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import Loading from "../../../components/Loading";
-import Error  from "../../../components/Error";
+import ErrorMessage  from "../../../components/ErrorMessage";
 import { BasicVariantInfo } from "../../../store/remote/variants/Variants.Types";
 import { Product, ProductFeature } from "../../../store/remote/products/Products.Types";
 
@@ -16,6 +16,7 @@ import { setCurrentProduct } from "../../../store/local/slices/productSlice";
 import { useDispatch } from "react-redux"; 
 import toast from "react-hot-toast";
 import DeleteVariantModal from "../../variants/dialogs/DeleteVariantModal";
+import RouterTable from "../../../router/router.table";
 
 const ProductInfo = () => {
 
@@ -82,7 +83,7 @@ const ProductInfo = () => {
 			/>
 
 			{status == StoreStatus.LOADING ? <Loading /> : ''}
-			{status == StoreStatus.ERROR ? <Error text={stores.variantsStore.lastError} /> : ''}
+			{status == StoreStatus.ERROR ? <ErrorMessage text={stores.variantsStore.lastError} /> : ''}
 			{status == StoreStatus.READY ? 
 				/** Main component */
 					<>
@@ -100,9 +101,11 @@ const ProductInfo = () => {
 								<div className="flex-1">
 									<p className="border-b text-2xl">
 										{product?.name} 
-										<NavLink to={`/products/${product?.productId}/${product?.isSet ? 'edit-set' : 'edit'}`} className="btn btn-info btn-xs btn-ghost mx-2">
+										<Link to={product?.isSet 
+												? RouterTable.products.edit(product?.productId || 0) 
+												: RouterTable.products.editSet(product?.productId || 0)}  className="btn btn-info btn-xs btn-ghost mx-2">
 											<MdEdit className="text-xl" />
-										</NavLink>
+										</Link>
 									</p>
 									<div className="flex">
 										<span className="text-sm flex-1">{product?.Category.category}</span>
@@ -112,12 +115,10 @@ const ProductInfo = () => {
 									<div >
 										<p className="mb-1 italic">{product?.description}</p>
 										{product?.Features.map((feature : ProductFeature) => {
-											return <>
-											<p key={feature.featureId} className="pl-2">
+											return <p key={feature.featureId} className="pl-2">
 												<strong>{feature.title}: </strong>
 												<span> {feature.content}</span>
 											</p> 
-											</>
 										})}
 									</div>
 								</div>
@@ -126,12 +127,12 @@ const ProductInfo = () => {
 							<fieldset>
 								<legend>Variants</legend>
 								<div className="text-right">
-									<NavLink
+									<Link
 										className="btn btn-primary btn-sm"
-										to={`/products/${product?.productId}/variants/new`}
+										to={RouterTable.variants.new(product?.productId || 0)}
 									>
 										<MdOutlineAdd className="text-xl" /> Add
-									</NavLink>
+									</Link>
 									<br></br>
 								</div>
 								<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -167,9 +168,9 @@ const ProductInfo = () => {
 																</button>
 															</div>
 															<div className="flex-none">
-																<NavLink to={`/products/${product?.productId}/variants/${variant.variantId}/edit`} className="btn btn-info btn-xs btn-outline btn-ghost">
+																<Link to={RouterTable.variants.edit(product?.productId || 0, variant.variantId)} className="btn btn-info btn-xs btn-outline btn-ghost">
 																	<MdEdit className="text-lg" />
-																</NavLink>
+																</Link>
 																<button
 																	className="btn btn-error btn-xs btn-outline btn-ghost mx-2"
 																	onClick={() => setVariant(variant)}

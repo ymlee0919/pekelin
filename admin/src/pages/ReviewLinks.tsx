@@ -4,7 +4,7 @@ import useStores from "../hooks/useStores";
 import { StoreStatus } from "../store/remote/Store";
 
 import Loading from "../components/Loading";
-import Error  from "../components/Error";
+import ErrorMessage  from "../components/ErrorMessage";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { ReviewLink } from "../store/remote/reviews/Reviews.Types";
 
@@ -65,7 +65,7 @@ const ReviewLinks =() => {
 			/>
 
 			{status == StoreStatus.LOADING ? <Loading /> : ""}
-			{status == StoreStatus.ERROR ? <Error text={stores.accountsStore.lastError} /> : ""}
+			{status == StoreStatus.ERROR ? <ErrorMessage text={stores.accountsStore.lastError} /> : ""}
 
 			{status == StoreStatus.READY ? (
 				/** Main component */

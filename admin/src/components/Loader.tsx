@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { StoreStatus } from "../store/remote/Store";
 import { setData } from "../store/local/slices/globalSlice";
 import { RootState } from "../store/local/store"; 
-import Error from "./Error";
+import ErrorMessage from "./ErrorMessage";
 
 const Loader = (props: CommonProps) => {
 
@@ -34,7 +34,7 @@ const Loader = (props: CommonProps) => {
     return (
 		<>
 			{status == StoreStatus.LOADING ? <Loading /> : ""}
-			{status == StoreStatus.ERROR ? <Error text={stores.dashboardStore.lastError} /> : ""}
+			{status == StoreStatus.ERROR ? <ErrorMessage text={stores.dashboardStore.lastError} /> : ""}
 			{status == StoreStatus.READY ? props.children : ""}
 		</>
 	);
