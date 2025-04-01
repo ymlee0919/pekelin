@@ -5,19 +5,20 @@ import {
 	MdOutlineCases,
 	MdAccountCircle,
 	MdLogout,
-	MdSave,
+	//MdSave,
 	MdLink,
 	MdManageAccounts,
 	MdSupervisorAccount,
+	MdConstruction,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import toast from 'react-hot-toast';
-import useStores from '../hooks/useStores';
+//import toast from 'react-hot-toast';
+//import useStores from '../hooks/useStores';
 import RouterTable from '../router/router.table';
 
 const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
-	const stores = useStores();
+	//const stores = useStores();
 
 	const {logout} = useAuth();
 	
@@ -25,7 +26,7 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 		logout();
 	}
 
-	const save = async () => {
+	/*const save = async () => {
 		let loadingToast = toast.loading("Saving database...");
 		let result = await stores.productsStore.save();
 		toast.dismiss(loadingToast);
@@ -35,11 +36,11 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 		} else {
 			toast.error(result.message);
 		}
-	}
+	}*/
 
  	return (
 		<aside
-			className={`drawer fixed lg:pt-14 lg:h-screen top-0 left-0 w-56 bg-gray-200 h-full lg:z-10 z-50 border-r border-gray-300 transform ${
+			className={`drawer fixed lg:pt-14 lg:h-screen top-0 left-0 w-60 bg-gray-200 h-full lg:z-10 z-50 border-r border-gray-300 transform ${
 				isOpen ? "translate-x-0" : "-translate-x-full"
 			} lg:translate-x-0 transition-transform duration-200 ease-in-out`}
 		>
@@ -94,6 +95,14 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 						</NavLink>
 					</li>
 					<li>
+						<NavLink to={RouterTable.orders.root} className="group text-sm text-gray-500 p-3 my-1">
+							<span>
+								<MdConstruction className="text-xl" />
+							</span>
+							<span>Orders</span>
+						</NavLink>
+					</li>
+					<li>
 						<NavLink to={RouterTable.links.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
 								<MdLink className="text-xl" />
@@ -102,7 +111,7 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 						</NavLink>
 					</li>
 					
-					<li></li>
+					{/*<li></li>
 					<li>
 						<a className="group text-sm text-gray-500 p-3 my-1"
 							onClick={save}
@@ -112,9 +121,9 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 							</span>
 							<span>Save</span>
 						</a>
-					</li>
+					</li>*/}
 					<li></li>
-					<li className='sm:invisible visible'>
+					<li className='sm:hidden block'>
 						<a onClick={handleLogout} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
 								<MdLogout className="text-xl" />

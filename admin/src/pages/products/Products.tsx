@@ -2,26 +2,26 @@ import { useCallback, useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { MdEdit, MdOutlineStar, MdFiberNew } from "react-icons/md";
 
-import useStores from "../hooks/useStores";
+import useStores from "../../hooks/useStores";
 
-import { StoreStatus } from "../store/remote/Store";
+import { StoreStatus } from "../../store/remote/Store";
 
-import Breadcrumbs from "../components/Breadcrumbs";
-import Loading from "../components/Loading";
-import ErrorMessage  from "../components/ErrorMessage";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import Loading from "../../components/Loading";
+import ErrorMessage  from "../../components/ErrorMessage";
 import toast from "react-hot-toast";
-import { BasicProductInfo } from "../store/remote/products/Products.Types";
+import { BasicProductInfo } from "../../store/remote/products/Products.Types";
 
-import { setProducts } from "../store/local/slices/globalSlice";
+import { setProducts } from "../../store/local/slices/globalSlice";
 import { useDispatch } from "react-redux"; 
 
 import type { CustomCellRendererProps } from 'ag-grid-react';
 import { GridOptions, RowDoubleClickedEvent} from "ag-grid-community";
 
-import { AgGridWrapper } from "../components/AgGridWrapper";
-import { useGrid } from "../hooks/useGrid";
-import ProductsTBar from "./products/components/ProductsTBar";
-import DeleteProductModal from "./products/dialogs/DeleteProductModal";
+import { AgGridWrapper } from "../../components/AgGridWrapper";
+import { useGrid } from "../../hooks/useGrid";
+import ProductsTBar from "./components/ProductsTBar";
+import DeleteProductModal from "./dialogs/DeleteProductModal";
 
 export interface ProductInfoForm {
 	price: number,

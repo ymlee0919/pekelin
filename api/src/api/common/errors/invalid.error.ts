@@ -1,4 +1,3 @@
-
 export class InvalidOperationError extends Error {
 
     constructor(message:string){

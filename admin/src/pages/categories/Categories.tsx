@@ -1,17 +1,17 @@
 import { useEffect, useState} from "react";
-import Breadcrumbs from "../components/Breadcrumbs";
-import { StoreStatus } from "../store/remote/Store";
-import useStores from "../hooks/useStores";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import { StoreStatus } from "../../store/remote/Store";
+import useStores from "../../hooks/useStores";
 import { MdOutlineAdd, MdEdit, MdDelete } from "react-icons/md";
-import Loading from "../components/Loading";
-import ErrorMessage  from "../components/ErrorMessage";
+import Loading from "../../components/Loading";
+import ErrorMessage  from "../../components/ErrorMessage";
 
 import { useDispatch } from "react-redux"; 
-import { CategoryContent } from "../store/remote/categories/Categories.Types";
-import { setCategories } from "../store/local/slices/globalSlice";
+import { CategoryContent } from "../../store/remote/categories/Categories.Types";
+import { setCategories } from "../../store/local/slices/globalSlice";
 import { Link } from "react-router-dom";
-import DeleteCategoryModal from "./categories/dialogs/DeleteCategoryModal";
-import RouterTable from "../router/router.table";
+import DeleteCategoryModal from "./dialogs/DeleteCategoryModal";
+import RouterTable from "../../router/router.table";
 
 const Categories = () => {
     const [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);

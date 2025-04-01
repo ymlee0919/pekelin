@@ -2,28 +2,28 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {MdFiberNew, MdOutlineStar } from "react-icons/md";
 
-import useStores from "../hooks/useStores";
+import useStores from "../../hooks/useStores";
 
-import { StoreStatus } from "../store/remote/Store";
+import { StoreStatus } from "../../store/remote/Store";
 
-import Breadcrumbs from "../components/Breadcrumbs";
-import Loading from "../components/Loading";
-import ErrorMessage  from "../components/ErrorMessage";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import Loading from "../../components/Loading";
+import ErrorMessage  from "../../components/ErrorMessage";
 import toast from "react-hot-toast";
-import { BasicVariantInfo } from "../store/remote/variants/Variants.Types";
+import { BasicVariantInfo } from "../../store/remote/variants/Variants.Types";
 import { useSelector } from 'react-redux'; 
-import { RootState } from "../store/local/store"; 
+import { RootState } from "../../store/local/store"; 
 
-import { setCurrentProduct } from "../store/local/slices/productSlice";
+import { setCurrentProduct } from "../../store/local/slices/productSlice";
 import { useDispatch } from "react-redux"; 
 
 import type { CustomCellRendererProps } from 'ag-grid-react';
 import { GridOptions} from "ag-grid-community";
 
-import { AgGridWrapper } from "../components/AgGridWrapper";
-import { useGrid } from "../hooks/useGrid";
-import VariantsTBar from "./variants/components/VariantsTBar";
-import DeleteVariantModal from "./variants/dialogs/DeleteVariantModal";
+import { AgGridWrapper } from "../../components/AgGridWrapper";
+import { useGrid } from "../../hooks/useGrid";
+import VariantsTBar from "./components/VariantsTBar";
+import DeleteVariantModal from "./dialogs/DeleteVariantModal";
 
 const ColImage = (params: CustomCellRendererProps<BasicVariantInfo>) => (
 	<span className="h-20">

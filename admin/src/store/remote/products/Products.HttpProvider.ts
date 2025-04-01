@@ -1,7 +1,7 @@
 import HttpProvider from "../HttpProvider";
 import { AxiosProvider } from "../Provider";
 
-import { BasicProductInfo, CreatedProduct, Product, UpdatedProduct } from "./Products.Types";
+import { BasicProductInfo, CreatedProduct, Product, TinyProductInfo, UpdatedProduct } from "./Products.Types";
 
 
 export default class ProductsHttpProvider extends AxiosProvider<Array<BasicProductInfo>> {
@@ -69,5 +69,16 @@ export default class ProductsHttpProvider extends AxiosProvider<Array<BasicProdu
 			this.handleError(error, "Unable to save the database");
 		}
 		return null;
+	}
+}
+
+export class ProductsListHttpProvider extends AxiosProvider<Array<TinyProductInfo>> {
+	async load(): Promise<Array<TinyProductInfo>> {
+		try {
+			return await HttpProvider.get<null, Array<TinyProductInfo>>("/products/list/tiny");
+		} catch (error: any) {
+			this.errorCode = error.response ? error.response.code : 0;
+			throw Error(error.response ? error.response.message : "Unable to load products list");
+		}
 	}
 }

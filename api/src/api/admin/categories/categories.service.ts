@@ -97,8 +97,6 @@ export class CategoriesService {
         if(exists)
             throw new InvalidOperationError(`The category ${category.category} already exists`);
 
-        console.log(image);
-
         // Create the newone
         let created = await this.database.categories.create({
             data : {

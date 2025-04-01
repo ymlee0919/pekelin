@@ -11,6 +11,9 @@ export const multerConfig = {
 
     localCategoriesDest: `${process.env.UPLOAD_ROOT}${process.env.CATEGORIES_LOCATION}`,
     categoriesDest: process.env.CATEGORIES_LOCATION,
+
+    localAuxDest: `${process.env.UPLOAD_ROOT}${process.env.AUX_LOCATION}`,
+    auxDest: process.env.AUX_LOCATION,
 };
 
 // Multer upload options

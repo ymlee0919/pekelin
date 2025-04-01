@@ -1,17 +1,17 @@
 import { useEffect, useState} from "react";
 
-import useStores from "../hooks/useStores";
-import { StoreStatus } from "../store/remote/Store";
+import useStores from "../../hooks/useStores";
+import { StoreStatus } from "../../store/remote/Store";
 
-import Loading from "../components/Loading";
-import ErrorMessage  from "../components/ErrorMessage";
-import Breadcrumbs from "../components/Breadcrumbs";
-import { Role } from "../store/remote/roles/Roles.Types";
+import Loading from "../../components/Loading";
+import ErrorMessage  from "../../components/ErrorMessage";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import { Role } from "../../store/remote/roles/Roles.Types";
 
-import { AgGridWrapper } from "../components/AgGridWrapper";
-import { useGrid } from "../hooks/useGrid";
-import RoleTBar from "./roles/components/RolesTBar";
-import DeleteRoleModal from "./roles/dialogs/DeleteRoleModal";
+import { AgGridWrapper } from "../../components/AgGridWrapper";
+import { useGrid } from "../../hooks/useGrid";
+import RoleTBar from "./components/RolesTBar";
+import DeleteRoleModal from "./dialogs/DeleteRoleModal";
 import { CustomCellRendererProps } from "ag-grid-react";
 
 const ColPermissions = (params: CustomCellRendererProps<Role>) => (

@@ -15,7 +15,7 @@ import { BadRequestException,
     UsePipes
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreatedProduct, UpdatedProduct, Product, BasicProductInfo } from "./products.types";
+import { CreatedProduct, UpdatedProduct, Product, BasicProductInfo, TinyProductInfo } from "./products.types";
 import { ProductDTO } from './products.dto';
 import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -40,6 +40,13 @@ export class ProductsController {
     @HttpCode(HttpStatus.OK)
     async getList(): Promise<Array<BasicProductInfo>>{
         let result = await this.manager.getList();
+        return result ?? [];
+    }
+
+    @Get('/list/tiny')
+    @HttpCode(HttpStatus.OK)
+    async getTinyList(): Promise<Array<TinyProductInfo>>{
+        let result = await this.manager.getTinyList();
         return result ?? [];
     }
 

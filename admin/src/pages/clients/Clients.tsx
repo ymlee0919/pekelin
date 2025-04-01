@@ -1,17 +1,17 @@
 import { useEffect, useState} from "react";
 
-import useStores from "../hooks/useStores";
-import { StoreStatus } from "../store/remote/Store";
+import useStores from "../../hooks/useStores";
+import { StoreStatus } from "../../store/remote/Store";
 
-import Loading from "../components/Loading";
-import ErrorMessage  from "../components/ErrorMessage";
-import Breadcrumbs from "../components/Breadcrumbs";
-import { Client } from "../store/remote/clients/Clients.Types";
+import Loading from "../../components/Loading";
+import ErrorMessage  from "../../components/ErrorMessage";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import { Client } from "../../store/remote/clients/Clients.Types";
 
-import { AgGridWrapper } from "../components/AgGridWrapper";
-import { useGrid } from "../hooks/useGrid";
-import ClientsTBar from "./clients/components/ClientsTBar";
-import DeleteClientModal from "./clients/dialogs/DeleteClientModal";
+import { AgGridWrapper } from "../../components/AgGridWrapper";
+import { useGrid } from "../../hooks/useGrid";
+import ClientsTBar from "./components/ClientsTBar";
+import DeleteClientModal from "./dialogs/DeleteClientModal";
 
 
 const Clients =() => {

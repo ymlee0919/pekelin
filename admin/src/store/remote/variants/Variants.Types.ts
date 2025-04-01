@@ -9,6 +9,14 @@ export interface VariantProduct {
     name: string;
 }
 
+export interface TinyVariantInfo {
+    variantId: number;
+    category: string;
+    product: string;
+    name: string;
+    remoteUrl: string;
+}
+
 export interface BasicVariantInfo {
     variantId: number;
     productId: number;

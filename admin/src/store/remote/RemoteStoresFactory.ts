@@ -2,14 +2,15 @@ import AccountsStore from "./accounts/Accounts.Store";
 import DashboarStore from "./dashboard/Dashboard.Store";
 import CategoryStore from "./categories/Categories.Store";
 
-import {ProductsStore, SingleProductStore} from "./products/Products.Store";
-import {VariantsStore, SingleVariantStore} from "./variants/Variants.Store";
+import {ProductsListStore, ProductsStore, SingleProductStore} from "./products/Products.Store";
+import {VariantsStore, SingleVariantStore, VariantsListStore} from "./variants/Variants.Store";
 import SetsStore from "./sets/Sets.Store";
 import SetSourceStore from "./sets/SetSource.Store";
 
 import ReviewLinksStore from "./reviews/Reviews.Store";
 import { PermissionsStore, RolesStore } from "./roles/Roles.Store";
 import ClientsStore from "./clients/Clients.Store";
+import OrdersStore from "./orders/Orders.Store";
 
 /**
  * Class to provide all stores
@@ -20,6 +21,8 @@ export default class RemoteStoresFactory {
     private _accountsStore: AccountsStore | null = null;
 
     private _productsStore: ProductsStore | null = null;
+
+    private _productsListStore: ProductsListStore | null = null;
 
     private _setsStore: SetsStore | null = null;
 
@@ -35,6 +38,8 @@ export default class RemoteStoresFactory {
 
     private _singleVariantStore: SingleVariantStore | null = null;
 
+    private _variantsListStore: VariantsListStore | null = null;
+
     private _reviewLinksStore: ReviewLinksStore | null = null;
 
     private _rolesStore: RolesStore | null = null;
@@ -42,6 +47,8 @@ export default class RemoteStoresFactory {
     private _permissionsStore: PermissionsStore | null = null;
 
     private _clientsStore: ClientsStore | null = null;
+
+    private _ordersStore: OrdersStore | null = null;
     
     // Public properties
     public get accountsStore() : AccountsStore {
@@ -63,6 +70,13 @@ export default class RemoteStoresFactory {
             this._singleProductsStore = new SingleProductStore();
 
         return this._singleProductsStore;
+    }
+
+    public get productsListStore() : ProductsListStore {
+        if(this._productsListStore == null)
+            this._productsListStore = new ProductsListStore();
+
+        return this._productsListStore;
     }
 
     public get dashboardStore() : DashboarStore {
@@ -90,6 +104,13 @@ export default class RemoteStoresFactory {
             this._singleVariantStore = new SingleVariantStore();
 
         return this._singleVariantStore;
+    }
+
+    public get variantsListStore() : VariantsListStore {
+        if(this._variantsListStore == null)
+            this._variantsListStore = new VariantsListStore();
+
+        return this._variantsListStore;
     }
 
     public get setsStore() : SetsStore {
@@ -132,5 +153,12 @@ export default class RemoteStoresFactory {
             this._clientsStore = new ClientsStore();
 
         return this._clientsStore;
+    }
+
+    public get ordersStore() : OrdersStore {
+        if(this._ordersStore == null)
+            this._ordersStore = new OrdersStore();
+
+        return this._ordersStore;
     }
 }

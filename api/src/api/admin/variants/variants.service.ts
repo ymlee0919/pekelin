@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InvalidOperationError } from "src/api/common/errors/invalid.error";
 import { DatabaseService } from "src/services/database/database.service";
 import { ImageSrc } from "src/api/common/types/common.types";
-import { BasicFeature, BasicVariant, BasicVariantInfo, CreatedVariant, UpdatedVariant, Variant } from "./variants.types";
+import { BasicFeature, BasicVariant, CreatedVariant, TinyVariantInfo, UpdatedVariant, Variant } from "./variants.types";
 import { VariantDTO } from "./variants.dto";
 import { FeatureDTO } from "../products/products.dto";
 import { FeatureStatus } from "../products/products.types";
@@ -77,7 +77,46 @@ export class VariantsService {
         });
 
         return result;
+    }
 
+    async getFullTinyList(): Promise<TinyVariantInfo[]> {
+        
+        await this.updateExpiryImages();
+
+        let list = await this.database.productVariants.findMany({
+            // Categories
+            select: {
+                variantId: true,
+                name: true,
+                remoteUrl: true,
+                Product: {
+                    select : {
+                        name: true,
+                        Category: {
+                            select: {
+                                category: true
+                            }
+                        }
+                    },
+                }
+            },
+            where : {
+                visible: true
+            },
+            orderBy: {
+                name: 'asc'
+            }
+        });
+
+        return list.map((item) => {
+            return {
+                variantId: item.variantId,
+                category: item.Product.Category.category,
+                product: item.Product.name,
+                name: item.name,
+                remoteUrl: item.remoteUrl
+            }
+        })
     }
 
     async get(productId: number, variantId: number) : Promise<Variant | null> {

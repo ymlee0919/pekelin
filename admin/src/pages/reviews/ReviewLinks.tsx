@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
 
-import useStores from "../hooks/useStores";
-import { StoreStatus } from "../store/remote/Store";
+import useStores from "../../hooks/useStores";
+import { StoreStatus } from "../../store/remote/Store";
 
-import Loading from "../components/Loading";
-import ErrorMessage  from "../components/ErrorMessage";
-import Breadcrumbs from "../components/Breadcrumbs";
-import { ReviewLink } from "../store/remote/reviews/Reviews.Types";
+import Loading from "../../components/Loading";
+import ErrorMessage  from "../../components/ErrorMessage";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import { ReviewLink } from "../../store/remote/reviews/Reviews.Types";
 
-import { AgGridWrapper } from "../components/AgGridWrapper";
-import { useGrid } from "../hooks/useGrid";
+import { AgGridWrapper } from "../../components/AgGridWrapper";
+import { useGrid } from "../../hooks/useGrid";
 import { RowDoubleClickedEvent } from "ag-grid-community";
 import toast from "react-hot-toast";
-import ReviewTBar from "./links/components/ReviewTBar";
-import NewLinkModal from "./links/dialogs/NewLinkModal";
-import ReviewModal from "./links/dialogs/ReviewModal";
+import ReviewTBar from "./components/ReviewTBar";
+import NewLinkModal from "./dialogs/NewLinkModal";
+import ReviewModal from "./dialogs/ReviewModal";
 
 const ReviewLinks =() => {
 

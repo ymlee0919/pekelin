@@ -16,6 +16,7 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { CsrfGuard } from 'src/services/guard/csrf.guard';
 import { RolesModule } from './roles/roles.module';
 import { ClientsModule } from './clients/clients.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
 	imports: [
@@ -29,6 +30,7 @@ import { ClientsModule } from './clients/clients.module';
 		ReviewsModule,
 		RolesModule,
 		ClientsModule,
+		OrdersModule,
 		JwtModule.register({
 			global: true,
 			secret: process.env.JWT_SECRET,

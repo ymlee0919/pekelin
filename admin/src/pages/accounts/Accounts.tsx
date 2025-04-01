@@ -1,20 +1,20 @@
 import { useEffect, useState} from "react";
 
-import useStores from "../hooks/useStores";
-import { StoreStatus } from "../store/remote/Store";
+import useStores from "../../hooks/useStores";
+import { StoreStatus } from "../../store/remote/Store";
 
-import Loading from "../components/Loading";
-import ErrorMessage  from "../components/ErrorMessage";
-import Breadcrumbs from "../components/Breadcrumbs";
-import { AccountContent } from "../store/remote/accounts/Accounts.Types";
+import Loading from "../../components/Loading";
+import ErrorMessage  from "../../components/ErrorMessage";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import { AccountContent } from "../../store/remote/accounts/Accounts.Types";
 
-import { setAccounts } from "../store/local/slices/globalSlice";
+import { setAccounts } from "../../store/local/slices/globalSlice";
 import { useDispatch } from "react-redux"; 
 
-import { AgGridWrapper } from "../components/AgGridWrapper";
-import { useGrid } from "../hooks/useGrid";
-import AccountsTBar from "./account/components/AccountsTBar";
-import DeleteAccountModal from "./account/dialogs/DeleteAccountModal";
+import { AgGridWrapper } from "../../components/AgGridWrapper";
+import { useGrid } from "../../hooks/useGrid";
+import AccountsTBar from "./components/AccountsTBar";
+import DeleteAccountModal from "./dialogs/DeleteAccountModal";
 
 
 const Accounts =() => {

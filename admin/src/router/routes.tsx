@@ -2,36 +2,40 @@ import { lazy, ReactNode, Suspense } from "react";
 import Loading from "../components/Loading";
 import RouterTable from "./router.table";
 
-const Roles = lazy(() => import("../pages/Roles"));
+const Roles = lazy(() => import("../pages/roles/Roles"));
 const NewRole = lazy(() => import("../pages/roles/pages/NewRole"));
 const EditRole = lazy(() => import("../pages/roles/pages/EditRole"));
 
-const Accounts = lazy(() => import("../pages/Accounts"));
-const NewAccount = lazy(() => import("../pages/account/pages/NewAccount"));
-const EditAccount = lazy(() => import("../pages/account/pages/EditAccount"));
-const CredentialsAccount = lazy(() => import("../pages/account/pages/CredentialsAccount"));
+const Accounts = lazy(() => import("../pages/accounts/Accounts"));
+const NewAccount = lazy(() => import("../pages/accounts/pages/NewAccount"));
+const EditAccount = lazy(() => import("../pages/accounts/pages/EditAccount"));
+const CredentialsAccount = lazy(() => import("../pages/accounts/pages/CredentialsAccount"));
 
-const Products = lazy(() => import("../pages/Products"));
+const Products = lazy(() => import("../pages/products/Products"));
 const NewProduct = lazy(() => import("../pages/products/pages/NewProduct"));
 const EditProduct = lazy(() => import("../pages/products/pages/EditProduct"));
 const ProductInfo = lazy(() => import("../pages/products/pages/ProductInfo"));
 
-const Categories = lazy(() => import("../pages/Categories"));
+const Categories = lazy(() => import("../pages/categories/Categories"));
 const NewCategory = lazy(() => import("../pages/categories/pages/NewCategory"));
 const EditCategory = lazy(() => import("../pages/categories/pages/EditCategory"));
 
-const ProductVariants = lazy(() => import("../pages/ProductVariants"));
+const ProductVariants = lazy(() => import("../pages/variants/ProductVariants"));
 const NewVariant = lazy(() => import("../pages/variants/pages/NewVariant"));
 const EditVariant = lazy(() => import("../pages/variants/pages/EditVariant"));
 
 const NewSet = lazy(() => import("../pages/products/pages/NewSet"));
 const EditSet = lazy(() => import("../pages/products/pages/EditSet"));
 
-const ReviewLinks = lazy(() => import("../pages/ReviewLinks"));
+const ReviewLinks = lazy(() => import("../pages/reviews/ReviewLinks"));
 
-const Clients = lazy(() => import("../pages/Clients"));
+const Clients = lazy(() => import("../pages/clients/Clients"));
 const NewClient = lazy(() => import("../pages/clients/pages/NewClient"));
 const EditClient = lazy(() => import("../pages/clients/pages/EditClient"));
+
+const Orders = lazy(() => import("../pages/orders/Orders"));
+const NewOrder = lazy(() => import("../pages/orders/pages/NewOrder"));
+const EditOrder = lazy(() => import("../pages/orders/pages/EditOrder"));
 
 export type Route = {
   path: string;
@@ -154,6 +158,20 @@ const routes : Route[] = [
         path: RouterTable.clients.edit(':clientId'),
         permission: "Clients",
         element: <Suspense fallback={<Loading/>}> <EditClient /> </Suspense>
+    },
+    {
+        path: RouterTable.orders.root,
+        permission: "Orders",
+        element: <Suspense fallback={<Loading/>}> <Orders /> </Suspense>
+    },
+    {
+        path: RouterTable.orders.new,
+        permission: "Orders",
+        element: <Suspense fallback={<Loading/>}> <NewOrder /> </Suspense>
+    },{
+        path: RouterTable.orders.edit(':orderId'),
+        permission: "Orders",
+        element: <Suspense fallback={<Loading/>}> <EditOrder /> </Suspense>
     },
 ];
 

@@ -1,7 +1,7 @@
 import { EventResult } from "../../../types/Events";
 import { Store } from "../Store";
-import HttpProductsProvider from "./Products.HttpProvider";
-import { BasicProductInfo, CreatedProduct, Product, UpdatedProduct } from "./Products.Types";
+import HttpProductsProvider, { ProductsListHttpProvider } from "./Products.HttpProvider";
+import { BasicProductInfo, CreatedProduct, Product, TinyProductInfo, UpdatedProduct } from "./Products.Types";
 
 export interface ProductSearch {
 	productId: number;
@@ -148,3 +148,19 @@ export class ProductsStore extends Store<Array<BasicProductInfo>> {
 	}
 }
 
+export class ProductsListStore extends Store<TinyProductInfo[]> {
+	private _provider: ProductsListHttpProvider;
+
+	constructor() {
+		super();
+		this._provider = new ProductsListHttpProvider();
+	}
+
+	protected get provider(): ProductsListHttpProvider {
+		return this._provider as ProductsListHttpProvider;
+	}
+
+	protected async getData(): Promise<TinyProductInfo[]> {
+		return await this.provider.load();
+	}
+}

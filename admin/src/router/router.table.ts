@@ -58,6 +58,14 @@ const RouterTable = {
 
         edit: (clientId:string|number) => `/clients/${clientId}/edit`,
     },
+
+    orders : {
+        root: '/orders',
+
+        new: '/orders/new',
+
+        edit: (orderId:string|number) => `/orders/${orderId}/edit`,
+    },
 }
 
 export default RouterTable;

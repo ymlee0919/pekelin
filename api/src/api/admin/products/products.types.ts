@@ -16,6 +16,13 @@ export interface ProductCategory {
     category: string;
 }
 
+export interface TinyProductInfo {
+    productId: number;
+    category: string;
+    name: string;
+    remoteUrl: string;
+}
+
 export interface BasicProductInfo {
     productId: number;
     category: string;

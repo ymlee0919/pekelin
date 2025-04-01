@@ -24,6 +24,14 @@ export interface BasicVariantInfo {
     visible: boolean;
 }
 
+export interface TinyVariantInfo {
+    variantId: number;
+    category: string;
+    product: string;
+    name: string;
+    remoteUrl: string;
+}
+
 export interface BasicVariant {
     variantId: number;
     productId: number;

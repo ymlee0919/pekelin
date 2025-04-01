@@ -1,7 +1,7 @@
 import { EventResult } from "../../../types/Events";
 import { Store } from "../Store";
-import HttpVariantsProvider, { VariantSearch } from "./Variants.HttpProvider";
-import { BasicVariantInfo, CreatedVariant, Variant, UpdatedVariant } from "./Variants.Types";
+import HttpVariantsProvider, { VariantSearch, VariantsListHttpProvider } from "./Variants.HttpProvider";
+import { BasicVariantInfo, CreatedVariant, Variant, UpdatedVariant, TinyVariantInfo } from "./Variants.Types";
 
 export interface StoreVariantSearch {
 	productId: number;
@@ -23,6 +23,23 @@ export class SingleVariantStore extends Store<Variant, StoreVariantSearch> {
 	protected async getData(params: StoreVariantSearch): Promise<Variant> {
 		let info = await this.provider.get(params.productId, params.variantId);
 		return info;
+	}
+}
+
+export class VariantsListStore extends Store<TinyVariantInfo[]> {
+	private _provider: VariantsListHttpProvider;
+
+	constructor() {
+		super();
+		this._provider = new VariantsListHttpProvider();
+	}
+
+	protected get provider(): VariantsListHttpProvider {
+		return this._provider as VariantsListHttpProvider;
+	}
+
+	protected async getData(): Promise<TinyVariantInfo[]> {
+		return await this.provider.load();
 	}
 }
 

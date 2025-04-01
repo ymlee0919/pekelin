@@ -195,6 +195,30 @@ model Clients {
   phone     String?   // Optional field
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  orders    Orders[]
 
   @@map("clients")
 }
+
+enum OrderStatus {
+  PENDING
+  READY
+  DELIVERED
+}
+
+model Orders {
+  orderId      Int         @id @default(autoincrement()) @map("order_id")
+  title        String
+  details      String?
+  note         String?
+  productImage String?     @map("product_image")
+  status       OrderStatus @default(PENDING)
+  clientId     Int         @map("client_id")
+  Client       Clients     @relation(fields: [clientId], references: [clientId])
+  
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  
+  @@map("orders")
+}
+

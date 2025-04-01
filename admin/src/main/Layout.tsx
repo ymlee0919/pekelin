@@ -45,7 +45,7 @@ const Layout: React.FC = () => {
         <Sidebar isOpen={isSidebarOpen} />
         <main id='working-area'
             ref={workspaceRef}
-            className={`flex-grow p-4 pr-6 mt-20 lg:ml-60  text-gray-500 ${
+            className={`flex-grow p-4 pr-6 mt-20 lg:ml-64  text-gray-500 ${
             isSidebarOpen && 'pointer-events-none'
             }`}
         >

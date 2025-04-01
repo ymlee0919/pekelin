@@ -1,7 +1,7 @@
 import HttpProvider from "../HttpProvider";
 import { AxiosProvider } from "../Provider";
 
-import { BasicVariantInfo, CreatedVariant, Variant, UpdatedVariant } from "./Variants.Types";
+import { BasicVariantInfo, CreatedVariant, Variant, UpdatedVariant, TinyVariantInfo } from "./Variants.Types";
 
 export interface VariantSearch {
 	productId: number
@@ -62,5 +62,16 @@ export default class VariantsHttpProvider extends AxiosProvider<Array<BasicVaria
 			this.handleError(error, "Unable to delete the product variant");
 		}
 		return true;
+	}
+}
+
+export class VariantsListHttpProvider extends AxiosProvider<Array<TinyVariantInfo>> {
+	async load(): Promise<Array<TinyVariantInfo>> {
+		try {
+			return await HttpProvider.get<null, Array<TinyVariantInfo>>(`/products/variants/list`);
+		} catch (error: any) {
+			this.errorCode = error.response ? error.response.code : 0;
+			throw Error(error.response ? error.response.message : "Unable to load variants list");
+		}
 	}
 }

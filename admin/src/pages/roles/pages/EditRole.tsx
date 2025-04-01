@@ -21,7 +21,8 @@ interface RoleFormValues {
 
 const EditRole: React.FC = () => {
 
-	const { roleId } = useParams<{ roleId: string }>(); // Extract roleId from URL params
+    // Extract roleId from URL params
+	const { roleId } = useParams<{ roleId: string }>();
 	const navigate = useNavigate();
 	const stores = useStores();
 

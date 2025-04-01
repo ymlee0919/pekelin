@@ -3,7 +3,7 @@ import { InvalidOperationError } from "src/api/common/errors/invalid.error";
 import { DatabaseService } from "src/services/database/database.service";
 import { FeatureDTO, ProductDTO, ProductSetDTO } from "./products.dto";
 import { ImageSrc } from "src/api/common/types/common.types";
-import { Product, CreatedProduct, UpdatedProduct, BasicProduct, BasicProductInfo, BasicFeature, FeatureStatus, UpdatedSet, CategorySource, ProductSet } from "./products.types";
+import { Product, CreatedProduct, UpdatedProduct, BasicProduct, BasicProductInfo, BasicFeature, FeatureStatus, UpdatedSet, CategorySource, ProductSet, TinyProductInfo } from "./products.types";
 import { name2url } from "src/services/utils/string.utils";
 import { CloudService } from 'src/services/cloud/cloud.service';
 
@@ -144,8 +144,6 @@ export class ProductsService {
                     name: 'asc'
                 }
             ]
-                
-            
         });
         
         // Format the result to match the desired output
@@ -162,6 +160,46 @@ export class ProductsService {
             isBestSeller: product.isBestSeller,
             isNew: product.isNew,
             visible: product.visible,
+        }));
+
+        return result;
+    }
+
+    async getTinyList(): Promise<TinyProductInfo[]> {
+
+        await this.updateExpiryImages();
+
+        const productsWithVariantsCount = await this.database.products.findMany({
+            select: {
+                productId: true,
+                name: true,
+                remoteUrl: true,
+                Category: {
+                    select: {
+                        category: true
+                    }
+                }
+            },
+            where: {
+                visible: {
+                    equals: true
+                }
+            },
+            orderBy: [{
+                Category : {
+                    categoryId: 'asc'
+                } }, {
+                    name: 'asc'
+                }
+            ]
+        });
+        
+        // Format the result to match the desired output
+        const result = productsWithVariantsCount.map(product => ({
+            productId: product.productId,
+            name: product.name,
+            category: product.Category.category,
+            remoteUrl: product.remoteUrl,
         }));
 
         return result;

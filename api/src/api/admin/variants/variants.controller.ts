@@ -14,7 +14,7 @@ import { BadRequestException,
     Patch
 } from '@nestjs/common';
 import { VariantsService } from './variants.service';
-import { CreatedVariant, UpdatedVariant, BasicVariant, Variant } from "./variants.types";
+import { CreatedVariant, UpdatedVariant, BasicVariant, Variant, TinyVariantInfo } from "./variants.types";
 import { VariantDTO } from './variants.dto';
 import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -22,7 +22,6 @@ import { multerConfig, MulterMemoryOptions } from 'src/services/files/multer.opt
 import { FileService } from 'src/services/files/file.services';
 import { CloudService } from 'src/services/cloud/cloud.service';
 import { ImageSrc } from 'src/api/common/types/common.types';
-import { plainToInstance } from 'class-transformer';
 import { CropPngFilePipe } from 'src/services/pipes/crop.PngFile.pipe';
 import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
 
@@ -35,9 +34,17 @@ export class VariantsController {
         private readonly cloudService: CloudService
     ){}
 
-    @Get(':productId/variants')
+    @Get('/variants/list')
     @HttpCode(HttpStatus.OK)
     async getList(
+    ): Promise<Array<TinyVariantInfo>>{
+        let result = await this.manager.getFullTinyList()
+        return result ?? [];
+    }
+
+    @Get(':productId/variants')
+    @HttpCode(HttpStatus.OK)
+    async getProductList(
         @Param('productId', CustomParseIntPipe) productId: number
     ): Promise<Array<BasicVariant>>{
         let result = await this.manager.getList(productId);
