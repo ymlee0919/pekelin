@@ -9,7 +9,8 @@ import {
 	MdLink,
 	MdManageAccounts,
 	MdSupervisorAccount,
-	MdConstruction,
+	MdOutlineAssignmentTurnedIn,
+	MdHandyman,
 } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -97,9 +98,17 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 					<li>
 						<NavLink to={RouterTable.orders.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
-								<MdConstruction className="text-xl" />
+								<MdOutlineAssignmentTurnedIn className="text-xl" />
 							</span>
 							<span>Orders</span>
+						</NavLink>
+					</li>
+					<li>
+						<NavLink to={RouterTable.production.root} className="group text-sm text-gray-500 p-3 my-1">
+							<span>
+								<MdHandyman className="text-xl" />
+							</span>
+							<span>Production</span>
 						</NavLink>
 					</li>
 					<li>

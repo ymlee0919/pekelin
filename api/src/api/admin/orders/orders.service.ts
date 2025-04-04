@@ -1,6 +1,6 @@
 import { Injectable} from '@nestjs/common';
 import { DatabaseService } from "src/services/database/database.service";
-import { OrderDTO, OrderStatusDTO } from './orders.dto';
+import { CreateOrderDTO, OrdersFilterDTO, OrderStatusDTO, UpdateOrderDTO } from './orders.dto';
 import { Order, OrderContent, OrderEntity } from './orders.types';
 import { ImageSrc } from 'src/api/common/types/common.types';
 import { NotFoundError } from 'src/api/common/errors/notFound.error';
@@ -41,7 +41,8 @@ export class OrdersService {
         }
     }
 
-    async findAll(): Promise<OrderContent[]> {
+    async findAll(filter: OrdersFilterDTO|null): Promise<OrderContent[]> {
+        
         let orders = await this.database.orders.findMany({
             include: {
                 Client: {
@@ -50,6 +51,7 @@ export class OrdersService {
                     }
                 }
             },
+            where : (filter && filter.status ? {status: filter.status} : undefined),
             orderBy: [
                 { createdAt: 'desc' },
                 { clientId: 'asc'}
@@ -61,8 +63,10 @@ export class OrdersService {
                 orderId: order.orderId,
                 clientId: order.clientId,
                 client: order.Client.name,
+                name: order.name,
                 title: order.title,
                 details: order.details,
+                note: order.note,
                 image: order.productImage,
                 status: order.status,
                 createdAt: order.createdAt
@@ -94,29 +98,58 @@ export class OrdersService {
         
     }
 
-    async create(newOrder: OrderDTO) : Promise<OrderEntity> {
+    // Generate order name [MonthYear-00N]
+    async generateOrderName(): Promise<string> {
+        const currentDate = new Date();
+        const monthName = currentDate.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+        const year = currentDate.getFullYear().toString().slice(-2);
+
+        const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+        const orderCount = await this.database.orders.count({
+            where: {
+            createdAt: {
+                gte: startOfMonth,
+                lte: endOfMonth,
+            },
+            },
+        });
+
+        const nextOrderNumber = (orderCount + 1).toString().padStart(3, '0');
+
+        return `${monthName}${year}-${nextOrderNumber}`;
+    }
+
+    async create(newOrder: CreateOrderDTO) : Promise<OrderEntity> {
         
         // Validate the product variant and the client
         await this.validateClientExists(newOrder.clientId);
+        let orderName = await this.generateOrderName();
+
+        let order = {name: orderName, ...newOrder}
 
         return await this.database.orders.create({
-            data: newOrder
+            data: order
         })
     }
 
-    async update(orderId: number, newOrder: OrderDTO) : Promise<OrderEntity>{
+    async update(orderId: number, newOrder: UpdateOrderDTO) : Promise<OrderEntity>{
         
         let currentOrder = await this.database.orders.findUnique({where: {orderId}});
         if(!currentOrder)
             throw new NotFoundError("Order not found")
         
         // Validate the product variant and the client
-        await this.validateClientExists(newOrder.clientId);
+        if(newOrder.clientId)
+            await this.validateClientExists(newOrder.clientId);
 
         let order: OrderEntity = await this.database.orders.update({
             where: { orderId },
             data: newOrder,
         });
+
+        console.log(newOrder);
 
         return order;
     }

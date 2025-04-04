@@ -203,11 +203,14 @@ model Clients {
 enum OrderStatus {
   PENDING
   READY
+  DISPATCHED
   DELIVERED
+  CANCELLED
 }
 
 model Orders {
   orderId      Int         @id @default(autoincrement()) @map("order_id")
+  name         String      @default("Order")
   title        String
   details      String?
   note         String?

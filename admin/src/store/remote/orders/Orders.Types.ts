@@ -1,15 +1,24 @@
 export enum OrderStatus {
-	PENDING, READY, DELIVERED
+	PENDING = 'PENDING',
+	READY = 'READY', 
+	DISPATCHED = 'DISPATCHED',
+	DELIVERED = 'DELIVERED', 
+	CANCELLED = 'CANCELLED'
+}
+
+export type OrderSearch = {
+	status? : OrderStatus
 }
 
 export type OrderContent = {
 	orderId: number;
 	clientId: number;
+	name: string;
 	client: string;
 	title: string;
 	details?: string;
 	note?: string;
-	productImage?: string;
+	image?: string;
 	status: OrderStatus;
 	createdAt: Date;
 }
@@ -22,6 +31,7 @@ type OrderClient = {
 
 export type Order = {
 	orderId: number;
+	name: string;
 	title: string;
 	details?: string;
 	note?: string;
@@ -36,6 +46,7 @@ export type Order = {
 
 export type OrderEntity = {
 	orderId: number;
+	name: string;
 	title: string;
 	details?: string;
 	note?: string;
@@ -50,5 +61,6 @@ export interface OrderDTO {
     clientId: number;
     title: string;
     details?: string;
+	note?: string;
     productImage?: string;
 }

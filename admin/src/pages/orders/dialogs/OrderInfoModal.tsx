@@ -37,7 +37,7 @@ const OrderInfoModal = (props : OrderInfoModalProps) => {
                 {status == StoreStatus.ERROR ? <ErrorMessage text={loadingError} /> : null}
 
                 {(status == StoreStatus.READY && order) ? (<>
-                    <h3 className="font-bold text-lg pb-2">Order details</h3>
+                    <h3 className="font-bold text-lg pb-2">Order {order.name}</h3>
                     <p className="py-2"><strong>Order: </strong> {order.title}</p>
                     {order.details && 
                         <p className="py-2"><strong>Details: </strong> {order.details}</p>

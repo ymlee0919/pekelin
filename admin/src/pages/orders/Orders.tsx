@@ -6,7 +6,7 @@ import { StoreStatus } from "../../store/remote/Store";
 import Loading from "../../components/Loading";
 import ErrorMessage  from "../../components/ErrorMessage";
 import Breadcrumbs from "../../components/Breadcrumbs";
-import { OrderContent } from "../../store/remote/orders/Orders.Types";
+import { OrderContent, OrderStatus } from "../../store/remote/orders/Orders.Types";
 
 //import { setOrders } from "../../store/local/slices/globalSlice";
 //import { useDispatch } from "react-redux"; 
@@ -15,8 +15,21 @@ import { AgGridWrapper } from "../../components/AgGridWrapper";
 import { useGrid } from "../../hooks/useGrid";
 import OrdersTBar from "./components/OrdersTBar";
 import DeleteOrderModal from "./dialogs/DeleteOrderModal";
-import { RowDoubleClickedEvent } from "ag-grid-community";
+import { GridOptions, RowDoubleClickedEvent } from "ag-grid-community";
 import OrderInfoModal from "./dialogs/OrderInfoModal";
+import { errorToEventResult } from "../../types/Errors";
+import toast from "react-hot-toast";
+import { EventResult } from "../../types/Events";
+
+
+const gridOptions : GridOptions<OrderContent> = {
+	rowClassRules: {
+	  'bg-red-200 text-red-600 font-semibold': (params) => params.data?.status == OrderStatus.CANCELLED,
+	  'bg-green-200 text-green-700 font-semibold': (params) => params.data?.status == OrderStatus.DELIVERED,
+	  'bg-blue-100 italic': (params) => params.data?.status == OrderStatus.READY,
+	  'bg-orange-200': (params) => params.data?.status == OrderStatus.DISPATCHED,
+	}
+};
 
 const Orders =() => {
 
@@ -26,6 +39,28 @@ const Orders =() => {
 	//const dispatch = useDispatch();
 
     const stores = useStores();
+
+	const changeStatus = async (status: OrderStatus) : Promise<EventResult> => {
+		try {
+			return await stores.ordersStore.setStatus(selectedItem?.orderId || 0, status);
+		}
+		catch (error) {
+			return errorToEventResult(error, "Unable to delete the order");
+		}
+	}
+
+	const onChangeStatus = async (status: OrderStatus) => {
+		let loadingToast = toast.loading('Updating order...');
+        let result = await changeStatus(status);
+        toast.dismiss(loadingToast);
+
+        if(result.success) {
+            toast.success(result.message);
+            reload();
+        }
+        else 
+            toast.error(result.message);
+	}
 
 	// General functions
     const reload = () => {
@@ -81,16 +116,19 @@ const Orders =() => {
 									<OrdersTBar 
 										selectedItem={selectedItem} 
 										onClickDelete={() => {setShowDelete(true)}}
+										onClickStatus={onChangeStatus}
 									/>
 									<div className="max-w-full">
 										<AgGridWrapper<OrderContent>
 											rowData={rowData}
 											columnDefs={[
+												{ field: "name", headerName: "Order"},
 												{ field: "client", flex: 3},
 												{ field: "title", flex: 5},
 												{ field: "createdAt", valueFormatter: params => new Date(params.value || Date.now).toLocaleDateString()},
 												{ field: "status"}
 											]}
+											gridOptions={gridOptions}
 											onRowSelected={onRowSelected}
 											onRowDoubleClicked={onRowDoubleClicked}
 										/>

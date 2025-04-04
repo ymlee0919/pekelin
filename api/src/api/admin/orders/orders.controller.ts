@@ -8,11 +8,12 @@ import {
     Delete,
     BadRequestException,
     NotFoundException,
+    Query,
   } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
 import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
-import { OrderDTO, OrderStatusDTO } from './orders.dto';
+import { CreateOrderDTO, OrdersFilterDTO, OrderStatusDTO, UpdateOrderDTO } from './orders.dto';
 import { Order, OrderContent, OrderEntity } from './orders.types';
 import { NotFoundError } from 'src/api/common/errors/notFound.error';
 
@@ -23,8 +24,9 @@ export class OrdersController {
     ) {}
   
     @Get()
-    findAll() : Promise<OrderContent[]> {
-        return this.manager.findAll();
+    findAll(@Query() filterDto: OrdersFilterDTO) : Promise<OrderContent[]> {
+        const { status } = filterDto;
+        return this.manager.findAll(!!status ? filterDto : null);
     }
   
     @Get(':orderId')
@@ -42,7 +44,7 @@ export class OrdersController {
     }
 
     @Post()
-    async create( @Body() order: OrderDTO, ) : Promise<OrderEntity>  {
+    async create( @Body() order: CreateOrderDTO, ) : Promise<OrderEntity>  {
         
         try {
             let created = await this.manager.create(order);
@@ -60,10 +62,9 @@ export class OrdersController {
   
     
     @Patch(':orderId')
-    
     async update(
         @Param('orderId', CustomParseIntPipe) orderId: number,
-        @Body() order: OrderDTO,
+        @Body() order: UpdateOrderDTO,
     ) : Promise<OrderEntity> {
         try {
             let updated = await this.manager.update(orderId, order);

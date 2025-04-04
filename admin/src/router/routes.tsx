@@ -37,6 +37,8 @@ const Orders = lazy(() => import("../pages/orders/Orders"));
 const NewOrder = lazy(() => import("../pages/orders/pages/NewOrder"));
 const EditOrder = lazy(() => import("../pages/orders/pages/EditOrder"));
 
+const Production = lazy(() => import("../pages/production/Production"));
+
 export type Route = {
   path: string;
   permission: string;
@@ -172,6 +174,10 @@ const routes : Route[] = [
         path: RouterTable.orders.edit(':orderId'),
         permission: "Orders",
         element: <Suspense fallback={<Loading/>}> <EditOrder /> </Suspense>
+    },{
+        path: RouterTable.production.root,
+        permission: "Production",
+        element: <Suspense fallback={<Loading/>}> <Production /> </Suspense>
     },
 ];
 

@@ -1,3 +1,9 @@
-- Make an object for manage the routes and the components
+- Edit and set note - OK
+- Change status in orders page - OK
+- Show different colors according the status - OK
+- Test
+- Upload
 
-- Load dashboard information and refresh with each change is made
+- Make reviews from registered clients
+
+- Implement role access system

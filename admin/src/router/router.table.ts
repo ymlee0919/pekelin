@@ -66,6 +66,12 @@ const RouterTable = {
 
         edit: (orderId:string|number) => `/orders/${orderId}/edit`,
     },
+
+    production : {
+        root: '/production',
+        
+        edit: (orderId:string|number) => `/orders/${orderId}/edit`,
+    },
 }
 
 export default RouterTable;

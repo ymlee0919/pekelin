@@ -3,6 +3,7 @@ import { OrderStatus } from '@prisma/client';
 export type OrderContent = {
 	orderId: number;
     clientId: number;
+    name: string;
     client: string;
     title: string;
     details?: string;
@@ -20,6 +21,7 @@ type OrderClient = {
 
 export type Order = {
 	orderId: number;
+	name: string;
 	title: string;
 	details?: string;
 	note?: string;
@@ -34,6 +36,7 @@ export type Order = {
 
 export type OrderEntity = {
 	orderId: number;
+	name: string;
 	title: string;
 	details?: string;
 	note?: string;

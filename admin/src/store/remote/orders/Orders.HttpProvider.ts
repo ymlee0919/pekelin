@@ -1,11 +1,13 @@
 import HttpProvider from "../HttpProvider";
 import { AxiosProvider } from "../Provider";
-import { Order, OrderContent, OrderDTO, OrderEntity } from "./Orders.Types";
+import { Order, OrderContent, OrderDTO, OrderEntity, OrderSearch, OrderStatus } from "./Orders.Types";
 
-export default class OrdersHttpProvider extends AxiosProvider<Array<OrderContent>> {
-	async load(): Promise<Array<OrderContent>> {
+export default class OrdersHttpProvider extends AxiosProvider<Array<OrderContent>, OrderSearch> {
+	async load(params: OrderSearch|null): Promise<Array<OrderContent>> {
 		try {
-			return await HttpProvider.get<null, Array<OrderContent>>("/orders");
+			return await HttpProvider.get<null, Array<OrderContent>>("/orders", {
+				params
+			});
 		} catch (error: any) {
 			this.errorCode = error.response ? error.response.code : 0;
 			throw Error(error.response ? error.response.message : "Unable to load orders");
@@ -32,7 +34,7 @@ export default class OrdersHttpProvider extends AxiosProvider<Array<OrderContent
 	}
 
 	
-	async updateOrder(orderId: number, newOrder: OrderDTO): Promise<OrderEntity | null> {
+	async updateOrder(orderId: number, newOrder: Partial<OrderDTO>): Promise<OrderEntity | null> {
 		try {
 			let updated = await HttpProvider.patch<OrderDTO, OrderEntity>(`/orders/${orderId}`, newOrder);
 			return updated;
@@ -48,6 +50,18 @@ export default class OrdersHttpProvider extends AxiosProvider<Array<OrderContent
 			await HttpProvider.delete<null, any>(`/orders/${orderId}`);
 		} catch (error: any) {
 			this.handleError(error, "Unable to delete the order");
+		}
+
+		return true;
+	}
+
+	async setStatus(orderId: number, newStatus: OrderStatus): Promise<boolean> {
+		try {
+			await HttpProvider.patch<null, any>(`/orders/${orderId}/status`, {
+				status: newStatus
+			});
+		} catch (error: any) {
+			this.handleError(error, "Unable to update the order");
 		}
 
 		return true;

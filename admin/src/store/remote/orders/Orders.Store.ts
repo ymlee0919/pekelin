@@ -1,9 +1,9 @@
 import { Store } from "../Store";
 import { EventResult } from "../../../types/Events";
 import OrdersHttpProvider from "./Orders.HttpProvider";
-import { Order, OrderContent, OrderDTO, OrderEntity } from "./Orders.Types";
+import { Order, OrderContent, OrderDTO, OrderEntity, OrderSearch, OrderStatus } from "./Orders.Types";
 
-export default class OrdersStore extends Store<Array<OrderContent>> {
+export default class OrdersStore extends Store<Array<OrderContent>, OrderSearch> {
 	private _provider: OrdersHttpProvider;
 
 	constructor() {
@@ -11,8 +11,8 @@ export default class OrdersStore extends Store<Array<OrderContent>> {
 		this._provider = new OrdersHttpProvider();
 	}
 
-	protected getData(): Promise<Array<OrderContent>> {
-		return this._provider.load();
+	protected getData(params: OrderSearch|null): Promise<Array<OrderContent>> {
+		return this._provider.load(params);
 	}
 
 	protected get provider(): OrdersHttpProvider {
@@ -42,7 +42,7 @@ export default class OrdersStore extends Store<Array<OrderContent>> {
 
 	async update(
 		orderId: string | number,
-		newOrder: OrderDTO
+		newOrder: Partial<OrderDTO>
 	): Promise<EventResult<OrderEntity | null>> {
 
 		let id = typeof orderId == "string" ? parseInt(orderId) : orderId;
@@ -63,6 +63,28 @@ export default class OrdersStore extends Store<Array<OrderContent>> {
 		return {
 			success: true,
 			message: "Order successfully deleted",
+		};
+	}
+
+	async done(orderId: string | number): Promise<EventResult> {
+		
+		let id = typeof orderId == "string" ? parseInt(orderId) : orderId;
+		await this.provider.setStatus(id, OrderStatus.READY);
+
+		return {
+			success: true,
+			message: "Order successfully completed",
+		};
+	}
+
+	async setStatus(orderId: string | number, status: OrderStatus): Promise<EventResult> {
+		
+		let id = typeof orderId == "string" ? parseInt(orderId) : orderId;
+		await this.provider.setStatus(id, status);
+
+		return {
+			success: true,
+			message: "Order successfully completed",
 		};
 	}
 }
