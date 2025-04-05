@@ -1,6 +1,6 @@
 import HttpProvider from "../HttpProvider";
 import { AxiosProvider } from "../Provider";
-import { CreatedReviewLink, CreationReviewLink, ReviewLink, ReviewLinkInfo, Review } from "./Reviews.Types";
+import { CreatedReviewLink, CreationReviewLink, ReviewLink, ReviewLinkInfo, Review, ReviewDTO } from "./Reviews.Types";
 
 export default class ReviewsHttpProvider extends AxiosProvider<Array<ReviewLink>> {
 	async load(): Promise<Array<ReviewLink>> {
@@ -39,6 +39,16 @@ export default class ReviewsHttpProvider extends AxiosProvider<Array<ReviewLink>
 			let created = await HttpProvider.post<CreationReviewLink, CreatedReviewLink>("/reviews", {
 				name: clientName, place
 			});
+			return created;
+		} catch (error: any) {
+			this.handleError(error, "Unable to create the review link");
+		}
+		return null;
+	}
+
+	async updateReview(linkId: number, review: ReviewDTO) : Promise<Review | null> {
+		try {
+			let created = await HttpProvider.patch<ReviewDTO, Review>(`/reviews/${linkId}`, review);
 			return created;
 		} catch (error: any) {
 			this.handleError(error, "Unable to create the review link");

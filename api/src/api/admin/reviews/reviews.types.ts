@@ -12,3 +12,20 @@ export interface ReviewLink {
     createdAt: Date;
     updatedAt?: Date;
 }
+
+export interface Review{
+	reviewId: number;
+	rate: number;
+	comment: string;
+	createdAt: Date;
+}
+
+export interface ReviewLinkData {
+	linkId : number;
+	url: string;
+	clientName: string;
+	place: string;
+	Review?: Review;
+	createdAt: Date;
+	updatedAt?: Date;
+}

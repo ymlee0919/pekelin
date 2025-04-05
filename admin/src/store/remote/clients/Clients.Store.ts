@@ -2,6 +2,7 @@ import { Store } from "../Store";
 import { EventResult } from "../../../types/Events";
 import {ClientsHttpProvider} from "./Clients.HttpProvider";
 import { Client, ClientDTO } from "./Clients.Types";
+import { CreatedReviewLink } from "../reviews/Reviews.Types";
 
 export default class ClientsStore extends Store<Array<Client>> {
 	private _provider: ClientsHttpProvider;
@@ -32,6 +33,17 @@ export default class ClientsStore extends Store<Array<Client>> {
 		return {
 			success: true,
 			message: "Client successfully created",
+			info: created,
+		};
+	}
+
+	async createReviewLink(clientId: number): Promise<EventResult<CreatedReviewLink | null>> {
+		
+		let created = await this.provider.createReviewLink(clientId);
+		
+		return {
+			success: true,
+			message: "Link successfully created",
 			info: created,
 		};
 	}

@@ -27,7 +27,7 @@ const ReviewTBar = (props : ReviewTBarProps) => {
 
             <Link
                 className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
-                    props.selectedItem ?? "btn-disabled"
+                    (props.selectedItem && props.selectedItem?.updatedAt) ?? "btn-disabled"
                 }`}
                 to={`/links/${props.selectedItem?.linkId}/edit`}
             >

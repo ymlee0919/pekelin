@@ -28,6 +28,7 @@ const NewSet = lazy(() => import("../pages/products/pages/NewSet"));
 const EditSet = lazy(() => import("../pages/products/pages/EditSet"));
 
 const ReviewLinks = lazy(() => import("../pages/reviews/ReviewLinks"));
+const EditReview = lazy(() => import("../pages/reviews/pages/EditReview"));
 
 const Clients = lazy(() => import("../pages/clients/Clients"));
 const NewClient = lazy(() => import("../pages/clients/pages/NewClient"));
@@ -145,6 +146,11 @@ const routes : Route[] = [
         path: RouterTable.links.root,
         permission: "Reviews",
         element: <Suspense fallback={<Loading/>}> <ReviewLinks /> </Suspense>
+    },
+    {
+        path: RouterTable.links.edit(':linkId'),
+        permission: "Reviews",
+        element: <Suspense fallback={<Loading/>}> <EditReview /> </Suspense>
     },
     {
         path: RouterTable.clients.root,

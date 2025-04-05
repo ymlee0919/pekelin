@@ -1,5 +1,6 @@
 import HttpProvider from "../HttpProvider";
 import { AxiosProvider } from "../Provider";
+import { CreatedReviewLink } from "../reviews/Reviews.Types";
 import { Client, ClientDTO } from "./Clients.Types";
 
 export class ClientsHttpProvider extends AxiosProvider<Array<Client>> {
@@ -28,6 +29,16 @@ export class ClientsHttpProvider extends AxiosProvider<Array<Client>> {
 			return created;
 		} catch (error: any) {
 			this.handleError(error, "Unable to create the client");
+		}
+		return null;
+	}
+
+	async createReviewLink(clientId: number): Promise<CreatedReviewLink | null> {
+		try {
+			let created = await HttpProvider.put<{clientId:number}, CreatedReviewLink>("/reviews", {clientId});
+			return created;
+		} catch (error: any) {
+			this.handleError(error, "Unable to create the client review link");
 		}
 		return null;
 	}

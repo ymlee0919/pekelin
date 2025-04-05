@@ -25,7 +25,7 @@ export class OrdersController {
     ) {}
   
     @Get()
-    @RequirePermission('Orders')
+    @RequirePermission(['Orders', 'Production'])
     findAll(@Query() filterDto: OrdersFilterDTO) : Promise<OrderContent[]> {
         const { status } = filterDto;
         return this.manager.findAll(!!status ? filterDto : null);

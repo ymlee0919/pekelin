@@ -48,7 +48,9 @@ const RouterTable = {
     },
 
     links: {
-        root: '/links'
+        root: '/links',
+
+        edit: (linkId:string|number) => `/links/${linkId}/edit`,
     },
 
     clients : {

@@ -29,6 +29,11 @@ export interface ReviewLinkInfo {
     updatedAt?: string;
 }
 
+export interface ReviewDTO {
+    rate: number;
+    comment: string;
+}
+
 interface ReviewContent {
     reviewId: number;
     rate: number;

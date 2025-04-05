@@ -7,14 +7,17 @@ import { Body,
     BadRequestException, 
     Delete,
     Param,
-    NotFoundException
+    NotFoundException,
+    Put,
+    Patch
 } from '@nestjs/common';
 import { InvalidOperationError } from 'src/common/errors/invalid.error';
 import { ReviewsService } from './reviews.service';
-import { CreatedReviewLink, ReviewLink } from './reviews.types';
-import { ReviewLinkCreationDTO } from './reviews.dto';
+import { CreatedReviewLink, ReviewLink, ReviewLinkData } from './reviews.types';
+import { ClientLinkCreationDTO, ReviewDTO, ReviewLinkCreationDTO } from './reviews.dto';
 import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
 import { RequirePermission } from 'src/common/decorators/permission.decorator';
+import { NotFoundError } from 'src/common/errors/notFound.error';
 
 
 @Controller('api/reviews')
@@ -50,6 +53,44 @@ export class ReviewsController {
         } catch (error) {
             if(error instanceof InvalidOperationError){
                 throw new BadRequestException(error.message);
+            }
+            throw new BadRequestException(error);
+        }
+    }
+
+    @Put('')
+    @HttpCode(HttpStatus.CREATED)
+    async createClientLink(@Body() linkDto: ClientLinkCreationDTO) : Promise<CreatedReviewLink> {
+        try {
+            let createdLink = await this.manager.createClientLink(linkDto.clientId);
+            return createdLink;
+        } catch (error) {
+            if(error instanceof InvalidOperationError){
+                throw new BadRequestException(error.message);
+            }
+            if(error instanceof NotFoundError){
+                throw new NotFoundException(error.message);
+            }
+            throw new BadRequestException(error);
+        }
+    }
+
+    @Patch('/:id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async updateReview(
+        @Param('id', CustomParseIntPipe) linkId: number,
+        @Body() reviewDto: ReviewDTO
+    ) : Promise<ReviewLinkData> {
+
+        try {
+            let review = await this.manager.updateReview(linkId, reviewDto);
+            return review;
+        } catch (error) {
+            if (error instanceof InvalidOperationError) {
+                throw new BadRequestException(error.message);
+            }
+            if(error instanceof NotFoundError){
+                throw new NotFoundException(error.message);
             }
             throw new BadRequestException(error);
         }

@@ -1,9 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { DatabaseService } from "src/services/database/database.service";
-import { CreatedReviewLink, ReviewLink } from "./reviews.types";
+import { CreatedReviewLink, ReviewLink, ReviewLinkData } from "./reviews.types";
 import { name2url } from "src/services/utils/string.utils";
 import { InvalidOperationError } from "src/common/errors/invalid.error";
 import { $Enums } from "@prisma/client";
+import { NotFoundError } from "src/common/errors/notFound.error";
+import { ReviewDTO } from "./reviews.dto";
 
 
 /**
@@ -38,9 +40,7 @@ export class ReviewsService {
         }})
     }
 
-    async createLink(clientName: string, place: string) : Promise<CreatedReviewLink> {
-
-        // Build the url
+    private buildLink(clientName: string) : string {
         let firstName = name2url(clientName.toLowerCase().split(' ')[0]);
         let today = new Date();
         let date = today.getFullYear().toString() 
@@ -48,6 +48,43 @@ export class ReviewsService {
                 + today.getDate().toString().padStart(2,'0');
         
         let url = firstName + date;
+
+        return url;
+    }
+
+    async createClientLink(clientId : number) : Promise<CreatedReviewLink> {
+        let client = await this.database.clients.findUnique({where: {clientId}});
+        if(!client)
+            throw new NotFoundError("Client not found");
+
+        // Build the url
+        let url = this.buildLink(client.name);
+
+        let created = await this.database.reviewLinks.create({
+            data: {
+                url,
+                clientId: client.clientId,
+            }, select: {
+                linkId: true,
+                url: true,
+                createdAt: true,
+                Client: true
+            }
+        });
+
+        return {
+            linkId: created.linkId,
+            url: created.url,
+            clientName: created.Client.name,
+            createdAt: created.createdAt
+        };
+
+    }
+
+    async createLink(clientName: string, place: string) : Promise<CreatedReviewLink> {
+
+        // Build the url
+        let url = this.buildLink(clientName)
 
         let created = await this.database.reviewLinks.create({
             data: {
@@ -74,7 +111,7 @@ export class ReviewsService {
         };
     }
 
-    async get(linkId: number) : Promise<ReviewLink> {
+    async get(linkId: number) : Promise<ReviewLinkData> {
         
         let link = await this.database.reviewLinks.findFirst({
             where: {linkId},
@@ -88,8 +125,33 @@ export class ReviewsService {
             linkId: link.linkId,
             url: link.url,
             clientName: link.Client.name,
-            createdAt: link.createdAt
+            place: link.Client.place,
+            createdAt: link.createdAt,
+            Review: link.Review
         };
+    }
+
+    async updateReview(linkId: number, reviewDto: ReviewDTO) : Promise<ReviewLinkData> {
+        let review = await this.database.reviews.findFirst({
+            where: {
+                linkId
+            }
+        });
+
+        if(!review)
+            throw new NotFoundError('Requested link do not exists or have not comment yet');
+
+        await this.database.reviews.update({
+            where: {
+                reviewId: review.reviewId
+            },
+            data : {
+                rate: reviewDto.rate,
+                comment: reviewDto.comment
+            }
+        });
+
+        return this.get(linkId);
     }
 
     async deleteLink(linkId: number) : Promise<ReviewLink> {

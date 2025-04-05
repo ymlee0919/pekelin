@@ -34,7 +34,6 @@ const DeleteClientModal = (props : DeleteClientModalProps) => {
             toast.success(result.message);
             props.reload();
         }
-            
         else 
             toast.error(result.message);
     }
