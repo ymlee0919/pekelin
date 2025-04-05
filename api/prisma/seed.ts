@@ -1,14 +1,11 @@
 import { PrismaClient } from '@prisma/client';
-import { crypt } from "./../src/services/crypt/crypt.service";
+//import { crypt } from "./../src/services/crypt/crypt.service";
 
 const prisma = new PrismaClient();
 
 async function main() {
+    /*
     // Basic account
-    await prisma.roles.deleteMany();
-    await prisma.systemModule.deleteMany();
-    await prisma.accounts.deleteMany();
-    
     await prisma.accounts.create({
         data: {
             user: 'admin',
@@ -35,10 +32,8 @@ async function main() {
             }
         }
     });
+    */
     
-    
-    
-
     console.log('Seed process completed')
 }
 

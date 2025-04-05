@@ -155,13 +155,13 @@ enum Status {
 
 model ReviewLinks {
   linkId        Int     @id @default(autoincrement()) @map("link_id")
+  clientId      Int?     @map("client_id")
+  Client        Clients? @relation(fields: [clientId], references: [clientId])
   url           String
-  clientName    String  @map("client_name")
-  place         String
   status        Status @default(READY)
   Review        Reviews?
   createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime? @updatedAt @map("updated_at")
+  updatedAt     DateTime? @map("updated_at")
 
   @@map("review_link")
 }
@@ -196,6 +196,7 @@ model Clients {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   orders    Orders[]
+  review    ReviewLinks[]
 
   @@map("clients")
 }

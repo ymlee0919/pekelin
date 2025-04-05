@@ -25,10 +25,19 @@ export class ClientReviewService {
         if(!link)
             throw new NotFoundException("Invalid review link");
 
-        return await this.database.reviewLinks.findFirst({
+        let review = await this.database.reviewLinks.findFirst({
             where: { linkId: link.linkId },
-            include: { Review : true }
+            include: { Review : true, Client: true }
         });
+
+        return {
+            linkId: review.linkId,
+            url: review.url,
+            clientName: review.Client.name,
+            Review: review.Review,
+            createdAt: review.createdAt,
+            updatedAt: review.updatedAt
+        }
     }
 
     async makeReview(url: string, rate: number, comment: string) : Promise<boolean> {

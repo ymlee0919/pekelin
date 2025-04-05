@@ -19,11 +19,23 @@ export class ReviewsService {
     constructor(private readonly database:DatabaseService){}
 
     async getList() : Promise<ReviewLink[]> {
-        return await this.database.reviewLinks.findMany({
+        let list = await this.database.reviewLinks.findMany({
+            include: {
+                Client: true
+            },
             orderBy: {
                 createdAt: 'desc'
             }
         });
+
+        return list.map(item => { return {
+            linkId: item.linkId,
+            url: item.url,
+            clientName: item.Client.name,
+            place: item.Client.place,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt
+        }})
     }
 
     async createLink(clientName: string, place: string) : Promise<CreatedReviewLink> {
@@ -37,12 +49,29 @@ export class ReviewsService {
         
         let url = firstName + date;
 
-        let created = this.database.reviewLinks.create({
-            data:
-                {clientName, place, url}
+        let created = await this.database.reviewLinks.create({
+            data: {
+                url,
+                Client: {
+                    create : {
+                        name: clientName,
+                        place: place
+                    }
+                }
+            }, select: {
+                linkId: true,
+                url: true,
+                createdAt: true,
+                Client: true
+            }
         });
 
-        return created;
+        return {
+            linkId: created.linkId,
+            url: created.url,
+            clientName: created.Client.name,
+            createdAt: created.createdAt
+        };
     }
 
     async get(linkId: number) : Promise<ReviewLink> {
@@ -50,11 +79,17 @@ export class ReviewsService {
         let link = await this.database.reviewLinks.findFirst({
             where: {linkId},
             include: {
-                Review: true
+                Review: true,
+                Client: true
             }
         });
 
-        return link;
+        return {
+            linkId: link.linkId,
+            url: link.url,
+            clientName: link.Client.name,
+            createdAt: link.createdAt
+        };
     }
 
     async deleteLink(linkId: number) : Promise<ReviewLink> {
@@ -72,10 +107,18 @@ export class ReviewsService {
             throw new InvalidOperationError("Can not delete the link");
 
         // Delete from database
-        await this.database.reviewLinks.delete({
-            where: {linkId}
+        let deleted = await this.database.reviewLinks.delete({
+            where: {linkId},
+            include: {
+                Client: true
+            }
         })
 
-        return link;
+        return  {
+            linkId: deleted.linkId,
+            url: deleted.url,
+            clientName: deleted.Client.name,
+            createdAt: deleted.createdAt
+        };;
     }
 }
