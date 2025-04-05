@@ -2,13 +2,13 @@ import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, UseG
 import { AuthService } from "./auth.service";
 import { CredentialsDTO } from "./auth.dto";
 import { JwtService } from '@nestjs/jwt';
-import { AccountInfo } from "../accounts/accounts.types";
-import { Public } from "./guard/public.guard";
-import { InvalidOperationError } from "src/api/common/errors/invalid.error";
+import { Public } from "../../../common/decorators/public.decorator";
+import { InvalidOperationError } from "src/common/errors/invalid.error";
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
+import { UserAuth } from "./auth.types";
 
 export interface AuthResponse {
-    account: AccountInfo;
+    account: UserAuth;
     accessToken: string;
 }
 

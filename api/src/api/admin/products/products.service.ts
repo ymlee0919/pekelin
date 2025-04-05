@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { InvalidOperationError } from "src/api/common/errors/invalid.error";
+import { InvalidOperationError } from "src/common/errors/invalid.error";
 import { DatabaseService } from "src/services/database/database.service";
 import { FeatureDTO, ProductDTO, ProductSetDTO } from "./products.dto";
-import { ImageSrc } from "src/api/common/types/common.types";
+import { ImageSrc } from "src/common/types/common.types";
 import { Product, CreatedProduct, UpdatedProduct, BasicProduct, BasicProductInfo, BasicFeature, FeatureStatus, UpdatedSet, CategorySource, ProductSet, TinyProductInfo } from "./products.types";
 import { name2url } from "src/services/utils/string.utils";
 import { CloudService } from 'src/services/cloud/cloud.service';

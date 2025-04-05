@@ -3,9 +3,11 @@ import { RolesService } from './roles.service';
 import { CreateRoleDto, UpdateRoleDto } from './roles.dto';
 import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
 import { Module, Role } from './roles.types';
-import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
+import { InvalidOperationError } from 'src/common/errors/invalid.error';
+import { RequirePermission } from 'src/common/decorators/permission.decorator';
 
 @Controller('api/roles')
+@RequirePermission('Roles')
 export class RolesController {
     constructor(private readonly manager: RolesService) {}
 

@@ -1,4 +1,5 @@
-import { IsDefined, IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { Transform } from "class-transformer";
+import { IsDefined, IsEmail, IsInt, IsNotEmpty, IsString, MinLength } from "class-validator";
 import { IsStrongPassword } from "src/services/validators/strongPassword.validator";
 
 export class AccountCreationDTO {
@@ -16,6 +17,11 @@ export class AccountCreationDTO {
     @IsEmail({}, { message: 'Please provide a valid email address' })
     @IsNotEmpty({message: 'The email field must not be empty'})
     readonly email: string;
+
+    @IsNotEmpty({message: "The role is required"})
+    @IsInt({message: "Invalid role information format"})
+    @Transform(({ value }) => parseInt(value.toString()))
+    roleId: number;
 
     @IsString()
     @IsStrongPassword({ message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.' })
@@ -41,6 +47,11 @@ export class AccountCredentialsUpdateDTO {
     @MinLength(5, {message: 'The user must contains at least 5 characters'})
     @IsNotEmpty({message: 'You must provide the user identifier'})
     readonly user: string;
+
+    @IsNotEmpty({message: "The role is required"})
+    @IsInt({message: "Invalid role information format"})
+    @Transform(({ value }) => parseInt(value.toString()))
+    roleId: number;
 
     @IsString()
     @IsStrongPassword({ message: 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.' })

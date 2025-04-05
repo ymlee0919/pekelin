@@ -2,8 +2,8 @@ import { Injectable} from '@nestjs/common';
 import { DatabaseService } from "src/services/database/database.service";
 import { CreateOrderDTO, OrdersFilterDTO, OrderStatusDTO, UpdateOrderDTO } from './orders.dto';
 import { Order, OrderContent, OrderEntity } from './orders.types';
-import { ImageSrc } from 'src/api/common/types/common.types';
-import { NotFoundError } from 'src/api/common/errors/notFound.error';
+import { ImageSrc } from 'src/common/types/common.types';
+import { NotFoundError } from 'src/common/errors/notFound.error';
 
 @Injectable()
 export class OrdersService {

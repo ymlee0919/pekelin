@@ -9,14 +9,16 @@ import { Body,
     Param,
     NotFoundException
 } from '@nestjs/common';
-import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
+import { InvalidOperationError } from 'src/common/errors/invalid.error';
 import { ReviewsService } from './reviews.service';
 import { CreatedReviewLink, ReviewLink } from './reviews.types';
 import { ReviewLinkCreationDTO } from './reviews.dto';
 import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
+import { RequirePermission } from 'src/common/decorators/permission.decorator';
 
 
 @Controller('api/reviews')
+@RequirePermission('Review')
 export class ReviewsController {
 
     constructor(private readonly manager: ReviewsService){}

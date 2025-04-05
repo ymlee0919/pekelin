@@ -7,3 +7,5 @@
 - Make reviews from registered clients
 
 - Implement role access system
+ - Client
+ - Server

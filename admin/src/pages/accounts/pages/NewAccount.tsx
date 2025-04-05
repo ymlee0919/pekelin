@@ -8,10 +8,16 @@ import useStores from "../../../hooks/useStores";
 import { NavLink, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import RouterTable from "../../../router/router.table";
+import { useEffect, useState } from "react";
+import { StoreStatus } from "../../../store/remote/Store";
+import Loading from "../../../components/Loading";
+import ErrorMessage from "../../../components/ErrorMessage";
+import { Role } from "../../../store/remote/roles/Roles.Types";
 
 
 const NewAccount = () => {
 
+    const [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
     const stores = useStores();
     const navigate = useNavigate();
 
@@ -67,6 +73,18 @@ const NewAccount = () => {
 		}
 	};
 
+    useEffect(() => {
+        setStatus(StoreStatus.LOADING);
+        
+        stores.rolesStore.load(null).then(
+            (newStatus: StoreStatus) => {
+                setStatus(newStatus);
+            }
+        );
+
+        return () => {stores.rolesStore.release()}
+    }, []);
+
     return <>
         <Breadcrumbs
 				pages={[
@@ -75,6 +93,12 @@ const NewAccount = () => {
 					{ url: ".", label: "Create" },
 				]}
 			/>
+        {status == StoreStatus.LOADING ? <Loading /> : null}
+        {status == StoreStatus.ERROR ? <ErrorMessage text={stores.accountsStore.lastError} /> : null}
+
+        {status == StoreStatus.READY ? (
+            /** Main component */
+            <>
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="panel mx-5 shadow-md">
                 <div className="panel-header panel-header-lighten">
@@ -82,7 +106,7 @@ const NewAccount = () => {
                 </div>
                 <div className="panel-content">
                     <div className="flex flex-wrap gap-3">
-                        <div className="lg:w-5/12 sm:w-11/12">
+                        <div className="lg:w-4/12 sm:w-11/12">
                             <label className="form-control w-full max-w-xs">
                                 <div className="label">
                                     <span className="label-text">Name</span>
@@ -104,7 +128,7 @@ const NewAccount = () => {
                                     </div>}
                             </label>
                         </div>
-                        <div className="lg:w-5/12 sm:w-11/12">
+                        <div className="lg:w-4/12 sm:w-11/12">
                             <label className="form-control w-full max-w-xs">
                                 <div className="label">
                                     <span className="label-text">Email</span>
@@ -121,6 +145,21 @@ const NewAccount = () => {
                                     <div className="label">
                                         <span className="label-text text-red-500 text-xs">{errors.email.message}</span>
                                     </div>}
+                            </label>
+                        </div>
+                        <div className="lg:w-3/12 sm:w-11/12">
+                            <label className="form-control w-full max-w-xs">
+                                <div className="label">
+                                    <span className="label-text">Role</span>
+                                </div>
+                                <select 
+                                    {...register("roleId")} 
+                                    className="select select-bordered w-full max-w-xs"
+                                >
+                                        {stores.rolesStore.content?.map((role: Role) => {
+                                            return <option key={role.roleId} value={role.roleId}>{role.role}</option>
+                                        })}
+                                </select>
                             </label>
                         </div>
                     </div>
@@ -226,6 +265,9 @@ const NewAccount = () => {
                 </div>
             </div>
         </form>
+        </>
+        /** END OF Main component */
+			) : null}
     </>
 };
 

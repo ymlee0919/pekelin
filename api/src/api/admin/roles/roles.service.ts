@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from "src/services/database/database.service";
 import { CreateRoleDto, UpdateRoleDto } from './roles.dto';
-import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
+import { InvalidOperationError } from 'src/common/errors/invalid.error';
 import { Module, Role } from './roles.types';
 
 

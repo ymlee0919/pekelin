@@ -16,6 +16,7 @@ type LoginResponse = {
         userId: number;
         user: string;
         name: string;
+        permissions: string[];
     },
     accessToken: string;
 }
@@ -35,7 +36,7 @@ const LoginForm: React.FC = () => {
         HttpProvider.post<AuthCredentials, LoginResponse>('/auth', data)
             .then((auth: LoginResponse) => {
                 setStatus(LoginStatus.None);
-                login(auth.account.user, auth.accessToken);
+                login(auth.account.user, auth.accessToken, auth.account.permissions);
                 dispatch(
                     setUser({
                         user: auth.account.user, 

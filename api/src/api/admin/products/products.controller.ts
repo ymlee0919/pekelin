@@ -17,17 +17,18 @@ import { BadRequestException,
 import { ProductsService } from './products.service';
 import { CreatedProduct, UpdatedProduct, Product, BasicProductInfo, TinyProductInfo } from "./products.types";
 import { ProductDTO } from './products.dto';
-import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
+import { InvalidOperationError } from 'src/common/errors/invalid.error';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig, MulterMemoryOptions } from 'src/services/files/multer.options';
 import { CropJpgFilePipe } from 'src/services/pipes/crop.JpgFile.pipe';
 import { FileService } from 'src/services/files/file.services';
 import { CloudService } from 'src/services/cloud/cloud.service';
-import { ImageSrc } from 'src/api/common/types/common.types';
-import { ParseFeaturesPipe } from 'src/services/pipes/parseFeatures.pipe';
+import { ImageSrc } from 'src/common/types/common.types';
 import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
+import { RequirePermission } from 'src/common/decorators/permission.decorator';
 
 @Controller('api/products')
+@RequirePermission('Products')
 export class ProductsController {
 
     constructor(

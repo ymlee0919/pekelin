@@ -1,6 +1,6 @@
 import { Controller, Get, Req, Res, UseGuards} from '@nestjs/common';
 import { ClientAppService } from './app.service';
-import { Public } from 'src/api/admin/auth/guard/public.guard';
+import { Public } from 'src/common/decorators/public.decorator';
 import { Request, Response } from 'express';
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 

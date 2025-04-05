@@ -4,6 +4,7 @@ import { CommonProps } from "../types/Common";
 import { useAuth } from "../hooks/useAuth";
 import { useSelector } from 'react-redux'; 
 import { RootState } from "../store/local/store"; 
+import { useNavigate } from "react-router-dom";
 
 interface NavProps extends CommonProps {
 	toggleSidebar: () => void;
@@ -13,9 +14,11 @@ interface NavProps extends CommonProps {
 const Navbar: React.FC<NavProps> = ({ toggleSidebar, isOpen }) => {
 	const user = useSelector((state: RootState) => state.global.user);
 	const userName = useSelector((state: RootState) => state.global.userName);
+	const navigate = useNavigate();
 	const {logout} = useAuth();
 
 	const handleLogout = () => {
+		navigate('/');
 		logout();
 	}
 

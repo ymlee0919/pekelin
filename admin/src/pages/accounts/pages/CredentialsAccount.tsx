@@ -12,6 +12,7 @@ import Loading from "../../../components/Loading";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { MdDone, MdOutlineCancel } from "react-icons/md";
 import RouterTable from "../../../router/router.table";
+import { Role } from "../../../store/remote/roles/Roles.Types";
 
 interface AccountCredentialsFormField extends AccountCredentialsUpdateDTO {
     confirmation: string
@@ -20,6 +21,7 @@ interface AccountCredentialsFormField extends AccountCredentialsUpdateDTO {
 const CredentialsAccount = () => {
 
     const [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
+    const [loadError, setLoadError] = useState<string>("");
 
     const stores = useStores();
     const navigate = useNavigate();
@@ -76,19 +78,34 @@ const CredentialsAccount = () => {
 	};
 
     useEffect(() => {
-        stores.accountsStore.load(null).then(
-            (newStatus: StoreStatus) => {
-                setStatus(newStatus);
-                if (newStatus == StoreStatus.READY && stores.accountsStore.content){
-                    let account = stores.accountsStore.get(parseInt(accountId));
-                    if(account) {
-                        setValue("user", account.user);
-                    }
-                    else
-                        setStatus(StoreStatus.ERROR);
+        stores.rolesStore.load(null).then(
+            (rolesStatus: StoreStatus) => {
+                if(rolesStatus == StoreStatus.ERROR)
+                {
+                    setLoadError(stores.rolesStore.lastError)
+                    setStatus(rolesStatus)
                 }
+                else {
+                    stores.accountsStore.load(null).then(
+                        (newStatus: StoreStatus) => {
+                            setStatus(newStatus);
+                            if (newStatus == StoreStatus.READY && stores.accountsStore.content){
+                                let account = stores.accountsStore.get(parseInt(accountId));
+                                if(account) {
+                                    setValue("user", account.user);
+                                    setValue("roleId", account.roleId);
+                                }
+                                else
+                                    setLoadError(stores.accountsStore.lastError)
+                            }
+                        }
+                    );
+                }
+                
             }
         );
+
+        
     }, []);
 
     return <>
@@ -100,7 +117,7 @@ const CredentialsAccount = () => {
 				]}
 			/>
             {status == StoreStatus.LOADING ? <Loading /> : ""}
-			{status == StoreStatus.ERROR ? <ErrorMessage text={stores.accountsStore.lastError} /> : ""}
+			{status == StoreStatus.ERROR ? <ErrorMessage text={loadError} /> : ""}
 
 			{status == StoreStatus.READY ? (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -125,6 +142,21 @@ const CredentialsAccount = () => {
                                     type="text" 
                                     placeholder="New user name" 
                                     className="input input-bordered w-full max-w-xs" />
+                            </label>
+                        </div>
+                        <div className="lg:w-3/12 sm:w-11/12">
+                            <label className="form-control w-full max-w-xs">
+                                <div className="label">
+                                    <span className="label-text">Role</span>
+                                </div>
+                                <select 
+                                    {...register("roleId")} 
+                                    className="select select-bordered w-full max-w-xs"
+                                >
+                                        {stores.rolesStore.content?.map((role: Role) => {
+                                            return <option key={role.roleId} value={role.roleId}>{role.role}</option>
+                                        })}
+                                </select>
                             </label>
                         </div>
                         <div className="w-full">

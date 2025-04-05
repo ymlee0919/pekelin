@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Req} from '@nestjs/common';
 import { ClientReviewService } from './review.service';
-import { Public } from 'src/api/admin/auth/guard/public.guard';
+import { Public } from 'src/common/decorators/public.decorator';
 import { ReviewLink } from "./review.types";
 import { ReviewDTO } from './review.dto';
 import { ReviewLinkPipe } from 'src/services/pipes/reviewLink.pipe';

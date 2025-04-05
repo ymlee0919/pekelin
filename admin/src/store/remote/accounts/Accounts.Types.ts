@@ -1,8 +1,10 @@
 export interface AccountContent {
 	readonly userId: number;
+	readonly roleId: number;
 	readonly user: string;
 	readonly name: string;
 	readonly email: string;
+	readonly role: string;
 }
 
 export interface AccountCreationDTO {
@@ -10,6 +12,7 @@ export interface AccountCreationDTO {
 	readonly user: string;
 	readonly email: string;
 	readonly password: string;
+	readonly roleId: number;
 }
 
 export interface AccountUpdateDTO {
@@ -19,6 +22,7 @@ export interface AccountUpdateDTO {
 
 export interface AccountCredentialsUpdateDTO {
 	readonly user: string;
+	readonly roleId: number;
 	readonly prevPassword?: string;
 	readonly password?: string;
 }

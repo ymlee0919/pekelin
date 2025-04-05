@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { InvalidOperationError } from "src/api/common/errors/invalid.error";
+import { InvalidOperationError } from "src/common/errors/invalid.error";
 import { DatabaseService } from "src/services/database/database.service";
-import { ImageSrc } from "src/api/common/types/common.types";
+import { ImageSrc } from "src/common/types/common.types";
 import { BasicFeature, BasicVariant, CreatedVariant, TinyVariantInfo, UpdatedVariant, Variant } from "./variants.types";
 import { VariantDTO } from "./variants.dto";
 import { FeatureDTO } from "../products/products.dto";

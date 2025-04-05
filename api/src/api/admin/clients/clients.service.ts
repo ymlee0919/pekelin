@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from "src/services/database/database.service";
 import { ClientDTO } from './clients.dto';
 import { Client } from './clients.type';
-import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
+import { InvalidOperationError } from 'src/common/errors/invalid.error';
 
 @Injectable()
 export class ClientsService {

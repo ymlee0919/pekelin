@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { DatabaseService } from "src/services/database/database.service";
 import { crypt, decrypt } from "src/services/crypt/crypt.service";
-import { InvalidOperationError } from "src/api/common/errors/invalid.error";
-import { AccountInfo, AccountCreation, CreatedAccount, UpdatedAccount, AccountCredentials } from "./accounts.types";
+import { InvalidOperationError } from "src/common/errors/invalid.error";
+import { AccountInfo, AccountCreation, CreatedAccount, UpdatedAccount, AccountCredentials, BaseAccountInfo } from "./accounts.types";
 import { AccountCredentialsUpdateDTO } from "./accounts.dto";
+import { NotFoundError } from "src/common/errors/notFound.error";
 
 /**
  * Servie for accounts
@@ -17,13 +18,27 @@ export class AccountsService {
      */
     constructor(private readonly database:DatabaseService){}
 
+    async validateRole(roleId: number) {
+        let roles = await this.database.roles.count({
+            where : {
+                roleId
+            }
+        });
+
+        if(roles == 0)
+            throw new NotFoundError("The selected rol do not exists");
+    }
+
     async getList() : Promise<Array<AccountInfo>|null>
     {
         let list = await this.database.accounts.findMany({select: {
-            userId: true, user: true, name: true, email: true
+            userId: true, user: true, name: true, email: true, roleId: true, Role: { select : {role: true }}
         }});
 
-        return list;
+        return list.map(value => {
+            let {Role, ...item} = value;
+            return {role: Role.role, ...item};
+        });
     }
 
     private async existsAccount(user: string) : Promise<boolean> 
@@ -39,6 +54,9 @@ export class AccountsService {
         if(exists)
             throw new InvalidOperationError("The new user already exists");
 
+        // Validate the role
+        await this.validateRole(account.roleId);
+
         // Create a account
         account.password = crypt(account.password);
         let created = await this.database.accounts.create({
@@ -48,11 +66,11 @@ export class AccountsService {
                 user: true,
                 name: true,
                 email: true,
-                createdAt: true,
+                createdAt: true
             }
         });
 
-        return created;
+        return created
     }
 
     async update(userId: number, newName: string, newEmail: string) : Promise<UpdatedAccount> {
@@ -70,7 +88,7 @@ export class AccountsService {
                 user: true,
                 name: true,
                 email: true,
-                updatedAt: true,
+                updatedAt: true
             }
         })
 
@@ -92,9 +110,13 @@ export class AccountsService {
                 throw new InvalidOperationError("The new user already exists. Please, provide another identifier.");
         }
 
+        // Validate the role exists
+        await this.validateRole(newCredentials.roleId);
+
         // Create new credentials
         let credentials: AccountCredentials = {
-            user: newCredentials.user
+            user: newCredentials.user,
+            roleId: newCredentials.roleId
         }
 
         // Crypt password
@@ -110,7 +132,6 @@ export class AccountsService {
 
             credentials.password = crypt(newCredentials.password);
         }
-            
 
         // Update the account
         let updatedAccount = await this.database.accounts.update({
@@ -121,21 +142,20 @@ export class AccountsService {
                 user: true,
                 name: true,
                 email: true,
-                updatedAt: true,
+                updatedAt: true
             }
         });
 
         return updatedAccount;
     }
 
-    async deleteAccount(userId: number) : Promise<AccountInfo> {
+    async deleteAccount(userId: number) : Promise<BaseAccountInfo> {
         // Validate the selected account exists
         let account = await this.database.accounts.findFirst({where: {userId}});
         if(!account)
             throw new InvalidOperationError("The account you want to delete do not exists");
 
         let deleted = await this.database.accounts.delete({where: {userId}});
-
         return deleted;
     }
 

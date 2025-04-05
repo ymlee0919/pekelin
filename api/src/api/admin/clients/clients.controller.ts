@@ -2,9 +2,11 @@ import { Controller, Get, Post, Patch, Delete, Body, Param, ParseIntPipe, BadReq
 import { ClientsService } from './clients.service';
 import { Client } from './clients.type';
 import { ClientDTO } from './clients.dto';
-import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
+import { InvalidOperationError } from 'src/common/errors/invalid.error';
+import { RequirePermission } from 'src/common/decorators/permission.decorator';
 
 @Controller('api/clients')
+@RequirePermission('Clients')
 export class ClientsController {
     constructor(private readonly manager: ClientsService) {}
 

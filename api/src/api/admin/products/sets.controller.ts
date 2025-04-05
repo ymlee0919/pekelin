@@ -17,13 +17,13 @@ import { BadRequestException,
 import { ProductsService } from './products.service';
 import { CreatedProduct, UpdatedProduct, ProductSet, CategorySource } from "./products.types";
 import { ProductDTO, ProductSetDTO } from './products.dto';
-import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
+import { InvalidOperationError } from 'src/common/errors/invalid.error';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig, MulterMemoryOptions } from 'src/services/files/multer.options';
 import { CropJpgFilePipe } from 'src/services/pipes/crop.JpgFile.pipe';
 import { FileService } from 'src/services/files/file.services';
 import { CloudService } from 'src/services/cloud/cloud.service';
-import { ImageSrc } from 'src/api/common/types/common.types';
+import { ImageSrc } from 'src/common/types/common.types';
 import { plainToInstance } from 'class-transformer';
 
 @Controller('api/products/sets')

@@ -16,16 +16,18 @@ import { BadRequestException,
 import { VariantsService } from './variants.service';
 import { CreatedVariant, UpdatedVariant, BasicVariant, Variant, TinyVariantInfo } from "./variants.types";
 import { VariantDTO } from './variants.dto';
-import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
+import { InvalidOperationError } from 'src/common/errors/invalid.error';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig, MulterMemoryOptions } from 'src/services/files/multer.options';
 import { FileService } from 'src/services/files/file.services';
 import { CloudService } from 'src/services/cloud/cloud.service';
-import { ImageSrc } from 'src/api/common/types/common.types';
+import { ImageSrc } from 'src/common/types/common.types';
 import { CropPngFilePipe } from 'src/services/pipes/crop.PngFile.pipe';
 import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
+import { RequirePermission } from 'src/common/decorators/permission.decorator';
 
 @Controller('api/products')
+@RequirePermission('Products')
 export class VariantsController {
 
     constructor(

@@ -4,7 +4,8 @@ import { AuthRequestContext } from '../auth/context/auth.context';
 import { Request, Response } from 'express';
 
 import { doubleCsrf } from 'csrf-csrf';
-import { Public } from '../auth/guard/public.guard';
+import { Public } from '../../../common/decorators/public.decorator';
+import { RequirePermission } from 'src/common/decorators/permission.decorator';
 
 const { generateToken } = doubleCsrf({
   getSecret: () => 'your-secret-key',
@@ -23,6 +24,7 @@ export class AppController {
     ){}
 
     @Get('/')
+    @RequirePermission('Dashboard')
     async getList(@Req() request: Request): Promise<DashboardInfo> {
         let authContext = request['authContext'] as AuthRequestContext;
         let result = await this.manager.getDashboardInfo();

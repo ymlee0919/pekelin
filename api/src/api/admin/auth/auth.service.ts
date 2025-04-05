@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { AccountInfo } from "../accounts/accounts.types";
 import { decrypt } from "src/services/crypt/crypt.service";
 import { DatabaseService } from "src/services/database/database.service";
-import { InvalidOperationError } from "src/api/common/errors/invalid.error";
+import { InvalidOperationError } from "src/common/errors/invalid.error";
+import { UserAuth } from "./auth.types";
 
 export interface Credentials {
     readonly user: string;
@@ -21,13 +21,25 @@ export class AuthService {
      */
     constructor(private readonly database:DatabaseService){}
 
-    async login(credentials: Credentials) : Promise<AccountInfo|null>
+    async login(credentials: Credentials) : Promise<UserAuth|null>
     {
         let account = await this.database.accounts.findFirst({
             where: {
                 user: credentials.user
             }, select: {
-                userId: true, user: true, name: true, password: true, email: true
+                userId: true,
+                user: true,
+                name: true,
+                email: true,
+                password: true,
+                Role: {
+                    select: {role: true, modules: {
+                        select: {
+                            module: true
+                        }
+                    }},
+                    
+                }
             }
         });
 
@@ -40,7 +52,9 @@ export class AuthService {
         if(decrypted != credentials.password)
             throw new InvalidOperationError('Invalid credentials');
 
-        return userAccount;
+
+        let {Role, ...item} = userAccount;
+        return {role: Role.role, ...item, permissions: Role.modules.map(module => module.module)};
     }
 
 }

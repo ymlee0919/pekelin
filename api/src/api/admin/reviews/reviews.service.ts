@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { DatabaseService } from "src/services/database/database.service";
 import { CreatedReviewLink, ReviewLink } from "./reviews.types";
 import { name2url } from "src/services/utils/string.utils";
-import { InvalidOperationError } from "src/api/common/errors/invalid.error";
+import { InvalidOperationError } from "src/common/errors/invalid.error";
 import { $Enums } from "@prisma/client";
 
 

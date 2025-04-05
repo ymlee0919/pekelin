@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { DatabaseService } from "src/services/database/database.service";
-import { InvalidOperationError } from "src/api/common/errors/invalid.error";
+import { InvalidOperationError } from "src/common/errors/invalid.error";
 
 import { name2url } from "src/services/utils/string.utils";
-import { ImageSrc } from "src/api/common/types/common.types";
+import { ImageSrc } from "src/common/types/common.types";
 import { CategoryInfo, CreatedCategory, UpdatedCategory } from "./categories.types";
 import { CategoryDTO } from "./categories.dto";
 import { CloudService } from 'src/services/cloud/cloud.service';

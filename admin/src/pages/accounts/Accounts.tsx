@@ -79,7 +79,8 @@ const Accounts =() => {
 											columnDefs={[
 												{ field: "user"},
 												{ field: "name"},
-												{ field: "email"}
+												{ field: "email"},
+												{ field: "role", flex: 1},
 											]}
 											onRowSelected={onRowSelected}
 										/>

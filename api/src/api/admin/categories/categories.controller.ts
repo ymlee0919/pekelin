@@ -13,8 +13,8 @@ import { Body,
     BadRequestException} from '@nestjs/common';
 import { CategoriesService } from './categories.service'
 import { CreatedCategory, CategoryInfo, UpdatedCategory } from "./categories.types";
-import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
-import { ImageSrc } from 'src/api/common/types/common.types';
+import { InvalidOperationError } from 'src/common/errors/invalid.error';
+import { ImageSrc } from 'src/common/types/common.types';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig, MulterMemoryOptions } from 'src/services/files/multer.options';
 import { CategoryDTO } from './categories.dto';
@@ -22,8 +22,10 @@ import { FileService } from 'src/services/files/file.services';
 import { CropJpgFilePipe } from 'src/services/pipes/crop.JpgFile.pipe';
 import { CloudService } from 'src/services/cloud/cloud.service';
 import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
+import { RequirePermission } from 'src/common/decorators/permission.decorator';
 
 @Controller('api/categories')
+@RequirePermission('Categories')
 export class CategoriesController {
 
     constructor(

@@ -12,11 +12,13 @@ import { Body,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service'
 import { AccountInfo, CreatedAccount, UpdatedAccount } from "./accounts.types";
-import { InvalidOperationError } from 'src/api/common/errors/invalid.error';
+import { InvalidOperationError } from 'src/common/errors/invalid.error';
 import { AccountCreationDTO, AccountCredentialsUpdateDTO, AccountUpdateDTO } from './accounts.dto';
 import { CustomParseIntPipe } from 'src/services/pipes/customParseInt.pipe';
+import { RequirePermission } from 'src/common/decorators/permission.decorator';
 
 @Controller('api/accounts')
+@RequirePermission('Account')
 export class AccountsController {
 
     constructor(private readonly manager: AccountsService){}

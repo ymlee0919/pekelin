@@ -12,18 +12,21 @@ import {
 	MdOutlineAssignmentTurnedIn,
 	MdHandyman,
 } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 //import toast from 'react-hot-toast';
 //import useStores from '../hooks/useStores';
 import RouterTable from '../router/router.table';
+import RoleBasedComponent from './RoleBasedComponent';
 
 const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 	//const stores = useStores();
 
 	const {logout} = useAuth();
+	const navigate = useNavigate();
 	
 	const handleLogout = () => {
+		navigate('/');
 		logout();
 	}
 
@@ -55,14 +58,18 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 							<span>Dashboard</span>
 						</NavLink>
 					</li>
-					<li>
-						<NavLink to={RouterTable.roles.root} className="group text-sm text-gray-500 p-3 my-1">
-							<span>
-								<MdManageAccounts className="text-xl" />
-							</span>
-							<span>Roles</span>
-						</NavLink>
-					</li>
+					<RoleBasedComponent roles={['Roles']}>
+						<li>
+							<NavLink to={RouterTable.roles.root} className="group text-sm text-gray-500 p-3 my-1">
+								<span>
+									<MdManageAccounts className="text-xl" />
+								</span>
+								<span>Roles</span>
+							</NavLink>
+						</li>
+					</RoleBasedComponent>
+
+					<RoleBasedComponent roles={['Account']}>
 					<li>
 						<NavLink to={RouterTable.accounts.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
@@ -71,6 +78,9 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 							<span>Accounts</span>
 						</NavLink>
 					</li>
+					</RoleBasedComponent>
+
+					<RoleBasedComponent roles={['Categories']}>
 					<li>
 						<NavLink to={RouterTable.categories.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
@@ -79,6 +89,9 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 							<span>Categories</span>
 						</NavLink>
 					</li>
+					</RoleBasedComponent>
+
+					<RoleBasedComponent roles={['Products']}>
 					<li>
 						<NavLink to={RouterTable.products.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
@@ -87,6 +100,9 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 							<span>Products</span>
 						</NavLink>
 					</li>
+					</RoleBasedComponent>
+
+					<RoleBasedComponent roles={['Clients']}>
 					<li>
 						<NavLink to={RouterTable.clients.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
@@ -95,6 +111,9 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 							<span>Clients</span>
 						</NavLink>
 					</li>
+					</RoleBasedComponent>
+
+					<RoleBasedComponent roles={['Orders']}>
 					<li>
 						<NavLink to={RouterTable.orders.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
@@ -103,6 +122,9 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 							<span>Orders</span>
 						</NavLink>
 					</li>
+					</RoleBasedComponent>
+
+					<RoleBasedComponent roles={['Production']}>
 					<li>
 						<NavLink to={RouterTable.production.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
@@ -111,6 +133,9 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 							<span>Production</span>
 						</NavLink>
 					</li>
+					</RoleBasedComponent>
+
+					<RoleBasedComponent roles={['Review']}>
 					<li>
 						<NavLink to={RouterTable.links.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
@@ -119,6 +144,7 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 							<span>Review links</span>
 						</NavLink>
 					</li>
+					</RoleBasedComponent>
 					
 					{/*<li></li>
 					<li>
