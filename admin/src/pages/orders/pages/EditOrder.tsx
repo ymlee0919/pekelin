@@ -4,7 +4,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import RouterTable from '../../../router/router.table';
 import { StoreStatus } from '../../../store/remote/Store';
 import useStores from '../../../hooks/useStores';
-import { Client } from '../../../store/remote/clients/Clients.Types';
 import Breadcrumbs from '../../../components/Breadcrumbs';
 import Loading from '../../../components/Loading';
 import ErrorMessage from '../../../components/ErrorMessage';
@@ -27,10 +26,12 @@ const EditOrder = () => {
     const [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
     const [loadingError, setLoadingError] = useState<string>("");
 	const [selectedImage, setSelectedImage] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
+    const [productSearchTerm, setProductSearchTerm] = useState("");
+    const [clientSearchTerm, setClientSearchTerm] = useState("");
 
     const { register, handleSubmit, formState: { errors }, watch, reset, setValue, setError} = useForm<OrderFormData>();
     const variantId = watch("variantId");
+    const clientId = watch("clientId");
     const navigate = useNavigate();
 
     const stores = useStores();
@@ -101,7 +102,8 @@ const EditOrder = () => {
 
             setSelectedImage(order.productImage || '');
             
-            setSearchTerm("");
+            setProductSearchTerm("");
+            setClientSearchTerm("");
         } catch (error) {
             setStatus(StoreStatus.ERROR);
             setLoadingError(error instanceof Error ? error.message : 'Unable to load the requested order');
@@ -138,7 +140,57 @@ const EditOrder = () => {
                 <div className="panel-content">
                     <div className="flex flex-wrap gap-5 pb-3">
                         <div className="md:w-3/12 w-11/12">
-                            <label className="form-control w-full max-w-xs">
+                        <label className="form-control w-full">
+                                <div className="label">
+                                    <span className="label-text">Client</span>
+                                </div>
+                                <div className="dropdown w-full">
+                                    <label tabIndex={0} className="btn btn-outline w-full justify-between">
+                                        {clientId ? stores.clientsStore.content?.find(item => item.clientId === clientId)?.name || "Select" : "Select client"}
+                                        <MdArrowDropDown className="w-4 h-4" />
+                                    </label>
+                                    <div
+                                        tabIndex={0}  
+                                        className='dropdown-content shadow bg-base-100 rounded-box w-full z-50'
+                                        style={{ maxHeight: "300px", overflowX: "auto" }}
+                                    >
+                                        <div className="p-2 sticky top-0 bg-base-100 z-10 border-b">
+                                            <label className="input input-sm input-bordered flex items-center gap-2">
+                                            <MdSearch className="w-4 h-4 opacity-70" />
+                                            <input
+                                                type="text"
+                                                className="grow"
+                                                placeholder="Search client..."
+                                                value={clientSearchTerm}
+                                                onChange={(e) => setClientSearchTerm(e.target.value)}
+                                                autoFocus
+                                            />
+                                            </label>
+                                        </div>
+                                        <ul>
+                                            {stores.clientsStore.content?.filter((item) => {
+                                                    if(clientSearchTerm.length <= 2)
+                                                        return true;
+                                                    return item.name.toLowerCase().includes(clientSearchTerm.toLowerCase())
+                                                }
+                                                ).map((item) => (
+                                                <li key={item.clientId} className="hover:bg-base-200" onClick={() => {
+                                                    setValue("clientId", item.clientId);
+                                                    
+                                                }}>
+                                                    <a>
+                                                        <div className="flex flex-col p-2">
+                                                            <span className="font-medium">{item.name}</span>
+                                                            <span className="text-xs text-gray-500">{item.place}</span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </label>
+                            {/*<label className="form-control w-full max-w-xs">
                                 <div className="label">
                                     <span className="label-text">Client</span>
                                 </div>
@@ -157,6 +209,7 @@ const EditOrder = () => {
                                     </div>
                                 )}
                             </label>
+                            */}
                         </div>
                         <div className="md:w-8/12 w-11/12">
                             <label className="form-control w-full">
@@ -240,10 +293,10 @@ const EditOrder = () => {
                                             <ul>
                                             {stores.variantsListStore.content?.filter((variant) => 
                                                 {
-                                                    if(searchTerm.length <= 2)
+                                                    if(productSearchTerm.length <= 2)
                                                         return true;
 
-                                                    return variant.name.toLowerCase().includes(searchTerm.toLowerCase())
+                                                    return variant.name.toLowerCase().includes(productSearchTerm.toLowerCase())
                                                 }
                                                 ).map((variant) => (
                                                 <li key={variant.variantId} className="hover:bg-base-200" onClick={() => {
@@ -267,8 +320,8 @@ const EditOrder = () => {
                                                     type="text"
                                                     className="grow"
                                                     placeholder="Search products..."
-                                                    value={searchTerm}
-                                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                                    value={productSearchTerm}
+                                                    onChange={(e) => setProductSearchTerm(e.target.value)}
                                                     autoFocus
                                                 />
                                                 </label>

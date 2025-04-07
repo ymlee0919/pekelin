@@ -8,8 +8,8 @@ import ErrorMessage  from "../../components/ErrorMessage";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import { OrderContent, OrderStatus } from "../../store/remote/orders/Orders.Types";
 
-//import { setOrders } from "../../store/local/slices/globalSlice";
-//import { useDispatch } from "react-redux"; 
+import { setOrders } from "../../store/local/slices/globalSlice";
+import { useDispatch } from "react-redux"; 
 
 import { AgGridWrapper } from "../../components/AgGridWrapper";
 import { useGrid } from "../../hooks/useGrid";
@@ -36,7 +36,7 @@ const Orders =() => {
 	const [showDelete, setShowDelete] = useState<boolean>(false);
 	const [showInfo, setShowInfo] = useState<boolean>(false);
     const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<OrderContent>();
-	//const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
     const stores = useStores();
 
@@ -71,7 +71,10 @@ const Orders =() => {
 			(newStatus: StoreStatus) => {
 				setStatus(newStatus);
 				if (newStatus == StoreStatus.READY && stores.ordersStore.content){
-					//dispatch(setOrders(stores.ordersStore.content.length));
+					let pending = stores.ordersStore.content.filter((order: OrderContent) => {
+						return order.status == OrderStatus.PENDING
+					}).length;
+					dispatch(setOrders(pending));
 					setRowData(stores.ordersStore.content)
 				}
 					

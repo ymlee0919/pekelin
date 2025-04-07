@@ -6,6 +6,7 @@ import { InvalidOperationError } from "src/common/errors/invalid.error";
 import { $Enums } from "@prisma/client";
 import { NotFoundError } from "src/common/errors/notFound.error";
 import { ReviewDTO } from "./reviews.dto";
+import {v4 as uuidv4} from 'uuid';
 
 
 /**
@@ -42,12 +43,9 @@ export class ReviewsService {
 
     private buildLink(clientName: string) : string {
         let firstName = name2url(clientName.toLowerCase().split(' ')[0]);
-        let today = new Date();
-        let date = today.getFullYear().toString() 
-                + today.getMonth().toString().padStart(2,'0') 
-                + today.getDate().toString().padStart(2,'0');
+        let rest = uuidv4().split('-').slice(0, -2).join('-');
         
-        let url = firstName + date;
+        let url = firstName + rest;
 
         return url;
     }
@@ -56,6 +54,15 @@ export class ReviewsService {
         let client = await this.database.clients.findUnique({where: {clientId}});
         if(!client)
             throw new NotFoundError("Client not found");
+
+        // Check if the client already have a link
+        let links = await this.database.reviewLinks.count({
+            where: {
+                clientId
+            }
+        })
+        if(links > 0)
+            throw new InvalidOperationError("The client already have a review link");
 
         // Build the url
         let url = this.buildLink(client.name);

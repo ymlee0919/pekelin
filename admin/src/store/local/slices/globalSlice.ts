@@ -66,6 +66,9 @@ const globalSlice = createSlice({
             state.orders = action.payload;
 			state.loaded = isStateComplete(state);
         },
+        addOrder: (state) => {
+            state.orders = state.orders + 1;
+        },
         setUser: (state, action: PayloadAction<UserInfo>) => {
             state.user = action.payload.user;
             state.userName = action.payload.userName;
@@ -84,7 +87,8 @@ export const {
     setProducts,
     setOrders,
     setData, 
-    setUser
+    setUser,
+    addOrder
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

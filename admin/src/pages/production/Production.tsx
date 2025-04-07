@@ -13,6 +13,9 @@ import toast from "react-hot-toast";
 import { EventResult } from "../../types/Events";
 import { errorToEventResult } from "../../types/Errors";
 
+import { setOrders } from "../../store/local/slices/globalSlice";
+import { useDispatch } from "react-redux"; 
+
 const Production =() => {
 
     const [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
@@ -20,6 +23,7 @@ const Production =() => {
     const [selectedItem, setSelectedItem] = useState<OrderContent|null>(null);
 
     const stores = useStores();
+    const dispatch = useDispatch();
 
     const onDone = async (orderId: number) : Promise<EventResult> => {
         try {
@@ -51,6 +55,8 @@ const Production =() => {
         stores.ordersStore.load({status: OrderStatus.PENDING}).then(
 			(newStatus: StoreStatus) => {
 				setStatus(newStatus);
+                if(stores.ordersStore.content)
+                    dispatch(setOrders(stores.ordersStore.content?.length));
 			}
 		);
     }

@@ -13,13 +13,21 @@ import { useGrid } from "../../hooks/useGrid";
 import ClientsTBar from "./components/ClientsTBar";
 import DeleteClientModal from "./dialogs/DeleteClientModal";
 
-
 const Clients =() => {
 
 	const [showDelete, setShowDelete] = useState<boolean>(false);
     const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<Client>();
 
     const stores = useStores();
+
+	const filter = (value : string) => {
+		if(stores.clientsStore.content)
+			setRowData(stores.clientsStore.content.filter((client) => {
+				if(value.length <= 1)
+					return true;
+				return client.name.toLowerCase().includes(value.toLowerCase());
+		}))
+	}
 
 	// General functions
     const reload = () => {
@@ -64,9 +72,11 @@ const Clients =() => {
 						<div className="panel-content no-padding">
 							<div className="overflow-x-auto">
 								<div className="border-2 border-solid border-gray-200">
+									
 									<ClientsTBar 
 										selectedItem={selectedItem} 
 										onClickDelete={() => {setShowDelete(true)}}
+										onFilterChange={filter}
 									/>
 									<div className="max-w-full">
 										<AgGridWrapper<Client>

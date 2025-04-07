@@ -53,7 +53,7 @@ export class OrdersService {
             },
             where : (filter && filter.status ? {status: filter.status} : undefined),
             orderBy: [
-                { createdAt: 'desc' },
+                { createdAt: 'asc' },
                 { clientId: 'asc'}
             ]
         });

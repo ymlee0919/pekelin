@@ -64,6 +64,7 @@ const ReviewModal = (props : ReviewModalProps) => {
                             {[1,2,3,4,5].map(drawStar)}                    
                         </span></p>
                         <p><strong>Comment:</strong> {review.Review?.comment}</p>
+                        <p><strong>Date:</strong> {review.Review && new Date(review.Review.createdAt.toString()).toLocaleDateString()}</p>
                     </fieldset>
                     <br></br>
                 </>}

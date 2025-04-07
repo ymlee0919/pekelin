@@ -1,10 +1,9 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams  } from 'react-router-dom';
 import RouterTable from '../../../router/router.table';
 import { StoreStatus } from '../../../store/remote/Store';
 import useStores from '../../../hooks/useStores';
-import { Client } from '../../../store/remote/clients/Clients.Types';
 import Breadcrumbs from '../../../components/Breadcrumbs';
 import Loading from '../../../components/Loading';
 import ErrorMessage from '../../../components/ErrorMessage';
@@ -12,6 +11,8 @@ import { MdArrowDropDown, MdSearch } from 'react-icons/md';
 import toast from 'react-hot-toast';
 import { EventResult } from '../../../types/Events';
 import { ErrorList, errorToEventResult } from '../../../types/Errors';
+import { addOrder } from "../../../store/local/slices/globalSlice";
+import { useDispatch } from "react-redux"; 
 
 interface OrderFormData {
     clientId: number;
@@ -26,12 +27,18 @@ const NewOrder = () => {
     const [status, setStatus] = useState<StoreStatus>(StoreStatus.LOADING);
     const [loadingError, setLoadingError] = useState<string>("");
 	const [selectedImage, setSelectedImage] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
+    const [productSearchTerm, setProductSearchTerm] = useState("");
+    const [clientSearchTerm, setClientSearchTerm] = useState("");
 
     const { register, handleSubmit, formState: { errors }, watch, setValue, setError} = useForm<OrderFormData>();
     const variantId = watch("variantId");
+    const clientId = watch("clientId");
 
     const stores = useStores();
+    const dispatch = useDispatch();
+
+    const [searchParams] = useSearchParams();
+    const client = searchParams.get("client");
 
     const onSubmit: SubmitHandler<OrderFormData> = async (data: OrderFormData) => {
         
@@ -53,8 +60,12 @@ const NewOrder = () => {
             setValue("details", "");
             setValue("productImage", "");
             setValue("variantId", 0);
-            setSearchTerm("");
+            setProductSearchTerm("");
+            setClientSearchTerm("");
             setSelectedImage("");
+            
+            dispatch(addOrder());
+
 		} else {
 			toast.error(result.message);
 
@@ -80,7 +91,7 @@ const NewOrder = () => {
         // Load clients
         stores.clientsStore.load(null).then(
 			(newStatus: StoreStatus) => {
-                if(newStatus == StoreStatus.ERROR){
+                if(newStatus == StoreStatus.ERROR) {
                     setStatus(newStatus);
                     setLoadingError(stores.clientsStore.lastError);
                 } else {
@@ -89,8 +100,11 @@ const NewOrder = () => {
                         (listStatus: StoreStatus) => {
                             if(listStatus == StoreStatus.ERROR) {
                                 setLoadingError(stores.variantsListStore.lastError);
+                                
                             }
-                            setStatus(listStatus);        
+                            setStatus(listStatus);
+                            if(client != null)
+                                setValue("clientId", parseInt(client));    
                         }
                     )
                 }
@@ -129,7 +143,58 @@ const NewOrder = () => {
                 <div className="panel-content">
                     <div className="flex flex-wrap gap-5 pb-3">
                         <div className="md:w-3/12 w-11/12">
-                            <label className="form-control w-full max-w-xs">
+                            <label className="form-control w-full">
+                                <div className="label">
+                                    <span className="label-text">Client</span>
+                                </div>
+                                <div className="dropdown w-full">
+                                    <label tabIndex={0} className="btn btn-outline w-full justify-between">
+                                        {clientId ? stores.clientsStore.content?.find(item => item.clientId === clientId)?.name || "Select" : "Select client"}
+                                        <MdArrowDropDown className="w-4 h-4" />
+                                    </label>
+                                    <div
+                                        tabIndex={0}  
+                                        className='dropdown-content shadow bg-base-100 rounded-box w-full z-50'
+                                        style={{ maxHeight: "300px", overflowX: "auto" }}
+                                    >
+                                        <div className="p-2 sticky top-0 bg-base-100 z-10 border-b">
+                                            <label className="input input-sm input-bordered flex items-center gap-2">
+                                            <MdSearch className="w-4 h-4 opacity-70" />
+                                            <input
+                                                type="text"
+                                                className="grow"
+                                                placeholder="Search client..."
+                                                value={clientSearchTerm}
+                                                onChange={(e) => setClientSearchTerm(e.target.value)}
+                                                autoFocus
+                                            />
+                                            </label>
+                                        </div>
+                                        <ul>
+                                            {stores.clientsStore.content?.filter((item) => {
+                                                    if(clientSearchTerm.length <= 2)
+                                                        return true;
+                                                    return item.name.toLowerCase().includes(clientSearchTerm.toLowerCase())
+                                                }
+                                                ).map((item) => (
+                                                <li key={item.clientId} className="hover:bg-base-200" onClick={() => {
+                                                    setValue("clientId", item.clientId);
+                                                    
+                                                }}>
+                                                    <a>
+                                                        <div className="flex flex-col p-2">
+                                                            <span className="font-medium">{item.name}</span>
+                                                            <span className="text-xs text-gray-500">{item.place}</span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </label>
+
+                            {/*<label className="form-control w-full max-w-xs">
                                 <div className="label">
                                     <span className="label-text">Client</span>
                                 </div>
@@ -147,7 +212,7 @@ const NewOrder = () => {
                                         <span className="label-text text-red-500 text-sm">{errors.clientId.message}</span>
                                     </div>
                                 )}
-                            </label>
+                            </label>*/}
                         </div>
                         <div className="md:w-8/12 w-11/12">
                             <label className="form-control w-full">
@@ -227,42 +292,42 @@ const NewOrder = () => {
                                             className='dropdown-content shadow bg-base-100 rounded-box w-full'
                                             style={{ maxHeight: "300px", overflowX: "auto" }}
                                         >
-                                            <div className="p-2 sticky top-0 bg-base-100 z-10 border-b">
+                                            
+                                            <ul>
+                                                {stores.variantsListStore.content?.filter((variant) => {
+                                                        if(productSearchTerm.length <= 2)
+                                                            return true;
+                                                        return variant.name.toLowerCase().includes(productSearchTerm.toLowerCase())
+                                                    }
+                                                    ).map((variant) => (
+                                                    <li key={variant.variantId} className="hover:bg-base-200" onClick={() => {
+                                                        setValue("variantId", variant.variantId);
+                                                        setSelectedImage(variant.remoteUrl);
+                                                        setValue("productImage", variant.remoteUrl);
+                                                    }}>
+                                                        <a>
+                                                            <div className="flex flex-col p-2">
+                                                                <span className="font-medium">{variant.name}</span>
+                                                                <span className="text-xs text-gray-500">{variant.category} / {variant.product}</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            <div className="p-2 sticky bottom-0 bg-base-100 z-10 border-b">
                                                 <label className="input input-sm input-bordered flex items-center gap-2">
                                                 <MdSearch className="w-4 h-4 opacity-70" />
                                                 <input
                                                     type="text"
                                                     className="grow"
                                                     placeholder="Search products..."
-                                                    value={searchTerm}
-                                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                                    value={productSearchTerm}
+                                                    onChange={(e) => setProductSearchTerm(e.target.value)}
                                                     autoFocus
                                                 />
                                                 </label>
                                             </div>
-                                            <ul>
-                                            {stores.variantsListStore.content?.filter((variant) => {
-                                                    if(searchTerm.length <= 2)
-                                                        return true;
-                                                    return variant.name.toLowerCase().includes(searchTerm.toLowerCase())
-                                                }
-                                                ).map((variant) => (
-                                                <li key={variant.variantId} className="hover:bg-base-200" onClick={() => {
-                                                    setValue("variantId", variant.variantId);
-                                                    setSelectedImage(variant.remoteUrl);
-                                                    setValue("productImage", variant.remoteUrl);
-                                                }}>
-                                                    <a>
-                                                        <div className="flex flex-col p-2">
-                                                            <span className="font-medium">{variant.name}</span>
-                                                            <span className="text-xs text-gray-500">{variant.category} / {variant.product}</span>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                            ))}
-                                        </ul>
                                         </div>
-                                        
                                     </div>
                                 </label>
                                 <label className="form-control w-full">

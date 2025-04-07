@@ -1,11 +1,18 @@
-- Edit and set note - OK
-- Change status in orders page - OK
-- Show different colors according the status - OK
-- Test
-- Upload
+- Order client by name - Ok
 
-- Make reviews from registered clients
+- Filter clients - Ok
 
-- Implement role access system
- - Client
- - Server
+- In New / Update order 
+  - List the client name and the place in the client select. Make the list like a dropdown. - OK
+
+- In client list: Add a button to add a new order - OK
+
+- In order info modal, link the phone to make a phone call - OK
+
+- Sort ordes by date asc - OK
+
+- Throw error if client link already exists - OK
+
+- Update dashboard orders information - OK
+
+- Improve link with uuid4

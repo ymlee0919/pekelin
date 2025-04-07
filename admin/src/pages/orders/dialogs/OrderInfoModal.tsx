@@ -54,7 +54,7 @@ const OrderInfoModal = (props : OrderInfoModalProps) => {
                         <legend>Client</legend>
                         <p className="py-2"><strong>Name: </strong> {order.Client.name}</p>
                         <p className="py-2"><strong>Place: </strong> {order.Client.place}</p>
-                        <p className="py-2"><strong>Phone: </strong> {order.Client.phone}</p>
+                        <a href={`tel:${order.Client.phone}`} className="py-2"><strong>Phone: </strong> <span className="text-blue-600">{order.Client.phone}</span></a>
                     </fieldset>
                     <p className="py-2 text-sm"><strong>Created at: </strong> {(new Date(order.createdAt)).toLocaleString()}</p>
                 </>) : null}

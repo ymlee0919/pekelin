@@ -15,7 +15,11 @@ export class ClientsService {
     }
 
     async findAll(): Promise<Client[]> {
-        return this.database.clients.findMany();
+        return this.database.clients.findMany({
+            orderBy: {
+                name: 'asc'
+            }
+        });
     }
 
     async findOne(clientId: number): Promise<Client | null> {

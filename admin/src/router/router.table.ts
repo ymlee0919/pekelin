@@ -66,6 +66,8 @@ const RouterTable = {
 
         new: '/orders/new',
 
+        newForClient: (clientId:string|number) => `/orders/new?client=${clientId}`,
+
         edit: (orderId:string|number) => `/orders/${orderId}/edit`,
     },
 
