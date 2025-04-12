@@ -1,6 +1,6 @@
 import { FaMedal } from "react-icons/fa"
 import { FaHeartCircleCheck } from "react-icons/fa6"
-import { IoLogoFacebook } from "react-icons/io"
+import { IoLogoFacebook, IoLogoWhatsapp } from "react-icons/io"
 import { RiShieldCheckFill } from "react-icons/ri"
 
 
@@ -12,7 +12,12 @@ const Footer = () => {
                 <div className="xl:w-2/12 w-full text-center">
                     <div className="inline-block align-middle pb-3">
                         <img src="/icon-white.png" className="max-h-28"></img>
-                        <a href="https://facebook.com/tienda.pekelin" target="_blank" className="btn btn-circle btn-outline btn-md btn-info"><IoLogoFacebook className="text-2xl" /></a>
+                        <a href="https://facebook.com/tienda.pekelin" target="_blank" className="btn btn-circle btn-outline btn-md btn-info mx-1">
+                            <IoLogoFacebook className="text-2xl" />
+                        </a>
+                        <a href="https://chat.whatsapp.com/GlDok6N4O2y9AktXoFj9iC" target="_blank" className="btn btn-circle btn-outline btn-md btn-info mx-1">
+                            <IoLogoWhatsapp className="text-2xl" />
+                        </a>
                     </div>
                 </div>
                 <div className="xl:w-10/12 w-full justify-center text-center">

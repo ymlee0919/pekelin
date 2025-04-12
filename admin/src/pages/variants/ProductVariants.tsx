@@ -142,6 +142,7 @@ const ProductVariants = () => {
 							<div className="overflow-x-auto">
 								<div className="border-2 border-solid border-gray-200">
 									<VariantsTBar
+										productId={product?.productId || 0}
 										selectedItem={selectedItem}
 										onClickChangeVisibility={onChangeView}
 										onClickDelete={() => { setShowDelete(true)}}

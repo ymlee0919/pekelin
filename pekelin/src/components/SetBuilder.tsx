@@ -11,7 +11,7 @@ import { CommonProps } from '../types/Common';
 import db from '../database/db';
 import { useState } from 'react';
 import Swiper from 'swiper';
-import RequestBtn from './RequestBtn';
+import AddToCartBtn from './AddToCartBtn';
 
 export interface CarouselProps extends CommonProps {
 	product: ProductInfo
@@ -29,7 +29,6 @@ const SetBuilder = (props: CarouselProps) => {
 		return <></>;
 
 	const productName = () => {
-
 		return props.product.name 
 			+ ' con ' 
 			+ variants1[v1].name.toLowerCase() + ' y '
@@ -85,7 +84,15 @@ const SetBuilder = (props: CarouselProps) => {
 					<p className="text-sm my-1 text-sky-900 px-7 text-center">{productName()}</p>
 					
 					<div className="pt-4 text-center">
-						<RequestBtn product={productName()} gender={props.product.gender} />
+						<AddToCartBtn product={{
+								id: variants1[v1].variantId * 1000 + variants1[v2].variantId,
+								category: props.product.category,
+								name: productName(),
+								price: props.product.price,
+								isSet: true,
+								image: variants1[v1].remoteUrl,
+								secondImage: variants2[v2].remoteUrl,
+						}} />
 					</div>
 				</div>
 			</div>

@@ -3,11 +3,14 @@ import AppRouter from "./AppRouter";
 import "../index.css"
 import "../app.css"
 import Loader from "./Loader";
+import { CartProvider } from "../cart/cart.context";
 
 const Main = () => {
     return <>
         <Loader>
-            <RouterProvider router={AppRouter} />
+            <CartProvider>
+                <RouterProvider router={AppRouter} />
+            </CartProvider>
         </Loader>
     </>
 }

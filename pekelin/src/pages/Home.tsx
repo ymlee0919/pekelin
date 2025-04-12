@@ -1,4 +1,4 @@
-import { BsMessenger, BsSearch } from "react-icons/bs";
+//import { BsSearch } from "react-icons/bs";
 import { FaHandshake } from "react-icons/fa";
 import { GiSewingMachine } from "react-icons/gi";
 import { IoMdHeart } from "react-icons/io";
@@ -9,6 +9,8 @@ import { CategoryInfo } from "../database/database.types";
 import ProductCard from "../components/cards/ProductCard";
 import VariantCard from "../components/cards/VariantCard";
 import CategoryCard from "../components/cards/CategoryCard";
+import StepCard from "../components/cards/StepCard";
+import { MdAddShoppingCart, MdLocationPin, MdOutlineWhatsapp } from "react-icons/md";
 
 const Home = () => {
     return <>
@@ -32,70 +34,78 @@ const Home = () => {
         <p> </p>
         <br></br>
         <div className="p-5 mb-12">
-            <p className="text-center text-xl mb-5 text-sky-900">El proceso es bien simple</p>
-            <ul className="timeline timeline-vertical">
-                <li>
-                    <hr />
-                    <div className="timeline-start timeline-box bg-green-100">Busca lo que quieres</div>
-                    <div className="timeline-middle bg-blue-200 text-base-100 p-3 rounded-full">
-                        <BsSearch className="text-xl"/>
-                    </div>
-                    <hr />
-                </li>
-                <li>
-                    <hr />
-                    <div className="timeline-start timeline-box bg-green-100">Déjanos saber</div>
-                    <div className="timeline-middle bg-blue-300 text-base-100 p-3 rounded-full">
-                        <BsMessenger className="text-xl" />
-                    </div>
-                    <hr />
-                </li>
-                <li>
-                    <hr />
-                    <div className="timeline-full justify-center">
-                        <div className="bg-blue-400 text-base-100 p-3 rounded-full flex">
-                            <FaHandshake className="text-xl my-1 mx-2" />
-                            Nos ponemos de acuerdo
-                        </div>    
-                        
-                    </div>
-                </li>
-                <li>
-                    <hr />
-                    <div className="timeline-middle bg-blue-500 text-base-100 p-3 rounded-full">
-                        <GiSewingMachine className="text-xl" />
-                    </div>
-                    <div className="timeline-end timeline-box bg-blue-50">Hacemos su pedido</div>
-                    <hr />
-                </li>
-                <li>
-                    <hr />
-                    <div className="timeline-middle bg-blue-600 text-base-100 p-3 rounded-full">
-                        <TbTruckDelivery className="text-xl" />
-                    </div>
-                    <div className="timeline-end timeline-box bg-blue-50">Entregamos</div>
-                    <hr />
-                </li>
-                <li>
-                    <hr />
-                    <div className="timeline-start timeline-box bg-yellow-100">Disfruta con tu bebé!</div>
-                    <div className="timeline-middle bg-blue-800 text-base-100 p-3 rounded-full">
-                        <IoMdHeart className="text-xl"/>
-                    </div>
-                    <hr />
-                </li>  
-            </ul>
+            <p className="text-center text-xl mb-5 py-5 text-sky-900">El proceso es bien simple</p>
+            <div className="content-center">
+
             
-            <div className="py-10">
-                <p className="text-center text-2xl my-5 text-sky-900">Nuestras ofertas</p>
+            <div className="inline-flex flex-wrap gap-0">
+                {/*<StepCard title="Busca lo que quieres"
+                    description="Busca la ropa que se acomode a tus gustos y necesidades."
+                    Icon={BsSearch}
+                    />*/}
+
+                <StepCard title="Conforma tu pedido"
+                    description="Busca lo que quieres y llena tu carrito de compras con ropita para tu niño."
+                    Icon={MdAddShoppingCart}
+                    />
+
+                <StepCard title="Déjanos saber"
+                    description="Ve al carrito de compras y envíanos tu solicitud. Respoderemos en breve."
+                    Icon={MdOutlineWhatsapp}
+                    />
+
+                <StepCard title="Nos ponemos de acuerdo"
+                    description="Ajustamos los detalles que necesites. Tamaño, color, adornos, entrega, etc."
+                    Icon={FaHandshake}
+                    />
+
+                <StepCard title="Elaboramos"
+                    description="Confeccionamos la ropa con lujo de detalles y de acuerdo a tus necesidades."
+                    Icon={GiSewingMachine}
+                    />
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 justify-center">
-                    {db.Categories.map((category: CategoryInfo) => {
-                        return <CategoryCard key={category.categoryId} category={category} />
-                    })}
-                </div>
+                <StepCard title="Entregamos"
+                    description="El fin de la espera. Te hacemos llegar la ropa según acordemos."
+                    Icon={TbTruckDelivery}
+                    />
+                
+                <StepCard title="Disfruta con tu bebé!"
+                    description="El momento más esperado, ver la elegancia y belleza de tu preciado tesoro"
+                    Icon={IoMdHeart}
+                    />
+            </div>
             </div>
 
+            <div className="text-center content-center pt-4">
+                <div className="mt-7 lg:flex block p-3 text-slate-500">
+                    <div className="rounded-full bg-sky-500 p-3 lg:flex-none inline-flex">
+                        <MdLocationPin className="text-blue-200 text-xl" />
+                    </div> 
+                    <span className="pt-1 pl-2 text-center content-center">
+                        Disponibles en: 
+                        <ul className="lg:inline-flex block">
+                            <li className="px-2">San José de las Lajas</li>
+                            <li className="px-2">Güines</li>
+                            <li className="px-2">Jaruco</li>
+                            <li className="px-2">Madruga</li>
+                            <li className="px-2">Santa Cruz del Norte</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+            
+        </div>
+            
+        <div className="py-16 px-5 bg-base-300">
+            <p className="text-center text-2xl mt-1 mb-8 text-sky-900">Nuestras ofertas</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 justify-center">
+                {db.Categories.map((category: CategoryInfo) => {
+                    return <CategoryCard key={category.categoryId} category={category} />
+                })}
+            </div>
+        </div>
+        <div className="p-5 mb-12">
             {db.existsBestSeller && 
                 /** Best sellers */
                 <>

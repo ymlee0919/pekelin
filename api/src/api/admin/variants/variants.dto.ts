@@ -31,12 +31,18 @@ export class VariantDTO {
     visible: boolean;
 
     @IsNotEmpty({ message: 'Products features can not be empty' })
-    @ValidateNested({ each: true })
+    //@ValidateNested({ each: true })
     //@MinLength(1, { message: 'The product must have at least one feature'})
     @Type(() => FeatureDTO)
     @Transform(({ value }) => {
         try {
-            return JSON.parse(value);
+            const parsedValue = typeof value === "string" ? JSON.parse(value) : value;
+            return parsedValue.map((feature: any) => ({
+                featureId: +feature.featureId,
+                status: +feature.status,
+                title: feature.title,
+                content: feature.content,
+            }));
         } catch (error) {
             throw new BadRequestException('Invalid features format');
         }

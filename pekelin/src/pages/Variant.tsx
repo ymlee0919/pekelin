@@ -3,8 +3,9 @@ import db from "../database/db";
 import { ProductCardInfo, VariantCardInfo, Feature} from "../database/database.types";
 import VariantCircle from "../components/cards/VariantCircle";
 import ProductCard from "../components/cards/ProductCard";
-import RequestBtn from "../components/RequestBtn";
+//import RequestBtn from "../components/RequestBtn";
 import { MdStar } from "react-icons/md";
+import AddToCartBtn from "../components/AddToCartBtn";
 
 const Variant = () => {
 
@@ -49,7 +50,14 @@ const Variant = () => {
                         <span className="price">Precio: ${variant.price}</span>
                     </div>
                     <div className="pt-6">
-                        <RequestBtn product={variant.name} gender={variant.gender} />
+                        <AddToCartBtn product={{
+                                id: variant.variantId,
+                                category: variant.productName,
+                                name: variant.name,
+                                price: variant.price,
+                                image: variant.remoteUrl,
+                                isSet: false
+                        }} />
                     </div>
                 </div>
             </div>

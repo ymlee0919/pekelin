@@ -4,7 +4,6 @@ import { CategoryInfo, ProductCardInfo, VariantCardInfo } from "../database/data
 import VariantCircle from "../components/cards/VariantCircle";
 import ProductCard from "../components/cards/ProductCard";
 import CategoryCard from "../components/cards/CategoryCard";
-import RequestBtn from "../components/RequestBtn";
 
 const SingleProduct = () => {
     const params = useParams();
@@ -31,9 +30,6 @@ const SingleProduct = () => {
                     <p className="py-5 text-gray-500">
                         {product.description}
                     </p>
-                    <div className="pt-4 text-center">
-                        <RequestBtn product={product.name} gender={product.gender} />
-                    </div>
                 </div>
                 
             </div>
