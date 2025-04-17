@@ -16,7 +16,7 @@ const RoleTBar = (props : RoleTBarProps) => {
     <div className="navbar bg-gray-200 min-h-1 p-1">
         <div className="flex-1">
             <Link to={RouterTable.roles.new} className="btn btn-ghost text-slate-500 btn-sm text-sm mr-2 rounded-none">
-                <MdOutlineAdd /> Add
+                <MdOutlineAdd /> <span className="hidden md:block">Add</span>
             </Link>
 
             <Link
@@ -25,7 +25,7 @@ const RoleTBar = (props : RoleTBarProps) => {
                 }`}
                 to={RouterTable.roles.edit(props.selectedItem?.roleId || 0)}
             >
-                <MdEditSquare /> Edit
+                <MdEditSquare /> <span className="hidden md:block">Edit</span>
             </Link>
 
             <a
@@ -34,7 +34,7 @@ const RoleTBar = (props : RoleTBarProps) => {
                 }`}
                 onClick={props.onClickDelete}
             >
-                <MdDelete /> Delete
+                <MdDelete /> <span className="hidden md:block">Delete</span>
             </a>
         </div>
     </div>

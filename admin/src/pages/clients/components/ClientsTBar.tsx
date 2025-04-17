@@ -58,64 +58,66 @@ const ClientsTBar = (props : ClientsTBarProps) => {
 
     return <>
     <div className="navbar bg-gray-200 min-h-1 p-1">
-        <div className="flex-1">
-            <Link to={RouterTable.clients.new} className="btn btn-ghost text-slate-500 btn-sm text-sm mr-2 rounded-none">
-                <MdOutlineAdd /> Add
-            </Link>
+        <div className="flex flex-wrap w-full">
+            <div className="md:w-9/12 sm:w-11/12">
+                <Link to={RouterTable.clients.new} className="btn btn-ghost text-slate-500 btn-sm text-sm mr-2 rounded-none">
+                    <MdOutlineAdd /> <span className="hidden md:block">Add</span>
+                </Link>
 
-            <Link
-                className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-1 rounded-none ${
-                    props.selectedItem ?? "btn-disabled"
-                }`}
-                to={RouterTable.clients.edit(props.selectedItem?.clientId || 0)}
-            >
-                <MdEditSquare /> Edit
-            </Link>
+                <Link
+                    className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-1 rounded-none ${
+                        props.selectedItem ?? "btn-disabled"
+                    }`}
+                    to={RouterTable.clients.edit(props.selectedItem?.clientId || 0)}
+                >
+                    <MdEditSquare /> <span className="hidden md:block">Edit</span>
+                </Link>
 
-            <a
-                className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-1 rounded-none ${
-                    props.selectedItem ?? "btn-disabled"
-                }`}
-                onClick={props.onClickDelete}
-            >
-                <MdDelete /> Delete
-            </a>
+                <a
+                    className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-1 rounded-none ${
+                        props.selectedItem ?? "btn-disabled"
+                    }`}
+                    onClick={props.onClickDelete}
+                >
+                    <MdDelete /> <span className="hidden md:block">Delete</span>
+                </a>
 
-            <RoleBasedComponent roles={['Review']}>
-            <a
-                className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-1 rounded-none ${
-                    props.selectedItem ?? "btn-disabled"
-                }`}
-                onClick={onCreateLink}
-            >
-                <MdAddLink /> Review link
-            </a>
-            </RoleBasedComponent>
+                <RoleBasedComponent roles={['Review']}>
+                <a
+                    className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-1 rounded-none ${
+                        props.selectedItem ?? "btn-disabled"
+                    }`}
+                    onClick={onCreateLink}
+                >
+                    <MdAddLink /> <span className="hidden md:block">Review link</span>
+                </a>
+                </RoleBasedComponent>
 
-            <RoleBasedComponent roles={['Orders']}>
-            <Link
-                className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-1 rounded-none ${
-                    props.selectedItem ?? "btn-disabled"
-                }`}
-                to={RouterTable.orders.newForClient(props.selectedItem?.clientId || 0)}
-            >
-                <MdOutlineAssignmentTurnedIn /> Order
-            </Link>
-            </RoleBasedComponent>
-        </div>
-        <div className="flex-none">
-            <div className="z-10 border-b">
-                <label className="input input-sm input-bordered flex items-center gap-2">
-                <MdSearch className="w-4 h-4 opacity-70" />
-                <input
-                    type="text"
-                    className="grow"
-                    placeholder="Search client..."
-                    value={entry}
-                    onChange={(e) => setFilter(e.target.value)}
-                    autoFocus
-                />
-                </label>
+                <RoleBasedComponent roles={['Orders']}>
+                <Link
+                    className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-1 rounded-none ${
+                        props.selectedItem ?? "btn-disabled"
+                    }`}
+                    to={RouterTable.orders.newForClient(props.selectedItem?.clientId || 0)}
+                >
+                    <MdOutlineAssignmentTurnedIn /> <span className="hidden md:block">Order</span>
+                </Link>
+                </RoleBasedComponent>
+            </div>
+            <div className="md:w-3/12 sm:w-11/12">
+                <div className="z-10 border-b md:pt-0 pt-2">
+                    <label className="input input-sm input-bordered flex items-center gap-2">
+                    <MdSearch className="w-4 h-4 opacity-70" />
+                    <input
+                        type="text"
+                        className="grow"
+                        placeholder="Search client..."
+                        value={entry}
+                        onChange={(e) => setFilter(e.target.value)}
+                        autoFocus
+                    />
+                    </label>
+                </div>
             </div>
         </div>
     </div>

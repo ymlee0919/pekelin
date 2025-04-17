@@ -29,14 +29,12 @@ const Home = () => {
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
 				<RoleBasedComponent roles={['Categories']}>
 					<Link to={RouterTable.categories.root} className="shadow bg-base-100 rounded-2xl p-3 hover:shadow-md">
-						<div className="stats">
-							<div className="stat">
-								<div className="stat-figure text-indigo-500">
-									<MdOutlineCases className="text-6xl" />
-								</div>
-								<div className="stat-title text-slate-400">Categories</div>
-								<div className="stat-value text-slate-500">{categories}</div>
+						<div className="stat">
+							<div className="stat-figure text-indigo-500">
+								<MdOutlineCases className="text-6xl" />
 							</div>
+							<div className="stat-title text-slate-400">Categories</div>
+							<div className="stat-value text-slate-500">{categories}</div>
 						</div>
 					</Link>
 				</RoleBasedComponent>

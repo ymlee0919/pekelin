@@ -24,7 +24,7 @@ const Layout: React.FC = () => {
 			!event.target.closest('.drawer')
 		) {
 			closeSidebar();
-		}
+		}        
 	};
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const Layout: React.FC = () => {
         <Sidebar isOpen={isSidebarOpen} />
         <main id='working-area'
             ref={workspaceRef}
-            className={`flex-grow p-4 pr-6 mt-20 lg:ml-64  text-gray-500 ${
+            className={`flex-grow p-4 pr-6 lg:mt-20 mt-16 lg:ml-64  text-gray-500 ${
             isSidebarOpen && 'pointer-events-none'
             }`}
         >

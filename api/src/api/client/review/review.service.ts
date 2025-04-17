@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { DatabaseService } from "src/services/database/database.service";
-import { ReviewLink } from "./review.types";
+import { ReviewContent, ReviewLink } from "./review.types";
 
 /**
  * Service for client review
@@ -15,6 +15,36 @@ export class ClientReviewService {
     constructor(
         private readonly database:DatabaseService
     ){ }
+
+    async getAll() : Promise<ReviewContent[]> {
+        let reviews = await this.database.reviews.findMany({
+            select: {
+                rate: true,
+                comment: true,
+                createdAt: true,
+                Link: {
+                    select : {
+                        Client : {
+                            select: {
+                                name: true,
+                                place: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        return reviews.map(review => {
+            return {
+                clientPlace: review.Link.Client.place,
+                clientName: review.Link.Client.name,
+                rate: review.rate,
+                comment: review.comment,
+                date: review.createdAt
+            }
+        });
+    }
 
     async getReview(url: string) : Promise<ReviewLink> {
 

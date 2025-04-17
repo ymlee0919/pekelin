@@ -4,6 +4,7 @@ import { CategoryInfo, ProductCardInfo, VariantCardInfo } from "../database/data
 import VariantCircle from "../components/cards/VariantCircle";
 import ProductCard from "../components/cards/ProductCard";
 import CategoryCard from "../components/cards/CategoryCard";
+import RequestBtn from "../components/RequestBtn";
 
 const SingleProduct = () => {
     const params = useParams();
@@ -13,7 +14,7 @@ const SingleProduct = () => {
 
     return <>
         <div className="hero bg-base-200 pt-20 pb-5">
-            <div className="hero-content flex-col lg:flex-row gap-5">
+            <div className="hero-content flex-col lg:flex-row gap-5 z-40">
                 <div className="relative">
                     <img
                         src={product.remoteUrl}
@@ -30,6 +31,9 @@ const SingleProduct = () => {
                     <p className="py-5 text-gray-500">
                         {product.description}
                     </p>
+                    <div className="pt-6 relative">
+                        <RequestBtn product={product.name} gender={product.gender} />
+                    </div>
                 </div>
                 
             </div>

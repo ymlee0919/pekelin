@@ -5,7 +5,7 @@ import VariantCircle from "../components/cards/VariantCircle";
 import ProductCard from "../components/cards/ProductCard";
 //import RequestBtn from "../components/RequestBtn";
 import { MdStar } from "react-icons/md";
-import AddToCartBtn from "../components/AddToCartBtn";
+import RequestBtn from "../components/RequestBtn";
 
 const Variant = () => {
 
@@ -50,14 +50,7 @@ const Variant = () => {
                         <span className="price">Precio: ${variant.price}</span>
                     </div>
                     <div className="pt-6">
-                        <AddToCartBtn product={{
-                                id: variant.variantId,
-                                category: variant.productName,
-                                name: variant.name,
-                                price: variant.price,
-                                image: variant.remoteUrl,
-                                isSet: false
-                        }} />
+                        <RequestBtn product={variant.name} gender={variant.gender} />
                     </div>
                 </div>
             </div>

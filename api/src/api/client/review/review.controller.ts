@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Req} from '@nestjs/common';
 import { ClientReviewService } from './review.service';
 import { Public } from 'src/common/decorators/public.decorator';
-import { ReviewLink } from "./review.types";
+import { ReviewContent, ReviewLink } from "./review.types";
 import { ReviewDTO } from './review.dto';
 import { ReviewLinkPipe } from 'src/services/pipes/reviewLink.pipe';
 
@@ -15,6 +15,12 @@ export class ClientReviewController {
     constructor(
         private readonly manager: ClientReviewService
     ){}
+
+    @Public()
+    @Get('')
+    async getAll(): Promise<ReviewContent[]> {
+        return this.manager.getAll()
+    }
 
     @Public()
     @Get('/:url')

@@ -126,7 +126,7 @@ const ProductInfo = () => {
 							<br></br>
 							<fieldset>
 								<legend>Variants</legend>
-								<div className="text-right">
+								<div className="text-right pb-2">
 									<Link
 										className="btn btn-primary btn-sm"
 										to={RouterTable.variants.new(product?.productId || 0)}
@@ -135,7 +135,7 @@ const ProductInfo = () => {
 									</Link>
 									<br></br>
 								</div>
-								<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+								<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
 									{stores.variantsStore.content?.length == 0 ? (
 										<p className="text-center">No product variants registered</p>
 									) : (

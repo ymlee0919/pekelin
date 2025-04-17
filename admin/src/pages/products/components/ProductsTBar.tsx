@@ -32,12 +32,12 @@ const ProductsTBar = (props : ProductsTBarProps) => {
             </div>
             
             <Link to={props.selectedItem?.isSet 
-                    ? RouterTable.products.edit(props.selectedItem?.productId || 0) 
-                    : RouterTable.products.editSet(props.selectedItem?.productId || 0)} 
+                    ? RouterTable.products.editSet(props.selectedItem?.productId || 0) 
+                    : RouterTable.products.edit(props.selectedItem?.productId || 0)} 
                 className={`btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none ${
                         props.selectedItem ?? "btn-disabled"
                     }`}>
-                <MdEditSquare /> Edit
+                <MdEditSquare /> <span className="hidden md:block">Edit</span>
             </Link>
 
             <a
@@ -46,7 +46,7 @@ const ProductsTBar = (props : ProductsTBarProps) => {
                 }`}
                 onClick={props.onClickDelete}
             >
-                <MdDelete /> Delete
+                <MdDelete /> <span className="hidden md:block">Delete</span>
             </a>
 
             <a
@@ -55,7 +55,7 @@ const ProductsTBar = (props : ProductsTBarProps) => {
                 }`}
                 onClick={props.onClickChangeVisibility}
             >
-                <MdOutlineRemoveRedEye /> Show/Hide
+                <MdOutlineRemoveRedEye /> <span className="hidden md:block">Show/Hide</span>
             </a>
 
         </div>

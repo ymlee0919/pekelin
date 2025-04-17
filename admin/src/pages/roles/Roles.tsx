@@ -20,6 +20,18 @@ const ColPermissions = (params: CustomCellRendererProps<Role>) => (
 	</div>
 );
 
+const MainColRender = (params: CustomCellRendererProps<Role>) => {
+	if(window.innerWidth >= 640)
+		return params.data?.role;
+
+	let modules = params.data?.modules && params.data?.modules.map(module => module.module).join(', ');
+	return <p>
+		<strong>Role:</strong> {params.data?.role}<br></br>
+		<strong>Details:</strong> {params.data?.details}<br></br>
+		<strong>Modules:</strong> {modules}
+	</p>;
+};
+
 const Roles =() => {
 
 	const [showDelete, setShowDelete] = useState<boolean>(false);
@@ -77,12 +89,13 @@ const Roles =() => {
 										<AgGridWrapper<Role>
 											rowData={rowData}
 											columnDefs={[
-												{ field: "role"},
-												{ field: "details"},
+												{ field: "role", flex: 1, cellRenderer: MainColRender },
+												{ field: "details", hide: window.innerWidth < 640},
 												{ 
-													field: "modules", 
+													field: "modules", flex: 3, 
 													headerName: 'Permissions',
-													cellRenderer: ColPermissions
+													cellRenderer: ColPermissions,
+													hide: window.innerWidth < 640
 												}
 											]}
 											onRowSelected={onRowSelected}

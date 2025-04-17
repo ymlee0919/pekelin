@@ -136,7 +136,7 @@ const NewOrder = () => {
 				<>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="panel mx-5 shadow-md">
+            <div className="panel lg:mx-5 shadow-md">
                 <div className="panel-header panel-header-lighten">
                     <span className="title">New order</span>
                 </div>
@@ -193,26 +193,6 @@ const NewOrder = () => {
                                     </div>
                                 </div>
                             </label>
-
-                            {/*<label className="form-control w-full max-w-xs">
-                                <div className="label">
-                                    <span className="label-text">Client</span>
-                                </div>
-                                <select 
-                                    {...register("clientId")} 
-                                    className="select select-bordered"
-                                >
-                                        {stores.clientsStore.content?.map((client: Client) => {
-                                            return <option key={client.clientId} value={client.clientId}>{client.name}</option>
-                                        })}
-                                </select>
-
-                                {errors.clientId && (
-                                    <div className="label">
-                                        <span className="label-text text-red-500 text-sm">{errors.clientId.message}</span>
-                                    </div>
-                                )}
-                            </label>*/}
                         </div>
                         <div className="md:w-8/12 w-11/12">
                             <label className="form-control w-full">
@@ -265,7 +245,7 @@ const NewOrder = () => {
                     </div>
                     <fieldset>
                         <legend>Product</legend>
-                        <div className="flex flex-wrap gap-5">
+                        <div className="flex flex-wrap gap-2 lg:gap-5">
                             <div className="md:w-2/12 w-10/12">
                                 {!!selectedImage ? (
                                     <div className="avatar">
@@ -277,7 +257,7 @@ const NewOrder = () => {
                                     <div className="bg-base-300 grid h-32 w-32 place-items-center">No image</div>
                                 )}
                             </div>
-                            <div className="md:w-8/12 w-11/12">
+                            <div className="md:w-8/12 w-full">
                                 <label className="form-control w-full">
                                     <div className="label">
                                         <span className="label-text">Product</span>

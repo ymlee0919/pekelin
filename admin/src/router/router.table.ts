@@ -18,7 +18,7 @@ const RouterTable = {
     },
 
     categories : {
-        root: 'categories',
+        root: '/categories',
 
         new: '/categories/new',
 
@@ -26,7 +26,7 @@ const RouterTable = {
     },
 
     products : {
-        root: 'products',
+        root: '/products',
 
         new: '/products/new',
 

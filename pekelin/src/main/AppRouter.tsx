@@ -8,7 +8,6 @@ import Category from "../pages/Category";
 import Product from "../pages/Product";
 import Variant from "../pages/Variant";
 import Review from "../pages/Review";
-import { Cart } from "../pages/Cart";
 
 const AppRouter = createBrowserRouter([
 	{
@@ -36,11 +35,7 @@ const AppRouter = createBrowserRouter([
 			{
 				path: "/review",
 				element: <Review />,
-			},
-			{
-				path: "/cart",
-				element: <Cart />,
-			},
+			}
 		],
 	},
 ]);

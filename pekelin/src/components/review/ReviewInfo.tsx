@@ -20,13 +20,13 @@ const ReviewInfo = (props: ReviewProps) => {
     }
     
     return <>
-        <div className="flex flex-wrap justify-center pt-32 pb-12">
+        <div className="flex flex-wrap justify-center pt-20 pb-12 px-3 review-info">
             <div className="max-w-60 rounded-lg text-gray-600">
                 <p className="italic pb-1">{props.review.comment}</p>
                 <div className="inline-flex gap-1">
                     {[1,2,3,4,5].map(drawStar)}                    
                 </div>
-                <p className=" text-gray-500">{props.review.clientName} <span className="text-xs">/ {props.review.date.toDateString()}</span></p>
+                <p className=" text-gray-500">{props.review.clientName} <br></br><span className="text-xs">{props.review.date.toDateString()}</span></p>
             </div>
         </div>
     </>

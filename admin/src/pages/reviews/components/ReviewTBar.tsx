@@ -22,7 +22,7 @@ const ReviewTBar = (props : ReviewTBarProps) => {
                 className="btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none"
                 onClick={props.onClickAdd}
             >
-                <MdOutlineAdd /> Add
+                <MdOutlineAdd /> <span className="hidden md:block">Add</span>
             </a>
 
             <Link
@@ -31,7 +31,7 @@ const ReviewTBar = (props : ReviewTBarProps) => {
                 }`}
                 to={`/links/${props.selectedItem?.linkId}/edit`}
             >
-                <MdEditSquare /> Edit
+                <MdEditSquare /> <span className="hidden md:block">Edit</span>
             </Link>
 
             <a
@@ -40,7 +40,7 @@ const ReviewTBar = (props : ReviewTBarProps) => {
                 }`}
                 onClick={props.onClickDelete}
             >
-                <MdDelete /> Delete
+                <MdDelete /> <span className="hidden md:block">Delete</span>
             </a>
 
             <a
@@ -49,7 +49,7 @@ const ReviewTBar = (props : ReviewTBarProps) => {
                 }`}
                 onClick={props.onClickInfo}
             >
-                <MdInfo /> Info
+                <MdInfo /> <span className="hidden md:block">Info</span>
             </a>
 
         </div>

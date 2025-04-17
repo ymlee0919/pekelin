@@ -2,7 +2,7 @@ import { MdDehaze } from "react-icons/md"
 import db from "../../database/db"
 import { CategoryInfo } from "../../database/database.types"
 import { Link, NavLink } from "react-router-dom"
-import { CartIcon } from "../cart/CartIcon"
+//import { CartIcon } from "../cart/CartIcon"
 
 
 const Navbar = () => {
@@ -16,7 +16,7 @@ const Navbar = () => {
             </Link>
         </div>
         <div className="navbar-end">
-            <CartIcon />
+            
             <div className="dropdown dropdown-end">
                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
                     <MdDehaze className="text-2xl" />

@@ -26,8 +26,8 @@ const Navbar: React.FC<NavProps> = ({ toggleSidebar, isOpen }) => {
 	<>
 		<div className="fixed lg:ml-56 h-12 from-gray-100 to-gray-300 bg-gradient-to-t opacity-75 z-20 left-0 right-0 top-0">
 		</div>
-		<div className="px-16 navbar from-indigo-800 to-indigo-900 bg-gradient-to-t text-white z-30 rounded-3xl fixed m-3 w-auto left-3 right-3 shadow-xl">
-			<div className="navbar-start">
+		<div className="lg:px-16 sm:p-0 navbar from-indigo-800 to-indigo-900 bg-gradient-to-t text-white z-30 lg:rounded-3xl fixed lg:m-3 lg:w-auto lg:left-3 lg:right-3 shadow-xl">
+			<div className="navbar-start pl-4">
 				<img src="/icon.png" className="max-h-7"></img><p className="pl-1 font-semibold normal-case text-xl">Pekelin</p>
 			</div>
 			<div className="navbar-end sm:visible invisible">

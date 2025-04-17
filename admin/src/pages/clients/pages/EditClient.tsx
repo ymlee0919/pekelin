@@ -104,8 +104,8 @@ const NewClient: React.FC = () => {
 			{status == StoreStatus.READY ? (
                 <>
 			<form onSubmit={handleSubmit(onSubmit)} >
-				<div className="panel">
-					<div className="panel-header">
+				<div className="panel lg:mx-5 shadow-md">
+					<div className="panel-header panel-header-lighten">
 						<span className="title">Update client</span>
 					</div>
 					<div className="panel-content">

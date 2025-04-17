@@ -43,12 +43,33 @@ const ColImage = (params: CustomCellRendererProps<BasicProductInfo>) => (
 );
 
 const ColName = (params: CustomCellRendererProps<BasicProductInfo>) => (
-    <div className="flex gap-1">
-        {params.data?.name} 
-        {params.data?.isNew && <MdFiberNew className="text-blue-500 text-lg mt-2" />} 
-        {params.data?.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg mt-2" />}
-        {params.data?.isSet && <span className="text-xs absolute right-1 top-3">(Set)</span>}
-    </div>
+    window.innerWidth >= 640 ?
+		<div className="flex gap-1">
+			{params.data?.name} 
+			{params.data?.isNew && <MdFiberNew className="text-blue-500 text-lg mt-2" />} 
+			{params.data?.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg mt-2" />}
+			{params.data?.isSet && <span className="text-xs absolute right-1 top-3">(Set)</span>}
+		</div>
+	: <>
+		<img     
+			src={(import.meta.env.VITE_IMG_URL ?? '') + params.data?.remoteUrl}
+			className="w-16 p-1"
+		/>
+		<div className="flex gap-1">
+			{params.data?.name} 
+			{params.data?.isNew && <MdFiberNew className="text-blue-500 text-lg mt-2" />} 
+			{params.data?.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg mt-2" />}
+			{params.data?.isSet && <span className="text-xs absolute right-1 top-3">(Set)</span>}
+		</div>
+		<p>
+			<strong>Category:</strong> {params.data?.category}<br></br>
+			<strong>Price:</strong> $ {params.data?.price} / <small>$ {params.data?.basePrice}</small><br></br>
+			<strong>Variants:</strong> $ {params.data?.variants} 
+			<NavLink to={`/products/${params.node.data?.productId}/variants`} className="btn btn-ghost text-slate-500 btn-sm text-sm mx-2 rounded-none">
+				<MdEdit />
+			</NavLink>
+		</p>
+	</>
 );
 
 const ColVariants = (params: CustomCellRendererProps<BasicProductInfo>) => (
@@ -152,19 +173,23 @@ const Products = () => {
 													cellRenderer: ColImage, 
 													flex: 1, 
 													sortable: false,
-													hide: window.innerWidth < 768
+													hide: window.innerWidth < 640
 												},
 												{ field: "name" ,  headerName: "Product", cellRenderer: ColName, flex: 3},
-												{ field: "category"},
+												{ field: "category", hide: window.innerWidth < 640},
 												{ field: "price", 
 													headerName: "Salling Price", 
+													hide: window.innerWidth < 640,
 													valueFormatter: params => '$ ' + params.value
 												 },
 												{ field: "basePrice", 
 													valueFormatter: params => '$' + params.value,
-													hide: window.innerWidth < 768
+													hide: window.innerWidth < 640
 												},
-												{ field: "variants", cellRenderer: ColVariants },
+												{ field: "variants", 
+													cellRenderer: ColVariants,
+													hide: window.innerWidth < 640
+												 },
 											]}
                                             gridOptions={gridOptions}
                                             onRowSelected={onRowSelected}

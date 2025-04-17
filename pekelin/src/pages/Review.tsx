@@ -50,12 +50,14 @@ const Review = () => {
             {!!review && <>
                 {!review.Review 
                     ? <ReviewForm url={review.url} clientName={review.clientName} />
-                    : <ReviewInfo review={{
-                        clientName: review.clientName,
-                        comment: review.Review.comment,
-                        rate: review.Review.rate,
-                        date: review.createdAt
-                    }} />
+                    : <div className="pt-12">
+                        <ReviewInfo review={{
+                            clientName: review.clientName,
+                            comment: review.Review.comment,
+                            rate: review.Review.rate,
+                            date: review.createdAt
+                        }} />
+                    </div>
                 }
             </>}
             

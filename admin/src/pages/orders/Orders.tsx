@@ -20,6 +20,7 @@ import OrderInfoModal from "./dialogs/OrderInfoModal";
 import { errorToEventResult } from "../../types/Errors";
 import toast from "react-hot-toast";
 import { EventResult } from "../../types/Events";
+import { CustomCellRendererProps } from "ag-grid-react";
 
 
 const gridOptions : GridOptions<OrderContent> = {
@@ -29,6 +30,19 @@ const gridOptions : GridOptions<OrderContent> = {
 	  'bg-blue-100 italic': (params) => params.data?.status == OrderStatus.READY,
 	  'bg-orange-200': (params) => params.data?.status == OrderStatus.DISPATCHED,
 	}
+};
+
+const MainColRender = (params: CustomCellRendererProps<OrderContent>) => {
+	if(window.innerWidth >= 640)
+		return params.data?.name;
+
+	return <p>
+		<strong>Order:</strong> {params.data?.name}<br></br>
+		<strong>Client:</strong> {params.data?.client}<br></br>
+		<strong>Title:</strong> {params.data?.title}<br></br>
+		<strong>Created:</strong> {new Date( params.data?.createdAt || Date.now() ).toLocaleDateString() }<br></br>
+		<strong>Status:</strong> {params.data?.status}
+	</p>;
 };
 
 const Orders =() => {
@@ -125,11 +139,11 @@ const Orders =() => {
 										<AgGridWrapper<OrderContent>
 											rowData={rowData}
 											columnDefs={[
-												{ field: "name", headerName: "Order"},
-												{ field: "client", flex: 3},
-												{ field: "title", flex: 5},
-												{ field: "createdAt", valueFormatter: params => new Date(params.value || Date.now).toLocaleDateString()},
-												{ field: "status"}
+												{ field: "name", headerName: "Order", cellRenderer: MainColRender},
+												{ field: "client", flex: 3, hide: window.innerWidth < 640},
+												{ field: "title", flex: 5, hide: window.innerWidth < 640},
+												{ field: "createdAt", hide: window.innerWidth < 640, valueFormatter: params => new Date(params.value || Date.now).toLocaleDateString()},
+												{ field: "status", hide: window.innerWidth < 640}
 											]}
 											gridOptions={gridOptions}
 											onRowSelected={onRowSelected}

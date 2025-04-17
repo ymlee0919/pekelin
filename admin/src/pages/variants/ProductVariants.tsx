@@ -37,11 +37,27 @@ const ColImage = (params: CustomCellRendererProps<BasicVariantInfo>) => (
 );
 
 const ColName = (params: CustomCellRendererProps<BasicVariantInfo>) => (
-	<div className="flex gap-1">
-		{params.data?.name} 
-		{params.data?.isNew && <MdFiberNew className="text-blue-500 text-lg mt-2" />} 
-		{params.data?.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg mt-2" />}
-	</div>
+	window.innerWidth >= 640 ?
+		<div className="flex gap-1">
+			{params.data?.name} 
+			{params.data?.isNew && <MdFiberNew className="text-blue-500 text-lg mt-2" />} 
+			{params.data?.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg mt-2" />}
+		</div> 
+	:
+	<>
+		<img     
+			src={(import.meta.env.VITE_IMG_URL ?? '') + params.data?.remoteUrl}
+			className="w-16 p-1"
+		/>
+		<div className="flex gap-1">
+			{params.data?.name} 
+			{params.data?.isNew && <MdFiberNew className="text-blue-500 text-lg mt-2" />} 
+			{params.data?.isBestSeller && <MdOutlineStar className="text-yellow-400 text-lg mt-2" />}
+		</div> 
+		<p>
+			<strong>Description:</strong> {params.data?.description}
+		</p>
+	</>
 );
 
 const gridOptions : GridOptions<BasicVariantInfo> = {
@@ -151,9 +167,22 @@ const ProductVariants = () => {
 										<AgGridWrapper<BasicVariantInfo>
 											rowData={rowData}
 											columnDefs={[
-												{ field: "remoteUrl" ,  headerName: "Image", cellRenderer: ColImage, flex: 1, sortable: false},
-												{ field: "name" ,  headerName: "Variant", cellRenderer: ColName, flex: 2},
-												{ field: "description", flex: 3},
+												{ field: "remoteUrl",  
+													headerName: "Image",
+													cellRenderer: ColImage,
+													flex: 1,
+													sortable: false,
+													hide: window.innerWidth < 640
+												},
+												{ field: "name",
+													headerName: "Variant",
+													cellRenderer: ColName,
+													flex: 2
+												},
+												{ field: "description", 
+													flex: 3, 
+													hide: window.innerWidth < 640
+												},
 											]}
 											gridOptions={gridOptions}
 											onRowSelected={onRowSelected}

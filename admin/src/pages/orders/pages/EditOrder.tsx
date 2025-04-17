@@ -133,7 +133,7 @@ const EditOrder = () => {
 				<>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="panel mx-5 shadow-md">
+            <div className="panel lg:mx-5 shadow-md">
                 <div className="panel-header panel-header-lighten">
                     <span className="title">Update order</span>
                 </div>
@@ -262,7 +262,7 @@ const EditOrder = () => {
                     </div>
                     <fieldset>
                         <legend>Product</legend>
-                        <div className="flex flex-wrap gap-5">
+                        <div className="flex flex-wrap gap-2 lg:gap-5">
                             <div className="md:w-2/12 w-10/12">
                                 {!!selectedImage ? (
                                     <div className="avatar">
@@ -274,7 +274,7 @@ const EditOrder = () => {
                                     <div className="bg-base-300 grid h-32 w-32 place-items-center">No image</div>
                                 )}
                             </div>
-                            <div className="md:w-8/12 w-11/12">
+                            <div className="md:w-8/12 w-full">
                                 <label className="form-control w-full">
                                     <div className="label">
                                         <span className="label-text">Product</span>

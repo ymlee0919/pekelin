@@ -15,6 +15,20 @@ import toast from "react-hot-toast";
 import ReviewTBar from "./components/ReviewTBar";
 import NewLinkModal from "./dialogs/NewLinkModal";
 import ReviewModal from "./dialogs/ReviewModal";
+import { CustomCellRendererProps } from "ag-grid-react";
+
+const MainColRender = (params: CustomCellRendererProps<ReviewLink>) => {
+	if(window.innerWidth >= 640)
+		return params.data?.clientName;
+
+	return <p>
+		<strong>Client:</strong> {params.data?.clientName}<br></br>
+		<strong>Place:</strong> {params.data?.place}<br></br>
+		<strong>Url:</strong> {import.meta.env.VITE_REVIEW_URL + params.data?.url}<br></br>
+		<strong>Created:</strong> {params.data?.createdAt.toLocaleDateString()}<br></br>
+		<strong>Review:</strong> {params.data?.updatedAt?.toLocaleDateString()}
+	</p>;
+};
 
 const ReviewLinks =() => {
 
@@ -88,11 +102,30 @@ const ReviewLinks =() => {
 										<AgGridWrapper<ReviewLink>
 											rowData={rowData}
 											columnDefs={[		
-												{ field: "clientName" ,  headerName: "Client"},
-												{ field: "place" ,  headerName: "Place"},
-												{ field: "url" ,  headerName: "Url", valueFormatter: params => import.meta.env.VITE_REVIEW_URL + params.value , flex: 3},
-												{ field: "createdAt" ,  headerName: "Created", valueFormatter: params => params.value?.toLocaleDateString(), flex: 1 },
-												{ field: "updatedAt" ,  headerName: "Review", valueFormatter: params => params.value?.toLocaleDateString(), flex: 1},
+												{ field: "clientName",
+													headerName: window.innerWidth < 640 ? 'Review' : 'Client', 
+													cellRenderer: MainColRender
+												},
+												{ field: "place",
+													headerName: "Place", 
+													hide: window.innerWidth < 640},
+												{ field: "url",
+													headerName: "Url",
+													valueFormatter: params => import.meta.env.VITE_REVIEW_URL + params.value,
+													flex: 3,
+													hide: window.innerWidth < 640},
+												{ field: "createdAt",
+													headerName: "Created",
+													valueFormatter: params => params.value?.toLocaleDateString(),
+													flex: 1,
+													hide: window.innerWidth < 640
+												},
+												{ field: "updatedAt",
+													headerName: "Review",
+													valueFormatter: params => params.value?.toLocaleDateString(),
+													flex: 1,
+													hide: window.innerWidth < 640
+												},
 											]}
 											onRowSelected={onRowSelected}
 											onRowDoubleClicked={onRowDoubleClicked}

@@ -13,3 +13,11 @@ export interface ReviewLink {
 	createdAt: Date;
 	updatedAt?: Date;
 }
+
+export interface ReviewContent {
+	clientName: string;
+	clientPlace: string;
+	rate: number;
+	comment: string;
+	date: Date;
+}

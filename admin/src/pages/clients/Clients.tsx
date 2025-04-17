@@ -12,6 +12,20 @@ import { AgGridWrapper } from "../../components/AgGridWrapper";
 import { useGrid } from "../../hooks/useGrid";
 import ClientsTBar from "./components/ClientsTBar";
 import DeleteClientModal from "./dialogs/DeleteClientModal";
+import { CustomCellRendererProps } from "ag-grid-react";
+
+
+const MainColRender = (params: CustomCellRendererProps<Client>) => {
+	if(window.innerWidth >= 640)
+		return params.data?.name;
+
+	return <p>
+		<strong>Name:</strong> {params.data?.name}<br></br>
+		<strong>Place:</strong> {params.data?.place}<br></br>
+		<strong>Phone:</strong> {params.data?.phone}
+	</p>;
+};
+
 
 const Clients =() => {
 
@@ -82,9 +96,12 @@ const Clients =() => {
 										<AgGridWrapper<Client>
 											rowData={rowData}
 											columnDefs={[
-												{ field: "name"},
-												{ field: "place"},
-												{ field: "phone"}
+												{ field: "name",
+													headerName: window.innerWidth < 640 ? 'Client' : 'User', 
+													cellRenderer: MainColRender
+												},
+												{ field: "place", hide: window.innerWidth < 640},
+												{ field: "phone", hide: window.innerWidth < 640}
 											]}
 											onRowSelected={onRowSelected}
 										/>

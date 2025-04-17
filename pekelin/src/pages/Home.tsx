@@ -10,7 +10,9 @@ import ProductCard from "../components/cards/ProductCard";
 import VariantCard from "../components/cards/VariantCard";
 import CategoryCard from "../components/cards/CategoryCard";
 import StepCard from "../components/cards/StepCard";
-import { MdAddShoppingCart, MdLocationPin, MdOutlineWhatsapp } from "react-icons/md";
+import { MdLocationPin, MdOutlineWhatsapp } from "react-icons/md";
+import ReviewCarousel from "../components/review/ReviewCarousel";
+import { BsSearch } from "react-icons/bs";
 
 const Home = () => {
     return <>
@@ -39,20 +41,20 @@ const Home = () => {
 
             
             <div className="inline-flex flex-wrap gap-0">
-                {/*<StepCard title="Busca lo que quieres"
+                <StepCard title="Busca lo que quieres"
                     description="Busca la ropa que se acomode a tus gustos y necesidades."
                     Icon={BsSearch}
-                    />*/}
+                    />
 
-                <StepCard title="Conforma tu pedido"
+                {/*<StepCard title="Conforma tu pedido"
                     description="Busca lo que quieres y llena tu carrito de compras con ropita para tu niño."
                     Icon={MdAddShoppingCart}
-                    />
+                    />*/}
 
                 <StepCard title="Déjanos saber"
-                    description="Ve al carrito de compras y envíanos tu solicitud. Respoderemos en breve."
-                    Icon={MdOutlineWhatsapp}
-                    />
+                     description="Puedes usar el botón <strong>Encargar</strong> para enviarnos tu solicitud."
+                     Icon={MdOutlineWhatsapp}
+                     />
 
                 <StepCard title="Nos ponemos de acuerdo"
                     description="Ajustamos los detalles que necesites. Tamaño, color, adornos, entrega, etc."
@@ -105,6 +107,9 @@ const Home = () => {
                 })}
             </div>
         </div>
+
+        <ReviewCarousel />
+
         <div className="p-5 mb-12">
             {db.existsBestSeller && 
                 /** Best sellers */

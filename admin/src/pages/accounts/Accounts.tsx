@@ -15,7 +15,19 @@ import { AgGridWrapper } from "../../components/AgGridWrapper";
 import { useGrid } from "../../hooks/useGrid";
 import AccountsTBar from "./components/AccountsTBar";
 import DeleteAccountModal from "./dialogs/DeleteAccountModal";
+import { CustomCellRendererProps } from "ag-grid-react";
 
+const MainColRender = (params: CustomCellRendererProps<AccountContent>) => {
+	if(window.innerWidth >= 640)
+		return params.data?.user;
+
+	return <p>
+		<strong>User:</strong> {params.data?.user}<br></br>
+		<strong>Name:</strong> {params.data?.name}<br></br>
+		<strong>Email:</strong> {params.data?.email}<br></br>
+		<strong>Role:</strong> {params.data?.role}
+	</p>;
+};
 
 const Accounts =() => {
 
@@ -77,10 +89,13 @@ const Accounts =() => {
 										<AgGridWrapper<AccountContent>
 											rowData={rowData}
 											columnDefs={[
-												{ field: "user"},
-												{ field: "name"},
-												{ field: "email"},
-												{ field: "role", flex: 1},
+												{ field: "user", 
+													headerName: window.innerWidth < 640 ? 'Account' : 'User', 
+													cellRenderer: MainColRender
+												},
+												{ field: "name", hide: window.innerWidth < 640},
+												{ field: "email", hide: window.innerWidth < 640},
+												{ field: "role", flex: 1, hide: window.innerWidth < 640},
 											]}
 											onRowSelected={onRowSelected}
 										/>
