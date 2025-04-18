@@ -17,6 +17,9 @@ import NewLinkModal from "./dialogs/NewLinkModal";
 import ReviewModal from "./dialogs/ReviewModal";
 import { CustomCellRendererProps } from "ag-grid-react";
 
+import { setLinks } from "../../store/local/slices/globalSlice";
+import { useDispatch } from "react-redux"; 
+
 const MainColRender = (params: CustomCellRendererProps<ReviewLink>) => {
 	if(window.innerWidth >= 640)
 		return params.data?.clientName;
@@ -50,6 +53,7 @@ const ReviewLinks =() => {
 	}, []);
 
     const stores = useStores();
+	const dispatch = useDispatch();
 
     const reload = () => {
         setStatus(StoreStatus.LOADING);
@@ -58,8 +62,11 @@ const ReviewLinks =() => {
         stores.reviewLinksStore.load(null).then(
 			(newStatus: StoreStatus) => {
 				setStatus(newStatus);
-				if(stores.reviewLinksStore.content)
-					setRowData(stores.reviewLinksStore.content)
+				if(stores.reviewLinksStore.content) {
+					setRowData(stores.reviewLinksStore.content);
+					dispatch(setLinks(stores.reviewLinksStore.content.filter(item => !item.updatedAt).length));
+				}
+					
 			}
 		);
     }

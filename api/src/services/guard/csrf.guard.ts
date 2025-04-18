@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { doubleCsrf } from 'csrf-csrf';
 
@@ -20,10 +20,10 @@ export class CsrfGuard implements CanActivate {
         // Validate CSRF token for POST, PUT, PATCH, DELETE requests
         if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)) {
             try {
-                doubleCsrfProtection(request, response, () => {});
+                doubleCsrfProtection(request, response, (err) => {if(err) throw err});
                 return true;
             } catch (error) {
-                throw new UnauthorizedException('Invalid CSRF token');
+                throw new ForbiddenException('Invalid CSRF token');
             }
         }
 

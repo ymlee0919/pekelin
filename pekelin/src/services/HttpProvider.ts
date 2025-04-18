@@ -3,6 +3,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 const HttpProvider = axios.create({
 	// .. where we make our configurations
 	baseURL: import.meta.env.VITE_API_URL,
+	withCredentials: true, // Ensures cookies are sent with requests
 });
 
 //axios.defaults.headers.common["Authorization"] = "AUTH TOKEN";

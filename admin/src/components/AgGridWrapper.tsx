@@ -31,7 +31,7 @@ export const AgGridWrapper = <T,>({
 	gridOptions,
 	onRowSelected,
 	onRowDoubleClicked,
-	height = "350px",
+	height = "420px",
 }: AgGridWrapperProps<T>) => {
 
 	const defaultColDef = useMemo<ColDef>(

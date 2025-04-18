@@ -196,8 +196,8 @@ table.table-grid th {
         font-weight: 500;
         color: #4b4d53;
         line-height: 1.5;
-        margin-left: -100%;
-        width: 60%;
+        margin-left: 0;
+        padding-right: 7px;
         white-space: nowrap;
     }
 }

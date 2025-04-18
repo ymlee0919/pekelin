@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ConfigModule } from '@nestjs/config';
 
 import { DatabaseModule } from 'src/services/database/database.module';
 
@@ -42,7 +43,9 @@ import { OrdersModule } from './orders/orders.module';
 				ttl: 60, // Time-to-live in seconds (1 minute)
 				limit: 10, // Maximum number of requests within the TTL
 			}]
-		})
+		}),
+		// Config module
+		ConfigModule.forRoot()
 	],
 	providers: [{
 		provide: APP_GUARD,

@@ -25,8 +25,10 @@ import { FileService } from 'src/services/files/file.services';
 import { CloudService } from 'src/services/cloud/cloud.service';
 import { ImageSrc } from 'src/common/types/common.types';
 import { plainToInstance } from 'class-transformer';
+import { RequirePermission } from 'src/common/decorators/permission.decorator';
 
 @Controller('api/products/sets')
+@RequirePermission('Products')
 export class SetsController {
 
     constructor(

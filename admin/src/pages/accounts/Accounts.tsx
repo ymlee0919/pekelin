@@ -8,9 +8,6 @@ import ErrorMessage  from "../../components/ErrorMessage";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import { AccountContent } from "../../store/remote/accounts/Accounts.Types";
 
-import { setAccounts } from "../../store/local/slices/globalSlice";
-import { useDispatch } from "react-redux"; 
-
 import { AgGridWrapper } from "../../components/AgGridWrapper";
 import { useGrid } from "../../hooks/useGrid";
 import AccountsTBar from "./components/AccountsTBar";
@@ -33,7 +30,6 @@ const Accounts =() => {
 
 	const [showDelete, setShowDelete] = useState<boolean>(false);
     const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<AccountContent>();
-	const dispatch = useDispatch();
 
     const stores = useStores();
 
@@ -46,7 +42,6 @@ const Accounts =() => {
 			(newStatus: StoreStatus) => {
 				setStatus(newStatus);
 				if (newStatus == StoreStatus.READY && stores.accountsStore.content){
-					dispatch(setAccounts(stores.accountsStore.content.length));
 					setRowData(stores.accountsStore.content)
 				}
 					

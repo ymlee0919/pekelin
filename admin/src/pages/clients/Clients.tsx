@@ -14,6 +14,8 @@ import ClientsTBar from "./components/ClientsTBar";
 import DeleteClientModal from "./dialogs/DeleteClientModal";
 import { CustomCellRendererProps } from "ag-grid-react";
 
+import { setClients } from "../../store/local/slices/globalSlice";
+import { useDispatch } from "react-redux"; 
 
 const MainColRender = (params: CustomCellRendererProps<Client>) => {
 	if(window.innerWidth >= 640)
@@ -33,6 +35,7 @@ const Clients =() => {
     const { rowData, setRowData, status, setStatus, selectedItem, setSelectedItem, onRowSelected } = useGrid<Client>();
 
     const stores = useStores();
+	const dispatch = useDispatch();
 
 	const filter = (value : string) => {
 		if(stores.clientsStore.content)
@@ -53,6 +56,7 @@ const Clients =() => {
 				setStatus(newStatus);
 				if (newStatus == StoreStatus.READY && stores.clientsStore.content){
 					setRowData(stores.clientsStore.content)
+					dispatch(setClients(stores.clientsStore.content.length));
 				}
 					
 			}

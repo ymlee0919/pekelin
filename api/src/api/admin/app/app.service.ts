@@ -7,6 +7,9 @@ export interface DashboardInfo {
     categories: number;
     products: number;
     orders: number;
+    production: number;
+    clients: number;
+    links: number;
 }
 
 /**
@@ -30,18 +33,26 @@ export class AppService {
      */
     async getDashboardInfo() : Promise<DashboardInfo>
     {
-        let [accounts, categories, products, orders] = await Promise.all([
+        let [accounts, categories, products, production, orders, clients, links] = await Promise.all([
             this.database.accounts.count(),
             this.database.categories.count(),
             this.database.products.count(),
-            this.database.orders.count({where: {status: OrderStatus.PENDING}})
+            this.database.orders.count({where: {status: OrderStatus.PENDING}}),
+            this.database.orders.count({where: {status: {
+                in: [OrderStatus.PENDING, OrderStatus.READY, OrderStatus.DISPATCHED]
+            } }}),
+            this.database.clients.count(),
+            this.database.reviewLinks.count({where : {updatedAt: null}})
         ]);
 
         return {
             accounts, 
             categories, 
             products,
-            orders
+            orders,
+            production,
+            clients,
+            links
         };
     }
 

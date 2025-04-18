@@ -83,7 +83,7 @@ const ColVariants = (params: CustomCellRendererProps<BasicProductInfo>) => (
 
 const gridOptions : GridOptions<BasicProductInfo> = {
     rowClassRules: {
-      'bg-red-50': (params) => params.data?.visible === false,
+      'bg-slate-200': (params) => params.data?.visible === false,
       'italic': (params) => params.data?.visible === false,
     }
 };

@@ -1,9 +1,12 @@
 
 export interface DashboardContent {
-	accounts: number;
-	categories: number;
-	products: number;
-	orders: number;
+    categories: number;
+    products: number;
+    orders: number;
+    production: number;
+    clients: number;
+    links: number;
+	
 	user: string;
 	userName: string;
 }

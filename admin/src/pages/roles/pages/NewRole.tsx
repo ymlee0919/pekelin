@@ -156,7 +156,7 @@ const NewRole: React.FC = () => {
                                     <tbody>
                                     {permissions.map((module) => (
                                         <tr key={module.moduleId}>
-                                        <td className="inline-flex">
+                                        <td data-label="Module" className="inline-flex">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedPermissions.includes(module.moduleId)}
@@ -165,7 +165,7 @@ const NewRole: React.FC = () => {
                                             />
                                             {module.module}
                                         </td>
-                                        <td>{module.details}</td>
+                                        <td data-label="Details">{module.details}</td>
                                         </tr>
                                     ))}
                                     {permissions.length > 0 || <tr><td colSpan={3} className="text-center">No permisions</td></tr>}

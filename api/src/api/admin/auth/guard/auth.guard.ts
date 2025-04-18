@@ -2,7 +2,7 @@ import {
     CanActivate,
     ExecutionContext,
     ForbiddenException,
-    Injectable, Scope, Inject,
+    Injectable, Scope, 
     UnauthorizedException
   } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -12,14 +12,16 @@ import { IS_PUBLIC_KEY } from '../../../../common/decorators/public.decorator';
 import { AuthRequestContext } from '../context/auth.context';
 import { AccountInfo } from "../../accounts/accounts.types";
 import { DatabaseService } from 'src/services/database/database.service';
+import { ConfigService } from '@nestjs/config';
   
 @Injectable({ scope: Scope.REQUEST })
 export class AuthGuard implements CanActivate {
 
     constructor(
-        private jwtService: JwtService, 
+        private readonly jwtService: JwtService, 
         private reflector: Reflector,
-        private database: DatabaseService
+        private readonly database: DatabaseService,
+        private readonly configService: ConfigService
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -43,7 +45,7 @@ export class AuthGuard implements CanActivate {
         try {
             // Verify payload
             const payload = await this.jwtService.verifyAsync<AccountInfo>(token, {
-                secret: process.env.JWT_SECRET
+                secret: this.configService.get('JWT_ACCESS_SECRET')
             });
             
             (request as Request)['authContext'] = new AuthRequestContext(payload);
@@ -53,6 +55,7 @@ export class AuthGuard implements CanActivate {
                 'permission',
                 [context.getHandler(), context.getClass()]
             );
+            
             if(typeof requiredPermission == "string")
                 requiredPermission = [requiredPermission];
 

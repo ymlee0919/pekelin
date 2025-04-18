@@ -1,10 +1,13 @@
 import { createContext, useContext, useMemo } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import { CommonProps } from "../types/Common";
+import { AuthCredentials, LoginResponse } from "../types/Auth";
+import { authService } from "../services/auth.service";
 
 export interface AuthHandler {
     user: string | null;
     permissions: string[];
+    signIn: (credentials: AuthCredentials) => Promise<LoginResponse>;
     login: (userAuth: string, accessToken: string, permissions: string[]) => void;
     logout: () => void;
 }
@@ -17,6 +20,24 @@ export const AuthProvider = (props: CommonProps) => {
     const [permissions, setPermissions] = useLocalStorage<string[]>("permissions", []);
 
     // call this function when you want to authenticate the user
+    const signIn = async (credentials: AuthCredentials) : Promise<LoginResponse> => {
+        // Implement the authentication process
+        try {
+            let auth = await authService.login(credentials);
+
+            setUser(auth.account.user);
+            setAccessToken(auth.accessToken);
+            setPermissions(auth.account.permissions);
+            
+            return auth;
+        }
+        catch(error)
+        {
+            throw error;
+        }        
+    };
+
+    // call this function when you want to authenticate the user
     const login = (userAuth: string, accessToken: string, permissions: string[]) => {
         // Implement the authentication process
         setUser(userAuth);
@@ -25,16 +46,19 @@ export const AuthProvider = (props: CommonProps) => {
     };
 
     // call this function to sign out logged in user
-    const logout = () => {
+    const logout = async () => {
         // Implement the logout process
+        await authService.logout();
+        
         setUser(null);
         setAccessToken(null);
         setPermissions([]);
+        
         window.history.replaceState({}, '', '/');
     };
 
     const value = useMemo(
-        () => ({ user, login, logout, permissions }), [user, token]
+        () => ({ user, login, signIn, logout, permissions }), [user, token]
     );
 
     return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;

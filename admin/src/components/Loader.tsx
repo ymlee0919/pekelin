@@ -4,7 +4,7 @@ import useStores from "../hooks/useStores";
 import { useSelector, useDispatch } from "react-redux"; 
 import { useEffect, useState } from "react";
 import { StoreStatus } from "../store/remote/Store";
-import { setData } from "../store/local/slices/globalSlice";
+import { setData, setUser } from "../store/local/slices/globalSlice";
 import { RootState } from "../store/local/store"; 
 import ErrorMessage from "./ErrorMessage";
 
@@ -24,6 +24,10 @@ const Loader = (props: CommonProps) => {
                     setStatus(newStatus)
                     if(newStatus == StoreStatus.READY && stores.dashboardStore.content) {
                         dispatch(setData(stores.dashboardStore.content));
+                        dispatch(setUser({
+                            user: stores.dashboardStore.content.user,
+                            userName: stores.dashboardStore.content.userName
+                        }));
                     }
                 }
             );

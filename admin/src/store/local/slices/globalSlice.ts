@@ -4,19 +4,23 @@ interface GlobalState {
 	user: string;
 	userName: string;
 
-	accounts: number;
-	categories: number;
-	products: number;
-	orders: number; // Pending orders
+    categories: number;
+    products: number;
+    orders: number;
+    production: number;  // Pending orders
+    clients: number;
+    links: number;
 
 	loaded: boolean;
 }
 
 interface InitialGlobalState {
-	accounts: number;
-	categories: number;
-	products: number;
-	orders: number;
+    categories: number;
+    products: number;
+    orders: number;
+    production: number;  // Pending orders
+    clients: number;
+    links: number;
 }
 
 interface UserInfo {
@@ -27,10 +31,12 @@ interface UserInfo {
 const initialState: GlobalState = {
     user: '',
     userName: '',
-    accounts: -1,
     categories: -1,
     products: -1,
     orders: -1,
+    clients: -1,
+    links: -1,
+    production: -1,
 
     loaded: false
 };
@@ -50,10 +56,6 @@ const globalSlice = createSlice({
     name: 'global',
     initialState,
     reducers: {
-        setAccounts: (state, action: PayloadAction<number>) => {
-            state.accounts = action.payload;
-			state.loaded = isStateComplete(state);
-        },
         setCategories: (state, action: PayloadAction<number>) => {
             state.categories = action.payload;
 			state.loaded = isStateComplete(state);
@@ -64,6 +66,18 @@ const globalSlice = createSlice({
         },
         setOrders: (state, action: PayloadAction<number>) => {
             state.orders = action.payload;
+			state.loaded = isStateComplete(state);
+        },
+        setProduction: (state, action: PayloadAction<number>) => {
+            state.production = action.payload;
+			state.loaded = isStateComplete(state);
+        },
+        setClients: (state, action: PayloadAction<number>) => {
+            state.clients = action.payload;
+			state.loaded = isStateComplete(state);
+        },
+        setLinks: (state, action: PayloadAction<number>) => {
+            state.links = action.payload;
 			state.loaded = isStateComplete(state);
         },
         addOrder: (state) => {
@@ -82,9 +96,11 @@ const globalSlice = createSlice({
 });
 
 export const { 
-    setAccounts, 
     setCategories,
     setProducts,
+    setClients,
+    setLinks,
+    setProduction,
     setOrders,
     setData, 
     setUser,

@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import { EventResult } from "../../types/Events";
 import { errorToEventResult } from "../../types/Errors";
 
-import { setOrders } from "../../store/local/slices/globalSlice";
+import { setProduction } from "../../store/local/slices/globalSlice";
 import { useDispatch } from "react-redux"; 
 
 const Production =() => {
@@ -56,7 +56,7 @@ const Production =() => {
 			(newStatus: StoreStatus) => {
 				setStatus(newStatus);
                 if(stores.ordersStore.content)
-                    dispatch(setOrders(stores.ordersStore.content?.length));
+                    dispatch(setProduction(stores.ordersStore.content.length));
 			}
 		);
     }

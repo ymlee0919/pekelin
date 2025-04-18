@@ -10,8 +10,8 @@ import {
 	MdManageAccounts,
 	MdSupervisorAccount,
 	MdOutlineAssignmentTurnedIn,
-	MdHandyman,
 } from "react-icons/md";
+import { GiSewingMachine } from "react-icons/gi";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 //import toast from 'react-hot-toast';
@@ -128,7 +128,7 @@ const Sidebar: React.FC<{ isOpen: boolean }> = ({ isOpen }) => {
 					<li>
 						<NavLink to={RouterTable.production.root} className="group text-sm text-gray-500 p-3 my-1">
 							<span>
-								<MdHandyman className="text-xl" />
+								<GiSewingMachine className="text-xl" />
 							</span>
 							<span>Production</span>
 						</NavLink>

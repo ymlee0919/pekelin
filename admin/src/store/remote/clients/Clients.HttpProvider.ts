@@ -9,6 +9,7 @@ export class ClientsHttpProvider extends AxiosProvider<Array<Client>> {
 		try {
 			return await HttpProvider.get<null, Array<Client>>("/clients");
 		} catch (error: any) {
+			console.log(error);
 			this.errorCode = error.response ? error.response.code : 0;
 			throw Error(error.response ? error.response.message : "Unable to load clients");
 		}

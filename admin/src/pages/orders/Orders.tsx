@@ -84,11 +84,8 @@ const Orders =() => {
         stores.ordersStore.load(null).then(
 			(newStatus: StoreStatus) => {
 				setStatus(newStatus);
-				if (newStatus == StoreStatus.READY && stores.ordersStore.content){
-					let pending = stores.ordersStore.content.filter((order: OrderContent) => {
-						return order.status == OrderStatus.PENDING
-					}).length;
-					dispatch(setOrders(pending));
+				if (newStatus == StoreStatus.READY && stores.ordersStore.content) {
+					dispatch(setOrders(stores.ordersStore.content.length));
 					setRowData(stores.ordersStore.content)
 				}
 					
