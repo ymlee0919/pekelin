@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AdminModule } from './api/admin/admin.module';
+import { AdminModule } from '../api/admin/admin.module';
 import { ServeStaticModule } from '@nestjs/serve-static'; 
 import { join } from 'path';
 import { RouterModule } from '@nestjs/core';
-import { ClientModule } from './api/client/client.module';
+import { ClientModule } from '../api/client/client.module';
 
 
 @Module({

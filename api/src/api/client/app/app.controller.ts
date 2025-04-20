@@ -9,6 +9,13 @@ import { doubleCsrf } from 'csrf-csrf';
 const { generateToken } = doubleCsrf({
     getSecret: () => 'your-secret-key',
     cookieName: 'x-csrf-token',
+    cookieOptions: { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+    },
+    size: 64,
+    ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
 });
 
 @Controller('client/app')

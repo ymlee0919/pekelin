@@ -43,7 +43,7 @@ export class AuthController {
             res.cookie('refresh_token', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: credentials.remember 
                   ? 30 * 24 * 60 * 60 * 1000 // 30 days
                   : 24 * 60 * 60 * 1000, // 1 day
@@ -88,7 +88,7 @@ export class AuthController {
             res.cookie('refresh_token', newRefreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: remember
                     ? 30 * 24 * 60 * 60 * 1000 // 30 days
                     : 24 * 60 * 60 * 1000, // 1 day
@@ -97,8 +97,6 @@ export class AuthController {
 
             return { accessToken };
         } catch (e) {
-            console.log(e);
-            console.log('Invalid refresh token')
             throw new UnauthorizedException('Invalid refresh token');
         }
     }

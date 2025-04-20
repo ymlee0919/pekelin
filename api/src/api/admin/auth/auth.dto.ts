@@ -11,7 +11,7 @@ export class CredentialsDTO {
     @IsNotEmpty({message: 'Password can not be empty'})
     readonly password: string;
 
-    @Transform(({ value }) => value === 'true')
+    @Transform(({ value }) => typeof value == "boolean" ? value : value === 'true')
     @IsBoolean()
     readonly remember: boolean;
 }

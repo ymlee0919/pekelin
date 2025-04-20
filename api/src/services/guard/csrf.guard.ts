@@ -3,11 +3,15 @@ import { Request, Response } from 'express';
 import { doubleCsrf } from 'csrf-csrf';
 
 const { generateToken, doubleCsrfProtection } = doubleCsrf({
-  getSecret: () => 'your-secret-key',
-  cookieName: 'x-csrf-token',
-  cookieOptions: { httpOnly: true, secure: process.env.NODE_ENV === 'production' },
-  size: 64,
-  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
+    getSecret: () => 'your-secret-key',
+    cookieName: 'x-csrf-token',
+    cookieOptions: { 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+    },
+    size: 64,
+    ignoredMethods: ['GET', 'HEAD', 'OPTIONS'],
 });
 
 @Injectable()
